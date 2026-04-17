@@ -13,6 +13,7 @@ import { GettingStartedScreen } from './components/screens/explore/GettingStarte
 import { PartnersTab } from './components/screens/social/PartnersTab';
 import { ChatScreen } from './components/screens/social/ChatScreen';
 import { AddPartnerScreen } from './components/screens/social/AddPartnerScreen';
+import { PartnerProfileScreen } from './components/screens/social/PartnerProfileScreen';
 
 // Screens: Journey
 import { ProgressTab } from './components/screens/journey/ProgressTab';
@@ -65,10 +66,18 @@ export default function App() {
             )}
 
             {/* Detail screens */}
-            {activeScreen === 'gymDetail'      && <GymDetailScreen gym={screenData} onBack={goHome} />}
+            {activeScreen === 'gymDetail'      && <GymDetailScreen gym={screenData} onBack={goHome} onNavigate={navigate} />}
             {activeScreen === 'gettingStarted' && <GettingStartedScreen onBack={goHome} />}
             {activeScreen === 'chat'           && <ChatScreen partner={screenData} onBack={goHome} />}
             {activeScreen === 'addPartner'     && <AddPartnerScreen onBack={goHome} />}
+            {activeScreen === 'partnerProfile' && (
+              <PartnerProfileScreen
+                partner={screenData}
+                onBack={goHome}
+                onChat={() => navigate('chat', screenData)}
+                onMatch={() => navigate('chat', screenData)}
+              />
+            )}
           </div>
 
           {/* Bottom Nav — only on home */}
