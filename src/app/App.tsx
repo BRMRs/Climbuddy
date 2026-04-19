@@ -17,6 +17,7 @@ import { PartnerProfileScreen } from './components/screens/social/PartnerProfile
 
 // Screens: Journey
 import { ProgressTab } from './components/screens/journey/ProgressTab';
+import { BoostTab } from './components/screens/boost/BoostTab';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('gyms');
@@ -27,6 +28,8 @@ export default function App() {
     setScreenData(data ?? null);
     setActiveScreen(screen as ScreenType);
   };
+
+  const switchTab = (tab: TabType) => setActiveTab(tab);
 
   const goHome = () => {
     setActiveScreen('home');
@@ -59,9 +62,10 @@ export default function App() {
             {/* Home tabs */}
             {activeScreen === 'home' && (
               <div className="h-full overflow-y-auto custom-scrollbar">
-                {activeTab === 'gyms'     && <GymsTab onNavigate={navigate} />}
-                {activeTab === 'partners' && <PartnersTab onNavigate={navigate} />}
-                {activeTab === 'progress' && <ProgressTab onNavigate={navigate} />}
+                {activeTab === 'gyms'     && <GymsTab onNavigate={navigate} switchTab={switchTab} />}
+                {activeTab === 'partners' && <PartnersTab onNavigate={navigate} switchTab={switchTab} />}
+                {activeTab === 'progress' && <ProgressTab onNavigate={navigate} switchTab={switchTab} />}
+                {activeTab === 'boost'     && <BoostTab onNavigate={navigate} switchTab={switchTab} />}
               </div>
             )}
 

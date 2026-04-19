@@ -8,9 +8,10 @@ const ALL_FILTERS = ['All', 'Beginner', 'Bouldering', 'Lead', 'Near Me'];
 
 interface GymsTabProps {
   onNavigate: (screen: string, data?: any) => void;
+  switchTab?: (tab: any) => void;
 }
 
-export const GymsTab: React.FC<GymsTabProps> = ({ onNavigate }) => {
+export const GymsTab: React.FC<GymsTabProps> = ({ onNavigate, switchTab }) => {
   const [query, setQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
 

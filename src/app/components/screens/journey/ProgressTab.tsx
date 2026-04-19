@@ -10,7 +10,7 @@ const SESSIONS = [
   { date: 'Apr 7',  routes: 6, level: 'V1',    calories: 250 },
 ];
 
-export const ProgressTab: React.FC<{ onNavigate: (s: string, d?: any) => void }> = () => {
+export const ProgressTab: React.FC<{ onNavigate: (s: string, d?: any) => void; switchTab?: (tab: any) => void; }> = ({}) => {
   const [heartRate, setHeartRate] = useState(142);
   const [badges, setBadges] = useState<Badge[]>(BADGES);
   const [showLogModal, setShowLogModal] = useState(false);

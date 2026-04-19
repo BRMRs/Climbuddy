@@ -6,6 +6,7 @@ import { Partner, MyPreferences, ChatHistoryItem } from '../../../types';
 
 interface PartnersTabProps {
   onNavigate: (screen: string, data?: any) => void;
+  switchTab?: (tab: any) => void;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -34,7 +35,7 @@ const DAYS = getNextDays(7);
 
 // ─── Main Component ────────────────────────────────────────────────────────────
 
-export const PartnersTab: React.FC<PartnersTabProps> = ({ onNavigate }) => {
+export const PartnersTab: React.FC<PartnersTabProps> = ({ onNavigate, switchTab }) => {
   const [queue,   setQueue]   = useState<Partner[]>([...PARTNERS_DATA]);
   const [matched, setMatched] = useState<Partner | null>(null);
 

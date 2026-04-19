@@ -199,7 +199,7 @@ Max Concurrent: 6 (Wave 2)
 
 ## TODOs
 
-- [ ] 1. Extend TypeScript Types + Scaffold Mock Data
+- [x] 1. Extend TypeScript Types + Scaffold Mock Data
 
   **What to do**:
   - In `src/app/types/index.ts`:
@@ -293,7 +293,7 @@ Max Concurrent: 6 (Wave 2)
   - Files: `src/app/types/index.ts`, `src/app/data/mockData.ts`, `src/app/App.tsx` (TabType/ScreenType only)
   - Pre-commit: `npx tsc --noEmit`
 
-- [ ] 2. Create Shared Modal Component
+- [x] 2. Create Shared Modal Component
 
   **What to do**:
   - Create `src/app/components/layout/Modal.tsx` as a shared, reusable modal component
