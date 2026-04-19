@@ -4,9 +4,11 @@ import { Zap } from 'lucide-react';
 interface BoostTabProps {
   onNavigate: (screen: string, data?: unknown) => void;
   switchTab: (tab: string) => void;
+  purchasedCourseIds: string[];
+  onPurchase: (courseId: string) => void;
 }
 
-export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab }) => {
+export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab, purchasedCourseIds, onPurchase }) => {
   return (
     <div className="p-5 pb-28 flex flex-col gap-5 animate-in fade-in duration-300">
       <div className="flex items-center gap-2 mt-3">
@@ -21,6 +23,7 @@ export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab }) => 
           <span className="font-black text-slate-900">Boost placeholder</span>
         </div>
         <p className="text-slate-600 text-sm">This tab is a placeholder for future Boost features.</p>
+        <div className="mt-3 text-xs text-slate-600">Purchased: {purchasedCourseIds.length} item{purchasedCourseIds.length !== 1 ? 's' : ''}</div>
       </div>
     </div>
   );

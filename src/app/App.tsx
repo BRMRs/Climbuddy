@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { SESSIONS, CALENDAR_EVENTS, VENUE_REVIEWS } from './data/mockData';
+import { SessionLog, CalendarEvent, VenueReview } from './types';
 import { ScreenType, TabType } from './types';
 
 // Layout
@@ -23,6 +25,18 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('gyms');
   const [activeScreen, setActiveScreen] = useState<ScreenType>('home');
   const [screenData, setScreenData] = useState<any>(null);
+  // Lifted shared state
+  const [sessions, setSessions] = useState<SessionLog[]>(SESSIONS);
+  const [calendarEvents, setCalendarEvents] = useState<CalendarEvent[]>(CALENDAR_EVENTS);
+  const [venueReviews, setVenueReviews] = useState<VenueReview[]>(VENUE_REVIEWS);
+  const [purchasedCourseIds, setPurchasedCourseIds] = useState<string[]>([]);
+
+  const addSession = (session: SessionLog) => {
+    setSessions(prev => [session, ...prev]);
+  };
+  const onPurchase = (courseId: string) => {
+    setPurchasedCourseIds(prev => [...prev, courseId]);
+  };
 
   const navigate = (screen: string, data?: any) => {
     setScreenData(data ?? null);
@@ -64,13 +78,13 @@ export default function App() {
               <div className="h-full overflow-y-auto custom-scrollbar">
                 {activeTab === 'gyms'     && <GymsTab onNavigate={navigate} switchTab={switchTab} />}
                 {activeTab === 'partners' && <PartnersTab onNavigate={navigate} switchTab={switchTab} />}
-                {activeTab === 'progress' && <ProgressTab onNavigate={navigate} switchTab={switchTab} />}
-                {activeTab === 'boost'     && <BoostTab onNavigate={navigate} switchTab={switchTab} />}
+                {activeTab === 'progress' && <ProgressTab onNavigate={navigate} switchTab={switchTab} sessions={sessions} calendarEvents={calendarEvents} addSession={addSession} />}
+                {activeTab === 'boost'     && <BoostTab onNavigate={navigate} switchTab={switchTab} purchasedCourseIds={purchasedCourseIds} onPurchase={onPurchase} />}
               </div>
             )}
 
             {/* Detail screens */}
-            {activeScreen === 'gymDetail'      && <GymDetailScreen gym={screenData} onBack={goHome} onNavigate={navigate} />}
+              {activeScreen === 'gymDetail'      && <GymDetailScreen gym={screenData} onBack={goHome} onNavigate={navigate} venueReviews={venueReviews} />}
             {activeScreen === 'gettingStarted' && <GettingStartedScreen onBack={goHome} />}
             {activeScreen === 'chat'           && <ChatScreen partner={screenData} onBack={goHome} />}
             {activeScreen === 'addPartner'     && <AddPartnerScreen onBack={goHome} />}

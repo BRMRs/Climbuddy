@@ -376,7 +376,7 @@ Max Concurrent: 6 (Wave 2)
   - Files: `src/app/components/layout/Modal.tsx`
   - Pre-commit: `npm run build`
 
-- [ ] 3. Add Boost Tab to BottomNav + Cross-Tab Navigation
+- [x] 3. Add Boost Tab to BottomNav + Cross-Tab Navigation
 
   **What to do**:
   - In `src/app/components/layout/BottomNav.tsx`:
@@ -456,7 +456,7 @@ Max Concurrent: 6 (Wave 2)
   - Files: `src/app/components/layout/BottomNav.tsx`, `src/app/App.tsx`, `src/app/components/screens/boost/BoostTab.tsx`
   - Pre-commit: `npm run build`
 
-- [ ] 4. Split ProgressTab into Sub-Components
+- [x] 4. Split ProgressTab into Sub-Components
 
   **What to do**:
   - Refactor `src/app/components/screens/journey/ProgressTab.tsx` (311 lines) into focused sub-components:

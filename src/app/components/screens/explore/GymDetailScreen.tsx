@@ -3,7 +3,7 @@ import { Star, ShieldCheck, MapPin, CheckCircle2, User, X, Eye, EyeOff, MessageC
 import { ScreenHeader } from '../../layout/ScreenHeader';
 import { GYM_COACHES, GYM_ROUTES, TIME_SLOTS, SLOT_BOOKERS } from '../../../data/mockData';
 import { S } from '../../../constants/styles';
-import { Gym, Route, SlotBooker } from '../../../types';
+import { Gym, Route, SlotBooker, VenueReview } from '../../../types';
 
 const AMENITY_ICONS: Record<string, string> = {
   Showers: '🚿', Lockers: '🔒', Cafe: '☕', 'Gear Rental': '👟', 'Yoga Room': '🧘', 'Pro Shop': '🛒',
@@ -42,13 +42,16 @@ function getNextDays(n: number) {
 }
 const DAYS = getNextDays(7);
 
+import { VenueReview } from '../../../types';
+
 interface GymDetailScreenProps {
   gym: Gym;
   onBack: () => void;
   onNavigate: (screen: string, data?: any) => void;
+  venueReviews?: VenueReview[];
 }
 
-export const GymDetailScreen: React.FC<GymDetailScreenProps> = ({ gym, onBack, onNavigate }) => {
+export const GymDetailScreen: React.FC<GymDetailScreenProps> = ({ gym, onBack, onNavigate, venueReviews }) => {
   const [tab, setTab] = useState<Tab>('Info');
   const [photoIdx, setPhotoIdx] = useState(0);
   // 'visit' = book the gym, coach name = book that coach, null = closed
@@ -218,6 +221,23 @@ export const GymDetailScreen: React.FC<GymDetailScreenProps> = ({ gym, onBack, o
             });
           }}
         />
+      )}
+
+      {/* Venue Reviews (lifted from App state) */}
+      {venueReviews && venueReviews.length > 0 && (
+        <section className="p-4 border-t-2 border-slate-200">
+          <h3 className="font-black text-lg text-slate-900 mb-2">Reviews</h3>
+          {venueReviews.map(r => (
+            <div key={r.id} className="mb-2 p-2 bg-white rounded-xl border border-slate-200">
+              <div className="flex items-center justify-between mb-1">
+                <span className="font-bold">{r.authorName}</span>
+                <span className="text-xs text-slate-500">{r.date}</span>
+              </div>
+              <div className="text-xs text-slate-600">Environment: {r.environment} · Design: {r.routeDesign} · Equipment: {r.equipment} · Value: {r.value}</div>
+              {r.text && <p className="mt-1 text-sm text-slate-700">{r.text}</p>}
+            </div>
+          ))}
+        </section>
       )}
     </div>
   );

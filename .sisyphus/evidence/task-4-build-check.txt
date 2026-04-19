@@ -1,0 +1,5 @@
+dist/index.html                   0.42 kB │ gzip:  0.28 kB
+dist/assets/index-DuhCLWx-.css   33.57 kB │ gzip:  6.52 kB
+dist/assets/index-MV0SvYMa.js   246.77 kB │ gzip: 69.27 kB
+
+✓ built in 523ms
