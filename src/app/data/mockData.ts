@@ -1,4 +1,4 @@
-import { Gym, Partner, Coach, Badge, Route, SlotBooker, PartnerRating, MyPreferences, ChatHistoryItem } from '../types';
+import { Gym, Partner, Coach, Badge, Route, SlotBooker, PartnerRating, MyPreferences, ChatHistoryItem, Course, CalendarEvent, VenueReview, DailyTask, SessionLog, CoachCourse } from '../types';
 
 export const PORTRAITS = {
   emma:  "https://images.unsplash.com/photo-1546872041-03da29ccc3f3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
@@ -61,18 +61,18 @@ export const GYMS_DATA: Gym[] = [
 
 export const GYM_COACHES: Record<string, Coach[]> = {
   g1: [
-    { name: 'Bob',  rating: '4.9', specialty: 'Footwork' },
-    { name: 'Jack', rating: '4.7', specialty: 'Lead' },
-    { name: 'John', rating: '4.8', specialty: 'Bouldering' },
+    { id: 'c1', name: 'Bob',  rating: '4.9', specialty: 'Footwork' },
+    { id: 'c2', name: 'Jack', rating: '4.7', specialty: 'Lead' },
+    { id: 'c3', name: 'John', rating: '4.8', specialty: 'Bouldering' },
   ],
   g2: [
-    { name: 'Sara', rating: '4.6', specialty: 'Yoga + Climb' },
-    { name: 'Liam', rating: '4.5', specialty: 'Beginner' },
+    { id: 'c4', name: 'Sara', rating: '4.6', specialty: 'Yoga + Climb' },
+    { id: 'c5', name: 'Liam', rating: '4.5', specialty: 'Beginner' },
   ],
   g3: [
-    { name: 'Kai',  rating: '4.9', specialty: 'Competition' },
-    { name: 'Mia',  rating: '4.8', specialty: 'Lead' },
-    { name: 'Rex',  rating: '4.7', specialty: 'Strength' },
+    { id: 'c6', name: 'Kai',  rating: '4.9', specialty: 'Competition' },
+    { id: 'c7', name: 'Mia',  rating: '4.8', specialty: 'Lead' },
+    { id: 'c8', name: 'Rex',  rating: '4.7', specialty: 'Strength' },
   ],
 };
 
@@ -202,10 +202,98 @@ export const CHAT_HISTORY: ChatHistoryItem[] = [
 ];
 
 export const BADGES: Badge[] = [
-  { id: 'b1', label: 'First Climb!',  icon: '🧗', unlocked: true,  desc: 'Completed your first climb.' },
-  { id: 'b2', label: 'V1 Sent',       icon: '✅', unlocked: true,  desc: 'Sent your first V1 route.' },
-  { id: 'b3', label: 'Social Bee',    icon: '🤝', unlocked: true,  desc: 'Matched with a partner.' },
+  { id: 'b1', label: 'First Climb!',  icon: '🧗', unlocked: true, earnedDate: 'Mar 15, 2025',  desc: 'Completed your first climb.' },
+  { id: 'b2', label: 'V1 Sent',       icon: '✅', unlocked: true, earnedDate: 'Mar 18, 2025',  desc: 'Sent your first V1 route.' },
+  { id: 'b3', label: 'Social Bee',    icon: '🤝', unlocked: true, earnedDate: 'Mar 20, 2025',  desc: 'Matched with a partner.' },
   { id: 'b4', label: '5 Sessions',    icon: '🔥', unlocked: false, desc: 'Log 5 climbing sessions.' },
   { id: 'b5', label: 'V3 Crusher',    icon: '💥', unlocked: false, desc: 'Send a V3 route.' },
   { id: 'b6', label: 'Video Star',    icon: '🎬', unlocked: false, desc: 'Upload a climbing video.' },
+];
+
+export const SESSIONS: SessionLog[] = [
+  {
+    date: '2025-04-12',
+    routes: 2,
+    level: 'V2',
+    duration: 60,
+    heartRate: 142,
+    calories: 520,
+    notes: 'Nice session',
+    videoUrl: 'https://example.com/video1.mp4',
+    fatigueLevel: 3,
+  },
+  {
+    date: '2025-04-18',
+    routes: 3,
+    level: 'V3',
+    duration: 70,
+    heartRate: 150,
+    calories: 600,
+    notes: 'Pushed hard',
+    videoUrl: 'https://example.com/video2.mp4',
+    fatigueLevel: 4,
+  }
+];
+
+export const COURSES: Course[] = [
+  { id: 'crs-warmup', title: 'Warm-Up Routine', thumbnail: '🔥', duration: '15 min', type: 'free', description: 'Gentle warm-up sequence to prep the body', category: 'Warm-up', coachId: 'c1' },
+  { id: 'crs-stretch', title: 'Essential Stretching', thumbnail: '🧘', duration: '20 min', type: 'free', description: 'Full-body stretching for mobility', category: 'Flexibility', coachId: 'c2' },
+  { id: 'crs-breathe', title: 'Breathing Techniques', thumbnail: '💨', duration: '10 min', type: 'free', description: 'Breath control for performance', category: 'Breath', coachId: 'c3' },
+  { id: 'crs-plateau', title: 'Plateau Breaker: Core Strength', thumbnail: '💪', duration: '25 min', type: 'paid', price: 9.99, description: 'Core strength to break plateaus', category: 'Strength', coachId: 'c4' },
+  { id: 'crs-finger', title: 'Finger Strength Training', thumbnail: '🖐️', duration: '15 min', type: 'paid', price: 14.99, description: 'Finger strength for advanced climbers', category: 'Grip', coachId: 'c5' },
+  { id: 'crs-footwork', title: 'Advanced Footwork Drills', thumbnail: '👣', duration: '20 min', type: 'paid', price: 12.99, description: 'Technique for precise footwork', category: 'Technique', coachId: 'c6' },
+];
+
+export const CALENDAR_EVENTS: CalendarEvent[] = [
+  { id: 'ev1', date: 'Apr 5', type: 'booking', gymId: 'g1', isExpired: true, isReviewed: false },
+  { id: 'ev2', date: 'Apr 10', type: 'booking', gymId: 'g2', isExpired: true, isReviewed: false },
+  { id: 'ev3', date: 'Apr 25', type: 'booking', gymId: 'g1', isExpired: false, isReviewed: false },
+  { id: 'ev4', date: 'Apr 30', type: 'booking', gymId: 'g3', isExpired: false, isReviewed: false },
+  { id: 'ev5', date: 'Apr 22', type: 'social', gymName: 'Peak Bouldering', partnerName: 'Marcus Li', isExpired: false, isReviewed: false },
+  { id: 'ev6', date: 'Apr 28', type: 'personal', gymName: 'The Crux Gym', note: 'Try new routes at gym', isExpired: false, isReviewed: false },
+];
+
+export const VENUE_REVIEWS: VenueReview[] = [
+  { id: 'vr1', gymId: 'g1', authorName: 'Alice', date: 'Apr 12', environment: 5, routeDesign: 4, equipment: 4, value: 5, text: 'Great atmosphere and solid routes.' },
+  { id: 'vr2', gymId: 'g1', authorName: 'Bob', date: 'Apr 01', environment: 4, routeDesign: 3, equipment: 4, value: 4, text: 'Wide range of holds and clean gym.' },
+  { id: 'vr3', gymId: 'g2', authorName: 'Mika', date: 'Mar 28', environment: 3, routeDesign: 4, equipment: 3, value: 3 },
+  { id: 'vr4', gymId: 'g2', authorName: 'Liam', date: 'Apr 06', environment: 5, routeDesign: 5, equipment: 5, value: 5, text: 'Top notch gear and staff.' },
+];
+
+export const DAILY_PLAN: DailyTask[] = [
+  { id: 'dt1', title: 'Warm-Up Routine', duration: '15 min', type: 'free', courseId: 'crs-warmup', completed: true },
+  { id: 'dt2', title: 'Essential Stretching', duration: '20 min', type: 'free', courseId: 'crs-stretch', completed: true },
+  { id: 'dt3', title: 'Plateau Breaker: Core Strength', duration: '25 min', type: 'paid', courseId: 'crs-plateau', completed: false },
+  { id: 'dt4', title: 'Coach Session: Advanced Footwork', duration: '60 min', type: 'coach', courseId: 'cc2', completed: false },
+  { id: 'dt5', title: 'General Training Reminder', duration: '5 min', type: 'free', completed: false },
+];
+
+export const COACH_COURSES: CoachCourse[] = [
+  { id: 'cc1', coachId: 'c1', courseId: 'crs-plateau' },
+  { id: 'cc2', coachId: 'c4', courseId: 'crs-footwork' },
+];
+
+export const SESSIONS: SessionLog[] = [
+  {
+    date: '2025-04-12',
+    routes: 2,
+    level: 'V2',
+    duration: 60,
+    heartRate: 142,
+    calories: 520,
+    notes: 'Nice session',
+    videoUrl: 'https://example.com/video1.mp4',
+    fatigueLevel: 3,
+  },
+  {
+    date: '2025-04-18',
+    routes: 3,
+    level: 'V3',
+    duration: 70,
+    heartRate: 150,
+    calories: 600,
+    notes: 'Pushed hard',
+    videoUrl: 'https://example.com/video2.mp4',
+    fatigueLevel: 4,
+  }
 ];

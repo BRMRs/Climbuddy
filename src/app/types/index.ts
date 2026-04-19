@@ -13,6 +13,7 @@ export interface Gym {
 }
 
 export interface Coach {
+  id: string;
   name: string;
   rating: string;
   specialty: string;
@@ -52,6 +53,7 @@ export interface Badge {
   label: string;
   icon: string;
   unlocked: boolean;
+  earnedDate?: string;
   desc: string;
 }
 
@@ -81,6 +83,8 @@ export interface SessionLog {
   heartRate: number;
   calories: number;
   notes: string;
+  videoUrl?: string;
+  fatigueLevel?: number;
 }
 
 export interface PartnerRating {
@@ -120,6 +124,58 @@ export type ScreenType =
   | 'chat'
   | 'addPartner'
   | 'gettingStarted'
-  | 'partnerProfile';
+  | 'partnerProfile'
+  | 'courseDetail';
 
-export type TabType = 'gyms' | 'partners' | 'progress';
+export type TabType = 'gyms' | 'partners' | 'progress' | 'boost';
+
+export interface Course {
+  id: string;
+  title: string;
+  thumbnail: string;
+  duration: string;
+  type: 'free' | 'paid';
+  price?: number;
+  description: string;
+  category: string;
+  coachId?: string;
+}
+
+export interface CalendarEvent {
+  id: string;
+  date: string;
+  type: 'booking' | 'social' | 'personal';
+  gymId?: string;
+  gymName?: string;
+  partnerName?: string;
+  note?: string;
+  isExpired: boolean;
+  isReviewed: boolean;
+}
+
+export interface VenueReview {
+  id: string;
+  gymId: string;
+  authorName: string;
+  date: string;
+  environment: number;
+  routeDesign: number;
+  equipment: number;
+  value: number;
+  text?: string;
+}
+
+export interface DailyTask {
+  id: string;
+  title: string;
+  duration: string;
+  type: 'free' | 'paid' | 'coach';
+  courseId?: string;
+  completed: boolean;
+}
+
+export interface CoachCourse {
+  id: string;
+  coachId: string;
+  courseId: string;
+}
