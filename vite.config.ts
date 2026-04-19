@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [react()],
   base: '/CPT208_C2-3/Climbuddy/',
   build: {
-    outDir: 'dist',
+    outDir: 'dist/Climbuddy',
     sourcemap: false,
   },
 });
