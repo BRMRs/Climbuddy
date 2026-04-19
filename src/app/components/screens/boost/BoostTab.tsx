@@ -12,9 +12,6 @@ interface BoostTabProps {
 
 export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab, purchasedCourseIds, onPurchase }) => {
   const [tasks, setTasks] = useState<DailyTask[]>(DAILY_PLAN);
-  const [aiUploading, setAiUploading] = useState(false);
-  const [aiUploadProgress, setAiUploadProgress] = useState(0);
-  const [aiShowResult, setAiShowResult] = useState(false);
   const freeCourses = COURSES.filter(c => c.type === 'free');
   const paidCourses = COURSES.filter(c => c.type === 'paid');
   const allCoaches = Object.values(GYM_COACHES).flat();
@@ -96,74 +93,20 @@ export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab, purch
         })}
       </div>
 
-      <div className="border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] rounded-2xl p-4 bg-indigo-50">
-        <h2 className="text-xl font-black text-slate-900 mb-1">🎥 AI Technique Analysis</h2>
-        <p className="text-slate-500 text-sm mb-3">Upload your climbing video for professional technique feedback</p>
-
-        {!aiShowResult && !aiUploading && (
-          <button
-            onClick={() => {
-              setAiUploading(true);
-              setAiUploadProgress(0);
-              const interval = setInterval(() => {
-                setAiUploadProgress(p => {
-                  if (p >= 100) {
-                    clearInterval(interval);
-                    setAiUploading(false);
-                    setAiShowResult(true);
-                    return 100;
-                  }
-                  return p + 10;
-                });
-              }, 200);
-            }}
-            className="w-full border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] active:translate-y-1 active:translate-x-1 active:shadow-none bg-indigo-500 text-white font-black py-3 rounded-xl text-sm"
-          >
-            📤 Upload Climbing Video
-          </button>
-        )}
-
-        {aiUploading && (
-          <div>
-            <p className="text-sm text-slate-600 mb-2">Analyzing your technique...</p>
-            <div className="h-3 bg-slate-200 rounded-full overflow-hidden border border-slate-300">
-              <div className="h-full bg-indigo-500 rounded-full transition-all" style={{ width: `${aiUploadProgress}%` }} />
-            </div>
-            <p className="text-xs text-slate-400 mt-1 text-right">{aiUploadProgress}%</p>
-          </div>
-        )}
-
-        {aiShowResult && (
-          <div className="flex flex-col gap-3">
-            <p className="text-sm font-bold text-green-700">✅ Analysis complete!</p>
-            {[
-              { label: 'Footwork', score: 7, color: 'bg-teal-500' },
-              { label: 'Body Position', score: 6, color: 'bg-blue-500' },
-            ].map(item => (
-              <div key={item.label} className="flex items-center gap-3">
-                <span className="text-sm font-bold text-slate-700 w-28">{item.label}</span>
-                <div className="flex-1 h-2 bg-slate-200 rounded-full overflow-hidden">
-                  <div className={`h-full ${item.color} rounded-full`} style={{ width: `${item.score * 10}%` }} />
-                </div>
-                <span className="text-sm font-black text-slate-900">{item.score}/10</span>
-              </div>
-            ))}
-            <div className="bg-amber-50 border-2 border-amber-300 rounded-xl p-3 mt-1">
-              <p className="text-xs font-black text-amber-800">Next Focus</p>
-              <p className="text-sm text-amber-700 mt-0.5">Hip rotation on overhangs</p>
-            </div>
-            <button
-              onClick={() => {
-                setAiShowResult(false);
-                setAiUploadProgress(0);
-              }}
-              className="text-xs text-slate-400 underline text-center"
-            >
-              Analyze another video
-            </button>
-          </div>
-        )}
-      </div>
+      {/* AI Coach Chat */}
+      <button
+        onClick={() => onNavigate('aiCoachChat')}
+        className="w-full border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] rounded-2xl p-4 bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center gap-4 active:translate-y-1 active:translate-x-1 active:shadow-none"
+      >
+        <div className="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center">
+          <span className="text-3xl">🤖</span>
+        </div>
+        <div className="flex-1 text-left">
+          <p className="font-black text-white text-lg">AI Coach Chat</p>
+          <p className="text-indigo-100 text-xs font-semibold">Ask anything, get climbing tips</p>
+        </div>
+        <span className="text-white text-2xl">→</span>
+      </button>
 
       <div className="flex flex-col gap-3">
         <h2 className="text-xl font-black text-slate-900">Free Training</h2>
@@ -226,21 +169,6 @@ export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab, purch
           })}
         </div>
       </div>
-
-      {/* AI Coach Chat */}
-      <button
-        onClick={() => onNavigate('aiCoachChat')}
-        className="w-full border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] rounded-2xl p-4 bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center gap-4 active:translate-y-1 active:translate-x-1 active:shadow-none"
-      >
-        <div className="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center">
-          <span className="text-3xl">🤖</span>
-        </div>
-        <div className="flex-1 text-left">
-          <p className="font-black text-white text-lg">AI Coach Chat</p>
-          <p className="text-indigo-100 text-xs font-semibold">Ask anything, get climbing tips</p>
-        </div>
-        <span className="text-white text-2xl">→</span>
-      </button>
 
       {/* Train with a Coach Section */}
       <div className="flex flex-col gap-3">
