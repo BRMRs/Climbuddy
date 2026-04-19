@@ -125,10 +125,12 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
                 </div>
                 <div className="flex gap-0.5 justify-center mt-0.5 h-1.5">
                   {dayEvents.map((e, i) => {
-                    if (i > 2) return null; // Max 3 dots
-                    let dotColor = 'bg-slate-400';
-                    if (e.type === 'booking') dotColor = 'bg-teal-500';
-                    if (e.type === 'social') dotColor = 'bg-orange-500';
+                    if (i > 2) return null;
+                    const dotColor =
+                      e.type === 'booking' ? 'bg-teal-500' :
+                      e.type === 'social' ? 'bg-orange-500' :
+                      e.type === 'coach' ? 'bg-purple-500' :
+                      'bg-slate-400';
                     return <div key={i} className={`w-1.5 h-1.5 rounded-full ${dotColor}`} />;
                   })}
                 </div>
@@ -138,53 +140,67 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
         </div>
       </div>
 
-      {selectedDay && (
+          {selectedDay && (
         <div className="flex flex-col gap-3 animate-in fade-in slide-in-from-top-2 duration-200">
           <h4 className="font-black text-slate-900 px-1">Events for {monthNames[month]} {selectedDay}</h4>
           {eventsForDay(selectedDay).length > 0 ? (
-            eventsForDay(selectedDay).map(event => (
-              <div key={event.id} className={`bg-white rounded-2xl p-3 flex flex-col gap-2 ${S.border} ${S.shadow}`}>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    {event.type === 'booking' && <span className="text-lg">🏠</span>}
-                    {event.type === 'social' && <span className="text-lg">👥</span>}
-                    {event.type === 'personal' && <span className="text-lg">📝</span>}
-                    <span className="font-bold text-slate-900">
-                      {event.type === 'booking' && getGymName(event)}
-                      {event.type === 'social' && event.partnerName}
-                      {event.type === 'personal' && 'Personal Note'}
+            eventsForDay(selectedDay).map(event => {
+              const cardBorder =
+                event.type === 'booking' ? 'border-teal-500' :
+                event.type === 'social' ? 'border-orange-500' :
+                event.type === 'coach' ? 'border-purple-500' :
+                'border-slate-400';
+              return (
+                <div key={event.id} className={`bg-white rounded-2xl p-3 flex flex-col gap-2 ${S.border} ${S.shadow} ${cardBorder}`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      {event.type === 'booking' && <span className="text-lg">🏠</span>}
+                      {event.type === 'social' && <span className="text-lg">👥</span>}
+                      {event.type === 'coach' && <span className="text-lg">👨‍🏫</span>}
+                      <span className="font-bold text-slate-900">
+                        {event.type === 'booking' && 'Solo Session'}
+                        {event.type === 'social' && event.partnerName}
+                        {event.type === 'coach' && event.coachName}
+                      </span>
+                    </div>
+                    <span className={`text-xs font-black px-2 py-1 rounded-full border ${
+                      event.type === 'booking' ? 'bg-teal-50 text-teal-700 border-teal-200' :
+                      event.type === 'social' ? 'bg-orange-50 text-orange-700 border-orange-200' :
+                      event.type === 'coach' ? 'bg-purple-50 text-purple-700 border-purple-200' :
+                      'bg-slate-50 text-slate-700 border-slate-200'
+                    }`}>
+                      {event.type === 'booking' && 'Solo'}
+                      {event.type === 'social' && 'Partner'}
+                      {event.type === 'coach' && 'Coach'}
                     </span>
                   </div>
-                  {event.type === 'social' && (
-                    <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-full border border-blue-200">
-                      🔄 Synced
-                    </span>
-                  )}
+
+                  <div className="ml-7 flex flex-col gap-1">
+                    <p className="text-sm font-bold text-slate-700">
+                      🕐 {event.slot || 'Time TBD'} · 📍 {getGymName(event)}
+                    </p>
+
+                    {event.type === 'booking' && event.isExpired && !event.isReviewed && (
+                      <button
+                        onClick={() => {
+                          onWriteReview?.(event);
+                          setReviewingEvent(event);
+                        }}
+                        className={`mt-1 bg-slate-900 text-white text-xs font-bold py-2 px-4 rounded-xl self-start ${S.press}`}
+                      >
+                        Write Review
+                      </button>
+                    )}
+
+                    {event.type === 'booking' && event.isExpired && event.isReviewed && (
+                      <span className="mt-1 text-green-600 text-sm font-bold flex items-center gap-1">
+                        Reviewed ✓
+                      </span>
+                    )}
+                  </div>
                 </div>
-                
-                {event.type === 'personal' && event.note && (
-                  <p className="text-sm font-medium text-slate-600 ml-7">{event.note}</p>
-                )}
-
-                {event.type === 'booking' && event.isExpired && !event.isReviewed && (
-                  <button 
-                    onClick={() => {
-                      onWriteReview?.(event);
-                      setReviewingEvent(event);
-                    }}
-                    className={`mt-1 ml-7 bg-slate-900 text-white text-xs font-bold py-2 px-4 rounded-xl self-start ${S.press}`}
-                  >
-                    Write Review
-                  </button>
-                )}
-
-                {event.type === 'booking' && event.isExpired && event.isReviewed && (
-                  <span className="mt-1 ml-7 text-green-600 text-sm font-bold flex items-center gap-1">
-                    Reviewed ✓
-                  </span>
-                )}
-              </div>
-            ))
+              );
+            })
           ) : (
             <p className="text-slate-400 text-sm font-semibold text-center py-4 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
               No climbs planned

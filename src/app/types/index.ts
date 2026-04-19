@@ -152,10 +152,12 @@ export interface Course {
 export interface CalendarEvent {
   id: string;
   date: string;
-  type: 'booking' | 'social' | 'personal';
+  type: 'booking' | 'social' | 'personal' | 'coach';
   gymId?: string;
   gymName?: string;
   partnerName?: string;
+  coachName?: string;
+  slot?: string;
   note?: string;
   isExpired: boolean;
   isReviewed: boolean;
