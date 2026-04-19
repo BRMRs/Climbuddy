@@ -326,12 +326,16 @@ export const COURSES: Course[] = [
 ];
 
 export const CALENDAR_EVENTS: CalendarEvent[] = [
-  { id: 'ev1', date: 'Apr 5', type: 'booking', gymId: 'g1', slot: '14:00', isExpired: true, isReviewed: false },
-  { id: 'ev2', date: 'Apr 10', type: 'booking', gymId: 'g2', slot: '10:00', isExpired: true, isReviewed: false },
-  { id: 'ev3', date: 'Apr 25', type: 'booking', gymId: 'g1', slot: '16:00', isExpired: false, isReviewed: false },
-  { id: 'ev4', date: 'Apr 30', type: 'booking', gymId: 'g3', slot: '19:00', isExpired: false, isReviewed: false },
-  { id: 'ev5', date: 'Apr 22', type: 'social', gymId: 'g1', gymName: 'Peak Bouldering', partnerName: 'Marcus Li', slot: '15:00', isExpired: false, isReviewed: false },
-  { id: 'ev6', date: 'Apr 28', type: 'coach', gymId: 'g1', gymName: 'Peak Bouldering', coachName: 'Bob', slot: '11:00', isExpired: false, isReviewed: false },
+  { id: 'ev1', date: 'Apr 2', type: 'booking', gymId: 'g1', slot: '09:00', isExpired: true, isReviewed: true },
+  { id: 'ev2', date: 'Apr 5', type: 'booking', gymId: 'g2', slot: '14:00', isExpired: true, isReviewed: false },
+  { id: 'ev3', date: 'Apr 8', type: 'social', gymId: 'g1', gymName: 'Peak Bouldering', partnerName: 'Alice Chen', slot: '10:00', isExpired: true, isReviewed: false },
+  { id: 'ev4', date: 'Apr 12', type: 'coach', gymId: 'g1', gymName: 'Peak Bouldering', coachName: 'Bob', slot: '16:00', isExpired: true, isReviewed: false },
+  { id: 'ev5', date: 'Apr 15', type: 'booking', gymId: 'g3', slot: '19:30', isExpired: true, isReviewed: false },
+  { id: 'ev6', date: 'Apr 18', type: 'social', gymId: 'g2', gymName: 'The Crux Gym', partnerName: 'Marcus Li', slot: '15:00', isExpired: false, isReviewed: false },
+  { id: 'ev7', date: 'Apr 22', type: 'booking', gymId: 'g1', slot: '11:00', isExpired: false, isReviewed: false },
+  { id: 'ev8', date: 'Apr 25', type: 'coach', gymId: 'g2', gymName: 'The Crux Gym', coachName: 'Sara', slot: '09:30', isExpired: false, isReviewed: false },
+  { id: 'ev9', date: 'Apr 28', type: 'social', gymId: 'g3', gymName: 'Iron Walls', partnerName: 'David Kim', slot: '14:00', isExpired: false, isReviewed: false },
+  { id: 'ev10', date: 'Apr 30', type: 'booking', gymId: 'g1', slot: '17:00', isExpired: false, isReviewed: false },
 ];
 
 export const VENUE_REVIEWS: VenueReview[] = [
