@@ -43,8 +43,6 @@ function getNextDays(n: number) {
 }
 const DAYS = getNextDays(7);
 
-import { VenueReview } from '../../../types';
-
 interface GymDetailScreenProps {
   gym: Gym;
   onBack: () => void;
@@ -60,6 +58,20 @@ export const GymDetailScreen: React.FC<GymDetailScreenProps> = ({ gym, onBack, o
 
   const coaches = GYM_COACHES[gym.id] ?? [];
   const routes  = GYM_ROUTES[gym.id]  ?? [];
+
+  // ---------------------------------------------------------------------------
+  // Reviews processing for the Reviews tab
+  // ---------------------------------------------------------------------------
+  const venueReviewsList = venueReviews ?? [];
+  const gymReviews = venueReviewsList.filter(r => r.gymId === gym.id);
+  const reviewsCount = gymReviews.length;
+  const overallAvg = gymReviews.length > 0
+    ? gymReviews.reduce((sum, r) => sum + ((r.environment + r.routeDesign + r.equipment + r.value) / 4), 0) / gymReviews.length
+    : 0;
+  const envAvg = gymReviews.length > 0 ? gymReviews.reduce((sum, r) => sum + r.environment, 0) / gymReviews.length : 0;
+  const routeAvg = gymReviews.length > 0 ? gymReviews.reduce((sum, r) => sum + r.routeDesign, 0) / gymReviews.length : 0;
+  const equipAvg = gymReviews.length > 0 ? gymReviews.reduce((sum, r) => sum + r.equipment, 0) / gymReviews.length : 0;
+  const valueAvg = gymReviews.length > 0 ? gymReviews.reduce((sum, r) => sum + r.value, 0) / gymReviews.length : 0;
 
   return (
     <div className="flex flex-col h-full bg-white animate-in slide-in-from-right duration-300">
