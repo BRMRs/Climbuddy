@@ -1,1 +1,5 @@
-- LSP diagnostics could not be executed because `typescript-language-server` is not installed in this environment.
+- Issue: ReviewOverlay in PartnersTab at line ~802 not migrated.
+- Resolution: Migrated ReviewOverlay usage to shared Modal; removed local wrapper and updated imports/usages.
+- Status: Resolved and build verified (vite) successfully.
+- Issue: TypeScript LSP diagnostics could not be executed in this environment because `typescript-language-server` is not installed.
+- Workaround: Used project build (`vite build`) as verification gate; build completed successfully.

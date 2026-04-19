@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { TrendingUp, Settings, Heart, Sparkles, Award, Video, CheckCircle2, X } from 'lucide-react';
 import { PORTRAITS, BADGES } from '../../../data/mockData';
 import { S } from '../../../constants/styles';
-import { Badge, SessionLog, CalendarEvent } from '../../../types';
+import { Badge, SessionLog, CalendarEvent, VenueReview } from '../../../types';
 import ProfileCard from './ProfileCard';
 import BadgeGrid from './BadgeGrid';
 import HealthStats from './HealthStats';
@@ -17,7 +17,9 @@ export const ProgressTab: React.FC<{
   sessions: SessionLog[];
   calendarEvents: CalendarEvent[];
   addSession: (session: SessionLog) => void;
-}> = ({ onNavigate, switchTab, sessions, calendarEvents, addSession }) => {
+  addReview: (review: VenueReview) => void;
+  markEventReviewed: (eventId: string) => void;
+}> = ({ onNavigate, switchTab, sessions, calendarEvents, addSession, addReview, markEventReviewed }) => {
   const [heartRate, setHeartRate] = useState(142);
   const [badges, setBadges] = useState<Badge[]>(BADGES);
   const [showLogModal, setShowLogModal] = useState(false);
@@ -75,7 +77,11 @@ export const ProgressTab: React.FC<{
       <AICoachCard onUpload={() => { setShowAIModal(true); simulateUpload(); }} />
 
       {/* Calendar Section */}
-      <CalendarSection calendarEvents={calendarEvents} onWriteReview={undefined} />
+      <CalendarSection
+        calendarEvents={calendarEvents}
+        addReview={addReview}
+        markEventReviewed={markEventReviewed}
+      />
 
       {/* Badges */}
       <BadgeGrid badges={badges} onSelectBadge={setSelectedBadge} selectedBadge={selectedBadge} />

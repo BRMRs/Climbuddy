@@ -36,6 +36,15 @@ export default function App() {
   const addSession = (session: SessionLog) => {
     setSessions(prev => [session, ...prev]);
   };
+
+  const addReview = (review: VenueReview) => {
+    setVenueReviews(prev => [...prev, review]);
+  };
+
+  const markEventReviewed = (eventId: string) => {
+    setCalendarEvents(prev => prev.map(e => (e.id === eventId ? { ...e, isReviewed: true } : e)));
+  };
+
   const onPurchase = (courseId: string) => {
     setPurchasedCourseIds(prev => [...prev, courseId]);
   };
@@ -80,7 +89,17 @@ export default function App() {
               <div className="h-full overflow-y-auto custom-scrollbar">
                 {activeTab === 'gyms'     && <GymsTab onNavigate={navigate} switchTab={switchTab} />}
                 {activeTab === 'partners' && <PartnersTab onNavigate={navigate} switchTab={switchTab} />}
-                {activeTab === 'progress' && <ProgressTab onNavigate={navigate} switchTab={switchTab} sessions={sessions} calendarEvents={calendarEvents} addSession={addSession} />}
+                {activeTab === 'progress' && (
+                  <ProgressTab
+                    onNavigate={navigate}
+                    switchTab={switchTab}
+                    sessions={sessions}
+                    calendarEvents={calendarEvents}
+                    addSession={addSession}
+                    addReview={addReview}
+                    markEventReviewed={markEventReviewed}
+                  />
+                )}
                 {activeTab === 'boost'     && <BoostTab onNavigate={navigate} switchTab={switchTab} purchasedCourseIds={purchasedCourseIds} onPurchase={onPurchase} />}
               </div>
             )}

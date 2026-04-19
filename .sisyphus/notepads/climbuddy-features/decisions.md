@@ -1,1 +1,5 @@
-- Kept `onOpenLogModal` prop support in SessionHistory for backward compatibility, but prioritized local modal flow when `addSession` is provided to satisfy immediate-add requirement.
+- Decision: Standardize modal usage by migrating all screen modals to the shared Modal component located at src/app/components/layout/Modal.tsx.
+- Rationale: Ensures consistent UX (fixed above bottom nav), simpler maintenance, and fewer divergent implementations.
+- Outcome: Local ReviewOverlay removed from PartnersTab.tsx; Booking/GymDetail and ProgressTab modal wrappers migrated to shared Modal.
+- Decision: Keep review write entry-point scoped to Calendar expired bookings only; no additional review creation surfaces added.
+- Rationale: Matches product constraint and keeps review eligibility coupled to completed booking lifecycle (`isExpired && !isReviewed`).

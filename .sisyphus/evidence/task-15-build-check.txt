@@ -1,0 +1,7 @@
+Command: ./node_modules/.bin/vite build 2>&1 | tail -5
+
+dist/index.html                   0.42 kB │ gzip:  0.28 kB
+dist/assets/index-ByoweUot.css   36.77 kB │ gzip:  6.95 kB
+dist/assets/index-CnQnfYMT.js   276.88 kB │ gzip: 75.78 kB
+
+✓ built in 533ms

@@ -1,1 +1,2 @@
-- SessionHistory still depends on parent state ordering for visual top insertion after `addSession`; component triggers callback immediately but does not own `sessions` ordering logic.
+- None currently outstanding after ReviewOverlay migration; build passes.
+- Environment gap: `typescript-language-server` missing, so LSP diagnostics clean-check is currently blocked until tooling is installed.
