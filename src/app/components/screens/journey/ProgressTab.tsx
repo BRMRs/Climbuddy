@@ -23,10 +23,7 @@ export const ProgressTab: React.FC<{
   const [heartRate, setHeartRate] = useState(142);
   const [badges, setBadges] = useState<Badge[]>(BADGES);
   const [showLogModal, setShowLogModal] = useState(false);
-  const [showAIModal, setShowAIModal] = useState(false);
   const [selectedBadge, setSelectedBadge] = useState<Badge | null>(null);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [uploading, setUploading] = useState(false);
 
   // Animated heart rate
   useEffect(() => {
@@ -37,18 +34,6 @@ export const ProgressTab: React.FC<{
   }, []);
 
   const hrColor = heartRate > 155 ? 'text-red-500' : heartRate > 140 ? 'text-orange-500' : 'text-rose-500';
-
-  const simulateUpload = () => {
-    if (uploading) return;
-    setUploading(true);
-    setUploadProgress(0);
-    const id = setInterval(() => {
-      setUploadProgress(p => {
-        if (p >= 100) { clearInterval(id); return 100; }
-        return p + Math.floor(Math.random() * 18) + 5;
-      });
-    }, 300);
-  };
 
   // Local log modal actions use parent-provided addSession via callback
   const handleAddSession = (session: SessionLog) => {
@@ -106,43 +91,7 @@ export const ProgressTab: React.FC<{
       {/* Log Session Modal */}
       {showLogModal && <LogSessionModal onClose={() => setShowLogModal(false)} addSession={handleAddSession} />}
 
-      {/* AI Upload Modal */}
-  {showAIModal && (
-        <Modal isOpen={true} onClose={() => { setShowAIModal(false); setUploading(false); setUploadProgress(0); }} title="AI Analysis">
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-6 h-6 text-indigo-600 fill-indigo-200" strokeWidth={2.5} />
-              <h3 className="font-black text-xl text-slate-900">AI Analysis</h3>
-            </div>
-            {uploadProgress < 100 ? (
-              <>
-                <p className="font-semibold text-slate-500 text-sm">Uploading your video...</p>
-                <div className={`w-full h-3 bg-slate-100 rounded-full overflow-hidden ${S.border}`}>
-                  <div className="h-full bg-gradient-to-r from-indigo-400 to-indigo-600 rounded-full transition-all duration-300"
-                    style={{ width: `${Math.min(uploadProgress, 100)}%` }} />
-                </div>
-                <p className="font-black text-indigo-600 text-center">{Math.min(uploadProgress, 100)}%</p>
-              </>
-            ) : (
-              <div className="flex flex-col gap-3">
-                <div className="flex items-center gap-2 text-green-600 font-black">
-                  <CheckCircle2 className="w-5 h-5" /> Analysis Complete!
-                </div>
-                {[
-                  ['👟', 'Footwork', 'You\'re using your toes correctly on slopers. Work on smearing technique.'],
-                  ['💪', 'Body Position', 'Great hip rotation on overhangs. Keep your hips close to the wall.'],
-                  ['🎯', 'Next Focus', 'Try flagging on balance moves — it will help you on V3s.'],
-                ].map(([icon, title, desc]) => (
-                  <div key={title} className={`bg-[#F0F9FF] rounded-2xl p-4 ${S.border} ${S.shadowSm}`}>
-                    <p className="font-black text-slate-900 mb-1">{icon} {title}</p>
-                    <p className="font-semibold text-slate-600 text-xs leading-relaxed">{desc}</p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </Modal>
-      )}
+
     </div>
   );
 };
