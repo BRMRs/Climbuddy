@@ -90,6 +90,15 @@
       "agent": "Sisyphus-Junior",
       "category": "visual-engineering",
       "updated_at": "2026-04-19T10:58:42.977Z"
+    },
+    "todo:10": {
+      "task_key": "todo:10",
+      "task_label": "10",
+      "task_title": "Gym Detail — Review Display Section (Read-Only)",
+      "session_id": "ses_25a9a7b8effe1t7soAad4jJg0X",
+      "agent": "Sisyphus-Junior",
+      "category": "quick",
+      "updated_at": "2026-04-19T11:17:52.152Z"
     }
   }
 }

@@ -264,22 +264,7 @@ export const GymDetailScreen: React.FC<GymDetailScreenProps> = ({ gym, onBack, o
         />
       )}
 
-      {/* Venue Reviews (lifted from App state) */}
-      {venueReviews && venueReviews.length > 0 && (
-        <section className="p-4 border-t-2 border-slate-200">
-          <h3 className="font-black text-lg text-slate-900 mb-2">Reviews</h3>
-          {venueReviews.map(r => (
-            <div key={r.id} className="mb-2 p-2 bg-white rounded-xl border border-slate-200">
-              <div className="flex items-center justify-between mb-1">
-                <span className="font-bold">{r.authorName}</span>
-                <span className="text-xs text-slate-500">{r.date}</span>
-              </div>
-              <div className="text-xs text-slate-600">Environment: {r.environment} · Design: {r.routeDesign} · Equipment: {r.equipment} · Value: {r.value}</div>
-              {r.text && <p className="mt-1 text-sm text-slate-700">{r.text}</p>}
-            </div>
-          ))}
-        </section>
-      )}
+      // Removed legacy venue reviews section; reviews are now surfaced via the Reviews tab only.
     </div>
   );
 };
