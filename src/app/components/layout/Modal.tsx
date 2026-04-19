@@ -12,6 +12,8 @@ export interface ModalProps {
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, maxHeight }) => {
   if (!isOpen) return null;
 
+  const contentMax = maxHeight ?? 'max-h-[70vh]';
+
   return (
     <>
       <div
@@ -29,7 +31,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, maxHeig
             <button onClick={onClose} className="text-slate-500 hover:text-slate-900" aria-label="Close modal">✕</button>
           </div>
         )}
-        <div className={`p-5 ${maxHeight ? `overflow-y-auto ${maxHeight}` : ''}`}>
+        <div className={`overflow-y-auto p-5 ${contentMax}`}>
           {children}
         </div>
       </div>
