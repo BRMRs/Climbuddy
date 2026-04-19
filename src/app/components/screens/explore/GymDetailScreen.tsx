@@ -273,8 +273,6 @@ export const GymDetailScreen: React.FC<GymDetailScreenProps> = ({ gym, onBack, o
           }}
         />
       )}
-
-      // Removed legacy venue reviews section; reviews are now surfaced via the Reviews tab only.
     </div>
   );
 };
