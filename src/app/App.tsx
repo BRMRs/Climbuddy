@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SESSIONS, CALENDAR_EVENTS, VENUE_REVIEWS } from './data/mockData';
+import { SESSIONS, CALENDAR_EVENTS, VENUE_REVIEWS, COACH_REVIEWS } from './data/mockData';
 import { SessionLog, CalendarEvent, VenueReview, CoachReview, PartnerReview } from './types';
 import { ScreenType, TabType } from './types';
 
@@ -33,9 +33,9 @@ export default function App() {
   const [sessions, setSessions] = useState<SessionLog[]>(SESSIONS);
   const [calendarEvents, setCalendarEvents] = useState<CalendarEvent[]>(CALENDAR_EVENTS);
   const [venueReviews, setVenueReviews] = useState<VenueReview[]>(VENUE_REVIEWS);
-  const [coachReviews, setCoachReviews] = useState<CoachReview[]>([]);
+  const [coachReviews, setCoachReviews] = useState<CoachReview[]>(COACH_REVIEWS);
   const [partnerReviews, setPartnerReviews] = useState<PartnerReview[]>([]);
-  const [purchasedCourseIds, setPurchasedCourseIds] = useState<string[]>([]);
+  const [purchasedCourseIds, setPurchasedCourseIds] = useState<string[]>(['crs-warmup', 'crs-stretch', 'crs-recovery', 'crs-plateau']);
 
   const addSession = (session: SessionLog) => {
     setSessions(prev => [session, ...prev]);
