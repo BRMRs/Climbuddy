@@ -21,7 +21,9 @@ import { PartnerProfileScreen } from './components/screens/social/PartnerProfile
 import { ProgressTab } from './components/screens/journey/ProgressTab';
 import { BoostTab } from './components/screens/boost/BoostTab';
 import { CourseDetailScreen } from './components/screens/boost/CourseDetailScreen';
-import { Course } from './types';
+import { AICoachChatScreen } from './components/screens/boost/AICoachChatScreen';
+import { CoachDetailScreen } from './components/coach/CoachDetailScreen';
+import { Course, Coach } from './types';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('gyms');
@@ -123,6 +125,15 @@ export default function App() {
                 onBack={goHome}
                 isPurchased={purchasedCourseIds.includes((screenData as Course).id)}
                 onPurchase={onPurchase}
+              />
+            )}
+            {activeScreen === 'aiCoachChat' && <AICoachChatScreen onBack={goHome} />}
+            {activeScreen === 'coachDetail' && (
+              <CoachDetailScreen
+                coach={screenData}
+                onBack={goHome}
+                onChat={() => navigate('chat', screenData)}
+                onBook={(coach: Coach) => navigate('bookCoach', coach)}
               />
             )}
           </div>

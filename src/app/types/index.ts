@@ -17,6 +17,11 @@ export interface Coach {
   name: string;
   rating: string;
   specialty: string;
+  frequentGyms: string[];
+  styles: string[];
+  qualifications: { label: string; score: number }[];
+  bio: string;
+  courseIds: string[];
 }
 
 export interface Partner {
@@ -125,7 +130,9 @@ export type ScreenType =
   | 'addPartner'
   | 'gettingStarted'
   | 'partnerProfile'
-  | 'courseDetail';
+  | 'courseDetail'
+  | 'coachDetail'
+  | 'aiCoachChat';
 
 export type TabType = 'gyms' | 'partners' | 'progress' | 'boost';
 

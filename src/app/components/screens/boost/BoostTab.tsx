@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { COURSES, DAILY_PLAN, COACH_COURSES, GYM_COACHES } from '../../../data/mockData';
 import { S } from '../../../constants/styles';
-import { DailyTask } from '../../../types';
+import { DailyTask, Coach } from '../../../types';
 
 interface BoostTabProps {
   onNavigate: (screen: string, data?: unknown) => void;
@@ -227,6 +227,21 @@ export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab, purch
         </div>
       </div>
 
+      {/* AI Coach Chat */}
+      <button
+        onClick={() => onNavigate('aiCoachChat')}
+        className="w-full border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] rounded-2xl p-4 bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center gap-4 active:translate-y-1 active:translate-x-1 active:shadow-none"
+      >
+        <div className="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center">
+          <span className="text-3xl">🤖</span>
+        </div>
+        <div className="flex-1 text-left">
+          <p className="font-black text-white text-lg">AI Coach Chat</p>
+          <p className="text-indigo-100 text-xs font-semibold">Ask anything, get climbing tips</p>
+        </div>
+        <span className="text-white text-2xl">→</span>
+      </button>
+
       {/* Train with a Coach Section */}
       <div className="flex flex-col gap-3">
         <h2 className="text-xl font-black text-slate-900">👨‍🏫 Train with a Coach</h2>
@@ -234,9 +249,10 @@ export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab, purch
         {/* Coach cards — horizontal scroll */}
         <div className="flex gap-3 overflow-x-auto pb-2 -mx-5 px-5">
           {allCoaches.map(coach => (
-            <div
+            <button
               key={coach.id}
-              className="flex-shrink-0 w-28 border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] rounded-2xl p-3 bg-white flex flex-col items-center gap-2"
+              onClick={() => onNavigate('coachDetail', coach)}
+              className="flex-shrink-0 w-28 border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] rounded-2xl p-3 bg-white flex flex-col items-center gap-2 active:translate-y-1 active:translate-x-1 active:shadow-none"
             >
               {/* Avatar circle with initials */}
               <div className="w-12 h-12 rounded-full bg-teal-100 border-2 border-slate-900 flex items-center justify-center font-black text-teal-700 text-lg">
@@ -248,7 +264,7 @@ export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab, purch
                 <span className="text-amber-500 text-xs">★</span>
                 <span className="text-xs font-bold text-slate-700">{coach.rating}</span>
               </div>
-            </div>
+            </button>
           ))}
         </div>
 

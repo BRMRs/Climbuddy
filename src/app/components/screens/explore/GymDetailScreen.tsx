@@ -160,7 +160,8 @@ export const GymDetailScreen: React.FC<GymDetailScreenProps> = ({ gym, onBack, o
           {tab === 'Coaches' && (
             <div className="flex flex-col gap-3">
               {coaches.map(c => (
-                <div key={c.name} className={`flex items-center gap-4 p-4 bg-[#FEF3C7] rounded-2xl ${S.border} ${S.shadowSm}`}>
+                <button key={c.id} onClick={() => onNavigate('coachDetail', c)}
+                  className={`flex items-center gap-4 p-4 bg-[#FEF3C7] rounded-2xl ${S.border} ${S.shadow} active:translate-y-1 active:translate-x-1 active:shadow-none text-left w-full`}>
                   <div className={`w-12 h-12 rounded-full bg-white flex items-center justify-center ${S.border}`}>
                     <User className="w-6 h-6 text-slate-600" strokeWidth={2.5} />
                   </div>
@@ -173,12 +174,8 @@ export const GymDetailScreen: React.FC<GymDetailScreenProps> = ({ gym, onBack, o
                       <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
                       <span className="font-black text-sm">{c.rating}</span>
                     </div>
-                    <button onClick={() => setBookingTarget(c.name)}
-                      className={`px-3 py-2 bg-slate-900 text-white rounded-xl font-black text-xs ${S.press}`}>
-                      Book
-                    </button>
                   </div>
-                </div>
+                </button>
               ))}
             </div>
           )}
