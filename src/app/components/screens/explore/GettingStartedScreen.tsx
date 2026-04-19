@@ -52,11 +52,11 @@ const STEPS = [
 
 interface GettingStartedScreenProps {
   onBack: () => void;
-  // Optional: allow navigation to other tabs from this screen
   switchTab?: (tab: string) => void;
+  onNavigateToBoost?: () => void;
 }
 
-export const GettingStartedScreen: React.FC<GettingStartedScreenProps> = ({ onBack, switchTab }) => {
+export const GettingStartedScreen: React.FC<GettingStartedScreenProps> = ({ onBack, switchTab, onNavigateToBoost }) => {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
   const [readSet, setReadSet] = useState<Set<number>>(new Set());
   const [done, setDone] = useState(false);
@@ -156,10 +156,9 @@ export const GettingStartedScreen: React.FC<GettingStartedScreenProps> = ({ onBa
           {allRead ? "I'm Ready! ✅" : `Open all ${STEPS.length} sections to continue`}
         </button>
 
-        {/* Subtle cross-tab navigation: link to Boost tab */}
         <div className="text-center pt-4 pb-2">
           <button
-            onClick={() => switchTab?.('boost')}
+            onClick={() => onNavigateToBoost?.()}
             className="text-slate-500 text-sm underline hover:text-slate-700"
           >
             Want to level up faster? Explore our training courses →
