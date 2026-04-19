@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import Modal from '../../layout/Modal';
 import { AlignJustify, ShieldCheck, X, Heart, CheckCircle2, CreditCard, Clock } from 'lucide-react';
 import { PARTNERS_DATA, GYMS_DATA, TIME_SLOTS, MY_PREFERENCES, MY_RATINGS, CHAT_HISTORY, PARTNER_RATINGS } from '../../../data/mockData';
 import { S } from '../../../constants/styles';
@@ -733,7 +734,7 @@ function ReviewSheet({ item, partner, onClose, onSubmit }: {
 
   if (submitted) {
     return (
-      <ReviewOverlay onClose={onSubmit}>
+      <Modal isOpen={true} onClose={onSubmit}>
         <div className="flex flex-col items-center gap-4 text-center py-4">
           <div className={`w-16 h-16 rounded-full bg-[#D1FAE5] flex items-center justify-center ${S.border}`}>
             <CheckCircle2 className="w-8 h-8 text-green-600" strokeWidth={2.5} />
@@ -744,12 +745,12 @@ function ReviewSheet({ item, partner, onClose, onSubmit }: {
             Done
           </button>
         </div>
-      </ReviewOverlay>
+      </Modal>
     );
   }
 
   return (
-    <ReviewOverlay onClose={onClose}>
+    <Modal isOpen={true} onClose={onClose}>
       <div className="flex items-center justify-between mb-5">
         <div>
           <h3 className="font-black text-xl text-slate-900">Rate {partner.name}</h3>
@@ -795,22 +796,11 @@ function ReviewSheet({ item, partner, onClose, onSubmit }: {
           ${allRated ? 'bg-[#FEF08A] text-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]' : 'bg-slate-200 text-slate-400 border-slate-300 cursor-not-allowed'}`}>
         {allRated ? 'Submit Review ✓' : 'Rate all dimensions first'}
       </button>
-    </ReviewOverlay>
+      </Modal>
   );
 }
 
-function ReviewOverlay({ children, onClose }: { children: React.ReactNode; onClose: () => void }) {
-  return (
-    <div className="absolute inset-0 z-50 flex items-end bg-slate-900/60 backdrop-blur-sm" onClick={onClose}>
-      <div
-        className={`w-full bg-white rounded-t-3xl p-5 pb-10 ${S.border} animate-in slide-in-from-bottom-4 duration-300 max-h-[92%] overflow-y-auto custom-scrollbar`}
-        onClick={e => e.stopPropagation()}
-      >
-        {children}
-      </div>
-    </div>
-  );
-}
+ 
 
 // ─── Radar Chart for "My Stats" in Prefs ──────────────────────────────────────
 
