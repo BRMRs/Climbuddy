@@ -4,6 +4,7 @@ import { ScreenHeader } from '../../layout/ScreenHeader';
 import { GYM_COACHES, GYM_ROUTES, TIME_SLOTS, SLOT_BOOKERS } from '../../../data/mockData';
 import { S } from '../../../constants/styles';
 import { Gym, Route, SlotBooker, VenueReview } from '../../../types';
+import Modal from '../../layout/Modal';
 
 const AMENITY_ICONS: Record<string, string> = {
   Showers: '🚿', Lockers: '🔒', Cafe: '☕', 'Gear Rental': '👟', 'Yoga Room': '🧘', 'Pro Shop': '🛒',
@@ -361,7 +362,7 @@ function BookingModal({ gymName, target, onClose, onChatWith }: {
 
   if (confirmed) {
     return (
-      <Overlay onClose={onClose}>
+      <Modal isOpen={true} onClose={onClose} title="Booking Confirmed">
         <div className="flex flex-col items-center gap-4 text-center">
           <div className={`w-16 h-16 rounded-full bg-[#D1FAE5] flex items-center justify-center ${S.border}`}>
             <CheckCircle2 className="w-8 h-8 text-green-600" strokeWidth={2.5} />
@@ -383,12 +384,12 @@ function BookingModal({ gymName, target, onClose, onChatWith }: {
             Done
           </button>
         </div>
-      </Overlay>
+      </Modal>
     );
   }
 
   return (
-    <Overlay onClose={onClose}>
+    <Modal isOpen={true} onClose={onClose} title={isCoach ? `📅 Book with ${target}` : '📅 Book a Visit'}>
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <h3 className="font-black text-xl text-slate-900">
@@ -487,23 +488,12 @@ function BookingModal({ gymName, target, onClose, onChatWith }: {
             : 'bg-slate-200 text-slate-400 border-slate-300 cursor-not-allowed'}`}>
         {slot ? 'Confirm Booking ✓' : 'Pick a time slot first'}
       </button>
-    </Overlay>
+    </Modal>
   );
 }
 
 /* ── Shared helpers ─────────────────────────────── */
-function Overlay({ children, onClose }: { children: React.ReactNode; onClose: () => void }) {
-  return (
-    <div className="absolute inset-0 z-50 flex items-end bg-slate-900/60 backdrop-blur-sm" onClick={onClose}>
-      <div
-        className={`w-full bg-white rounded-t-3xl p-5 pb-8 ${S.border} animate-in slide-in-from-bottom-4 duration-300 max-h-[90%] overflow-y-auto custom-scrollbar`}
-        onClick={e => e.stopPropagation()}
-      >
-        {children}
-      </div>
-    </div>
-  );
-}
+ 
 
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (

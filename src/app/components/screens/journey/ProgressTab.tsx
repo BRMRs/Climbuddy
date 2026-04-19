@@ -9,6 +9,7 @@ import HealthStats from './HealthStats';
 import AICoachCard from './AICoachCard';
 import SessionHistory from './SessionHistory';
 import { CalendarSection } from './CalendarSection';
+import Modal from '../../layout/Modal';
 
 export const ProgressTab: React.FC<{
   onNavigate: (screen: string, data?: unknown) => void;
@@ -84,7 +85,7 @@ export const ProgressTab: React.FC<{
 
       {/* Badge Detail Modal */}
       {selectedBadge && (
-        <Modal onClose={() => setSelectedBadge(null)}>
+        <Modal isOpen={true} onClose={() => setSelectedBadge(null)} title={selectedBadge.label}>
           <div className="flex flex-col items-center gap-4 text-center">
             <span className="text-6xl">{selectedBadge.icon}</span>
             <h3 className="font-black text-2xl text-slate-900">{selectedBadge.label}</h3>
@@ -100,8 +101,8 @@ export const ProgressTab: React.FC<{
       {showLogModal && <LogSessionModal onClose={() => setShowLogModal(false)} addSession={handleAddSession} />}
 
       {/* AI Upload Modal */}
-      {showAIModal && (
-        <Modal onClose={() => { setShowAIModal(false); setUploading(false); setUploadProgress(0); }}>
+  {showAIModal && (
+        <Modal isOpen={true} onClose={() => { setShowAIModal(false); setUploading(false); setUploadProgress(0); }} title="AI Analysis">
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-2">
               <Sparkles className="w-6 h-6 text-indigo-600 fill-indigo-200" strokeWidth={2.5} />
@@ -140,21 +141,7 @@ export const ProgressTab: React.FC<{
   );
 };
 
-function Modal({ children, onClose }: { children: React.ReactNode; onClose: () => void }) {
-  return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/60 backdrop-blur-sm" onClick={onClose}>
-      <div
-        className={`w-full max-w-[390px] bg-white rounded-t-3xl p-6 ${S.border} animate-in slide-in-from-bottom-4 duration-300`}
-        onClick={e => e.stopPropagation()}
-      >
-        <button onClick={onClose} className="absolute top-4 right-4">
-          <X className="w-5 h-5 text-slate-400" />
-        </button>
-        {children}
-      </div>
-    </div>
-  );
-}
+ 
 
 function LogSessionModal({ onClose, addSession }: { onClose: () => void; addSession?: (session: SessionLog) => void }) {
   const [routes, setRoutes] = useState('');
