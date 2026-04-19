@@ -78,16 +78,23 @@ export const ProgressTab: React.FC<{
       {/* Session History */}
       <SessionHistory sessions={sessions} addSession={handleAddSession} />
 
-      {/* Badge Detail Modal */}
       {selectedBadge && (
         <Modal isOpen={true} onClose={() => setSelectedBadge(null)} title={selectedBadge.label}>
           <div className="flex flex-col items-center gap-4 text-center">
             <span className="text-6xl">{selectedBadge.icon}</span>
             <h3 className="font-black text-2xl text-slate-900">{selectedBadge.label}</h3>
             <p className="font-semibold text-slate-600 text-sm">{selectedBadge.desc}</p>
-            {selectedBadge.unlocked
-              ? <div className="flex items-center gap-2 text-green-600 font-black"><CheckCircle2 className="w-5 h-5" /> Unlocked!</div>
-              : <p className="font-bold text-slate-400 text-sm">🔒 Keep climbing to unlock this badge.</p>}
+            {selectedBadge.unlocked ? (
+              <div className="flex flex-col items-center gap-1">
+                <div className="flex items-center gap-2 text-green-600 font-black">
+                  <CheckCircle2 className="w-5 h-5" />
+                  Unlocked!
+                </div>
+                <p className="text-xs text-gray-500">Unlocked on April 19, 2026</p>
+              </div>
+            ) : (
+              <p className="font-bold text-slate-400 text-sm">🔒 Keep climbing to unlock this badge.</p>
+            )}
           </div>
         </Modal>
       )}

@@ -9,23 +9,17 @@ export interface ModalProps {
   maxHeight?: string; // optional override, defaults to max-h-[70vh]
 }
 
-/**
- * Shared, reusable Modal component for Climbuddy.
- * - Anchored above BottomNav (bottom-24)
- * - No backdrop (sheet only, anchored at bottom)
- * - Neobrutalist sheet with rounded top corners
- * - Scrollable content area
- * - Close button closes modal
- */
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, maxHeight }) => {
   if (!isOpen) return null;
 
-  // Default content height
   const contentMax = maxHeight ?? 'max-h-[70vh]';
 
   return (
     <>
-      {/* Sheet - full width at bottom, above tab bar */}
+      <div
+        onClick={onClose}
+        className="absolute inset-0 z-40 bg-slate-900/50 backdrop-blur-sm"
+      />
       <div
         data-modal-content
         onClick={(e) => e.stopPropagation()}
@@ -37,7 +31,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, maxHeig
             <button onClick={onClose} className="text-slate-500 hover:text-slate-900" aria-label="Close modal">✕</button>
           </div>
         )}
-        <div className={`overflow-y-auto p-5 ${contentMax}`}>
+        <div className={`overflow-y-auto p-5 pb-8 ${contentMax}`}>
           {children}
         </div>
       </div>
