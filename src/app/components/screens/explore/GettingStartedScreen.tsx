@@ -52,7 +52,7 @@ const STEPS = [
 
 interface GettingStartedScreenProps {
   onBack: () => void;
-  switchTab?: (tab: string) => void;
+  switchTab?: (tab: any) => void;
   onNavigateToBoost?: () => void;
 }
 

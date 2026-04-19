@@ -5,7 +5,7 @@ import { DailyTask, Coach } from '../../../types';
 
 interface BoostTabProps {
   onNavigate: (screen: string, data?: unknown) => void;
-  switchTab: (tab: string) => void;
+  switchTab?: (tab: any) => void;
   purchasedCourseIds: string[];
   onPurchase: (courseId: string) => void;
 }
