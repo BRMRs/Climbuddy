@@ -29,13 +29,13 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, maxHeig
       <div
         data-modal-backdrop
         onClick={onClose}
-        className="fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-sm"
+        className="absolute inset-0 z-40 bg-slate-900/60 backdrop-blur-sm"
       />
 
       {/* Sheet */}
       <div
         data-modal-content
-        className={`fixed inset-x-0 bottom-24 z-50 rounded-t-3xl bg-white ${S.border} border-t-2 border-slate-900 shadow-[0px_-4px_0px_0px_rgba(15,23,42,1)] animate-in slide-in-from-bottom-4`}
+        className={`absolute inset-x-0 bottom-24 z-50 rounded-t-3xl bg-white ${S.border} border-t-2 border-slate-900 shadow-[0px_-4px_0px_0px_rgba(15,23,42,1)] animate-in slide-in-from-bottom-4`}
       >
         {title && (
           <div className="flex items-center justify-between p-5 pb-3 border-b-2 border-slate-900">

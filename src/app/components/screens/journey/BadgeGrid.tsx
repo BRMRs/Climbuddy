@@ -2,7 +2,6 @@ import React from 'react';
 import { S } from '../../../constants/styles';
 import { Badge } from '../../../types';
 import { Award } from 'lucide-react';
-import Modal from '../../layout/Modal';
 
 export interface BadgeGridProps {
   badges: Badge[];
@@ -11,14 +10,6 @@ export interface BadgeGridProps {
 }
 
 const BadgeGrid: React.FC<BadgeGridProps> = ({ badges, onSelectBadge, selectedBadge }) => {
-  const [openBadge, setOpenBadge] = React.useState<Badge | null>(null);
-  const [modalOpen, setModalOpen] = React.useState(false);
-
-  const handleOpenModal = (b: Badge) => {
-    setOpenBadge(b);
-    setModalOpen(true);
-  };
-
   return (
     <div className={`bg-[#FFFBEB] rounded-3xl p-5 ${S.border} ${S.shadow}`}>
       <div className="flex items-center gap-2 mb-4">
@@ -31,10 +22,7 @@ const BadgeGrid: React.FC<BadgeGridProps> = ({ badges, onSelectBadge, selectedBa
           return (
             <button
               key={b.id}
-              onClick={() => {
-                onSelectBadge?.(b);
-                handleOpenModal(b);
-              }}
+              onClick={() => onSelectBadge?.(b)}
               className={`flex flex-col items-center p-3 rounded-2xl border-2 transition-all ${S.press}
                 ${b.unlocked
                   ? 'bg-[#FEF08A] border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]'
@@ -49,20 +37,6 @@ const BadgeGrid: React.FC<BadgeGridProps> = ({ badges, onSelectBadge, selectedBa
           );
         })}
       </div>
-
-      
-      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={openBadge?.label}>
-        {openBadge && (
-          <div>
-            <p className="mb-2">{openBadge.desc}</p>
-            {openBadge.unlocked && openBadge.earnedDate ? (
-              <p className="text-slate-500 text-sm">Earned {openBadge.earnedDate}</p>
-            ) : !openBadge.unlocked ? (
-              <p className="text-slate-400 text-sm italic mt-2">Not yet earned</p>
-            ) : null}
-          </div>
-        )}
-      </Modal>
     </div>
   );
 };
