@@ -1,6 +1,7 @@
-import React from 'react';
-import { COURSES } from '../../../data/mockData';
+import React, { useState } from 'react';
+import { COURSES, DAILY_PLAN, COACH_COURSES } from '../../../data/mockData';
 import { S } from '../../../constants/styles';
+import { DailyTask } from '../../../types';
 
 interface BoostTabProps {
   onNavigate: (screen: string, data?: unknown) => void;
@@ -10,6 +11,7 @@ interface BoostTabProps {
 }
 
 export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab, purchasedCourseIds, onPurchase }) => {
+  const [tasks, setTasks] = useState<DailyTask[]>(DAILY_PLAN);
   const freeCourses = COURSES.filter(c => c.type === 'free');
   const paidCourses = COURSES.filter(c => c.type === 'paid');
 
@@ -32,10 +34,62 @@ export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab, purch
         <p className="text-slate-500 text-sm -mt-1 font-bold">Your personal training hub</p>
       </div>
 
-      <div className="border-2 border-dashed border-slate-300 rounded-2xl p-4 bg-slate-50 text-center">
-        <p className="text-2xl mb-1">🤖</p>
-        <p className="font-black text-slate-700">Today's Training Plan</p>
-        <p className="text-slate-400 text-sm font-medium">AI plan coming soon...</p>
+      {/* Today's Training Plan Section */}
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-black text-slate-900">🤖 Today's Plan</h2>
+          <span className="text-sm text-slate-500">{tasks.filter(t => t.completed).length}/{tasks.length} done</span>
+        </div>
+        
+        {/* Progress bar */}
+        <div className="h-2 bg-slate-100 rounded-full border border-slate-200 overflow-hidden">
+          <div
+            className="h-full bg-teal-500 rounded-full transition-all"
+            style={{ width: `${(tasks.filter(t => t.completed).length / tasks.length) * 100}%` }}
+          />
+        </div>
+
+        {/* Task cards */}
+        {tasks.map(task => {
+          const isPaid = task.type === 'paid';
+          const isLocked = isPaid && !purchasedCourseIds.includes(task.courseId ?? '');
+          return (
+            <div
+              key={task.id}
+              className={`border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] rounded-2xl p-4 bg-white flex items-start gap-3 ${task.completed ? 'opacity-60' : ''}`}
+            >
+              {/* Checkbox */}
+              <button
+                onClick={() => setTasks(prev => prev.map(t => t.id === task.id ? { ...t, completed: !t.completed } : t))}
+                className={`mt-0.5 w-6 h-6 rounded-full border-2 border-slate-900 flex items-center justify-center flex-shrink-0 ${task.completed ? 'bg-green-500' : 'bg-white'}`}
+              >
+                {task.completed && <span className="text-white text-xs">✓</span>}
+              </button>
+              
+              {/* Task content — tappable area */}
+              <button
+                className="flex-1 text-left"
+                onClick={() => {
+                  if (task.courseId) onNavigate('courseDetail', [...COURSES, ...COACH_COURSES].find(c => c.id === task.courseId));
+                }}
+              >
+                <p className={`font-bold text-slate-900 text-sm ${task.completed ? 'line-through text-slate-400' : ''}`}>
+                  {isLocked && '🔒 '}{task.title}
+                </p>
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="text-xs text-slate-400">{task.duration}</span>
+                  <span className={`text-xs px-2 py-0.5 rounded-full border font-bold ${
+                    task.type === 'free' ? 'bg-green-50 text-green-700 border-green-200' :
+                    task.type === 'paid' ? 'bg-amber-50 text-amber-700 border-amber-200' :
+                    'bg-purple-50 text-purple-700 border-purple-200'
+                  }`}>
+                    {task.type === 'free' ? 'FREE' : task.type === 'paid' ? 'PRO' : 'COACH'}
+                  </span>
+                </div>
+              </button>
+            </div>
+          );
+        })}
       </div>
 
       <div className="flex flex-col gap-3">
