@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { COURSES, DAILY_PLAN, COACH_COURSES } from '../../../data/mockData';
+import { COURSES, DAILY_PLAN, COACH_COURSES, GYM_COACHES } from '../../../data/mockData';
 import { S } from '../../../constants/styles';
 import { DailyTask } from '../../../types';
 
@@ -14,6 +14,7 @@ export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab, purch
   const [tasks, setTasks] = useState<DailyTask[]>(DAILY_PLAN);
   const freeCourses = COURSES.filter(c => c.type === 'free');
   const paidCourses = COURSES.filter(c => c.type === 'paid');
+  const allCoaches = Object.values(GYM_COACHES).flat();
 
   const getBgColor = (thumbnail: string) => {
     switch (thumbnail) {
@@ -154,10 +155,63 @@ export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab, purch
         </div>
       </div>
 
-      <div className="border-2 border-dashed border-slate-300 rounded-2xl p-4 bg-slate-50 text-center">
-        <p className="text-2xl mb-1">👨‍🏫</p>
-        <p className="font-black text-slate-700">Train with a Coach</p>
-        <p className="text-slate-400 text-sm font-medium">Coach section coming soon...</p>
+      {/* Train with a Coach Section */}
+      <div className="flex flex-col gap-3">
+        <h2 className="text-xl font-black text-slate-900">👨‍🏫 Train with a Coach</h2>
+        
+        {/* Coach cards — horizontal scroll */}
+        <div className="flex gap-3 overflow-x-auto pb-2 -mx-5 px-5">
+          {allCoaches.map(coach => (
+            <div
+              key={coach.id}
+              className="flex-shrink-0 w-28 border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] rounded-2xl p-3 bg-white flex flex-col items-center gap-2"
+            >
+              {/* Avatar circle with initials */}
+              <div className="w-12 h-12 rounded-full bg-teal-100 border-2 border-slate-900 flex items-center justify-center font-black text-teal-700 text-lg">
+                {coach.name.charAt(0)}
+              </div>
+              <p className="font-black text-slate-900 text-xs text-center">{coach.name}</p>
+              <p className="text-slate-500 text-xs text-center">{coach.specialty}</p>
+              <div className="flex items-center gap-1">
+                <span className="text-amber-500 text-xs">★</span>
+                <span className="text-xs font-bold text-slate-700">{coach.rating}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Coach Courses sub-section */}
+        <h3 className="text-base font-black text-slate-700 mt-1">Coach Courses</h3>
+        <div className="flex flex-col gap-3">
+          {COACH_COURSES.map(cc => {
+            const course = COURSES.find(c => c.id === cc.courseId);
+            const coach = allCoaches.find(c => c.id === cc.coachId);
+            if (!course) return null;
+            return (
+              <button
+                key={cc.id}
+                onClick={() => onNavigate('courseDetail', course)}
+                className="border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] rounded-2xl p-4 bg-white flex items-center gap-3 active:translate-y-1 active:translate-x-1 active:shadow-none text-left w-full"
+              >
+                <div className="w-14 h-14 rounded-xl bg-purple-100 border-2 border-slate-900 flex items-center justify-center text-2xl flex-shrink-0">
+                  {course.thumbnail}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-black text-slate-900 text-sm">{course.title}</p>
+                  {coach && (
+                    <span className="inline-block text-xs bg-teal-100 text-teal-700 border border-teal-300 rounded-full px-2 py-0.5 mt-1 font-bold">
+                      👤 {coach.name}
+                    </span>
+                  )}
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="text-xs text-slate-400">{course.duration}</span>
+                    {course.price && <span className="text-xs font-black text-amber-600">${course.price}</span>}
+                  </div>
+                </div>
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
