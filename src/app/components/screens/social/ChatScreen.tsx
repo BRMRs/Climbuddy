@@ -116,7 +116,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ partner, onBack }) => {
         }
       />
 
-      {/* Partner header bar */}
+        {/* Partner/Coach header bar */}
       <div className="px-5 py-3 bg-white border-b-2 border-slate-900 flex items-center gap-3">
         <div className={`w-10 h-10 rounded-full overflow-hidden ${S.border}`}>
           <img src={partner.image} className="w-full h-full object-cover" alt={partner.name} />
@@ -125,17 +125,21 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ partner, onBack }) => {
           <p className="font-black text-slate-900">{partner.name}</p>
           <div className="flex items-center gap-1.5">
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            <span className="text-xs font-semibold text-slate-500">Online · {partner.level}</span>
+            <span className="text-xs font-semibold text-slate-500">
+              Online{(partner as any).level ? ` · ${(partner as any).level}` : ''}
+            </span>
           </div>
         </div>
-        {/* Propose meeting CTA */}
-        <button
-          onClick={() => setShowPropose(true)}
-          className={`flex items-center gap-1.5 px-3 py-2 bg-[#FEF08A] rounded-xl font-black text-xs text-slate-900 ${S.border} ${S.shadowSm} ${S.press}`}
-        >
-          <CalendarPlus className="w-3.5 h-3.5" strokeWidth={2.5} />
-          Climb Date
-        </button>
+        {/* Propose meeting CTA - only for Partners, not Coaches */}
+        {(partner as any).level && (
+          <button
+            onClick={() => setShowPropose(true)}
+            className={`flex items-center gap-1.5 px-3 py-2 bg-[#FEF08A] rounded-xl font-black text-xs text-slate-900 ${S.border} ${S.shadowSm} ${S.press}`}
+          >
+            <CalendarPlus className="w-3.5 h-3.5" strokeWidth={2.5} />
+            Climb Date
+          </button>
+        )}
       </div>
 
       {/* Messages */}
@@ -314,9 +318,9 @@ function ProposeMeetingSheet({ partnerName, onClose, onSend }: {
   };
 
   return (
-    <div className="absolute inset-x-0 bottom-[120px] z-50" onClick={onClose}>
+    <div className="absolute inset-0 z-50 flex items-end bg-slate-900/60 backdrop-blur-sm" onClick={onClose}>
       <div
-        className={`w-full bg-white rounded-t-3xl ${S.border} shadow-[0px_-4px_0px_0px_rgba(15,23,42,1)] animate-in slide-in-from-bottom-4 duration-300 max-h-[70vh] flex flex-col`}
+        className={`w-full bg-white rounded-t-3xl ${S.border} animate-in slide-in-from-bottom-4 duration-300 max-h-[88%] flex flex-col`}
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}

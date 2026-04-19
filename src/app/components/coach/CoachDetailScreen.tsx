@@ -28,10 +28,13 @@ interface CoachDetailScreenProps {
   onBack: () => void;
   onChat: () => void;
   onBook: (coach: Coach) => void;
+  onNavigate: (screen: string, data?: unknown) => void;
 }
 
-export const CoachDetailScreen: React.FC<CoachDetailScreenProps> = ({ coach, onBack, onChat, onBook }) => {
+export const CoachDetailScreen: React.FC<CoachDetailScreenProps> = ({ coach, onBack, onChat, onBook, onNavigate }) => {
   const [showBookModal, setShowBookModal] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [bookingInfo, setBookingInfo] = useState<{gymName: string; date: string; slot: string} | null>(null);
   
   const coachCourses = COACH_COURSES
     .filter(cc => cc.coachId === coach.id)
@@ -139,7 +142,11 @@ export const CoachDetailScreen: React.FC<CoachDetailScreenProps> = ({ coach, onB
             <h3 className="font-black text-slate-900 mb-3">Published Courses</h3>
             <div className="flex flex-col gap-3">
               {coachCourses.map(course => (
-                <button key={course.id} className="w-full bg-white rounded-2xl p-4 flex items-center gap-3 border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]">
+                <button
+                  key={course.id}
+                  onClick={() => onNavigate('courseDetail', course)}
+                  className="w-full bg-white rounded-2xl p-4 flex items-center gap-3 border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] active:translate-y-1 active:translate-x-1 active:shadow-none transition-all"
+                >
                   <div className="w-12 h-12 rounded-xl bg-purple-100 border-2 border-slate-900 flex items-center justify-center text-xl">
                     {course.thumbnail}
                   </div>
@@ -191,13 +198,24 @@ function BookingModal({ coach, onClose }: { coach: Coach; onClose: () => void })
 
   const handleBook = () => {
     if (!selectedGym || !slot) return;
-    alert(`Booked ${coach.name} at ${GYMS_DATA.find(g => g.id === selectedGym)?.name} on ${DAYS[dayIdx].label} at ${slot}`);
-    onClose();
+    const gym = GYMS_DATA.find(g => g.id === selectedGym);
+    if (gym) {
+      setBookingInfo({
+        gymName: gym.name,
+        date: DAYS[dayIdx].label,
+        slot: slot
+      });
+      setShowSuccess(true);
+      setTimeout(() => {
+        setShowSuccess(false);
+        onClose();
+      }, 2000);
+    }
   };
 
   return (
-    <div className="absolute inset-x-0 bottom-[120px] z-50" onClick={onClose}>
-      <div className="w-full bg-white rounded-t-3xl border-t-2 border-slate-900 shadow-[0px_-4px_0px_0px_rgba(15,23,42,1)] animate-in slide-in-from-bottom-4 duration-300 max-h-[70vh] flex flex-col"
+    <div className="absolute inset-0 z-50 flex items-end bg-slate-900/60 backdrop-blur-sm" onClick={onClose}>
+      <div className="w-full bg-white rounded-t-3xl border-t-2 border-slate-900 animate-in slide-in-from-bottom-4 duration-300 max-h-[88%] flex flex-col"
         onClick={e => e.stopPropagation()}>
         <div className="px-5 pt-5 pb-3 flex-shrink-0 flex items-center justify-between">
           <div>
@@ -308,6 +326,28 @@ function BookingModal({ coach, onClose }: { coach: Coach; onClose: () => void })
           )}
         </div>
       </div>
+
+      {/* Success Toast */}
+      {showSuccess && bookingInfo && (
+        <div className="absolute inset-0 z-[60] flex items-center justify-center bg-slate-900/30 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl p-6 border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] mx-5 animate-in zoom-in duration-200">
+            <div className="flex flex-col items-center gap-3 text-center">
+              <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
+                <CheckCircle2 className="w-8 h-8 text-green-600" strokeWidth={2.5} />
+              </div>
+              <div>
+                <p className="font-black text-slate-900 text-lg">Booking Confirmed!</p>
+                <p className="font-semibold text-slate-500 text-xs mt-1">
+                  {coach.name} at {bookingInfo.gymName}
+                </p>
+                <p className="font-semibold text-slate-400 text-xs">
+                  {bookingInfo.date} · {bookingInfo.slot}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
