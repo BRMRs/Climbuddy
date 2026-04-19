@@ -20,6 +20,8 @@ import { PartnerProfileScreen } from './components/screens/social/PartnerProfile
 // Screens: Journey
 import { ProgressTab } from './components/screens/journey/ProgressTab';
 import { BoostTab } from './components/screens/boost/BoostTab';
+import { CourseDetailScreen } from './components/screens/boost/CourseDetailScreen';
+import { Course } from './types';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('gyms');
@@ -84,7 +86,7 @@ export default function App() {
             )}
 
             {/* Detail screens */}
-              {activeScreen === 'gymDetail'      && <GymDetailScreen gym={screenData} onBack={goHome} onNavigate={navigate} venueReviews={venueReviews} />}
+            {activeScreen === 'gymDetail'      && <GymDetailScreen gym={screenData} onBack={goHome} onNavigate={navigate} venueReviews={venueReviews} />}
             {activeScreen === 'gettingStarted' && <GettingStartedScreen onBack={goHome} />}
             {activeScreen === 'chat'           && <ChatScreen partner={screenData} onBack={goHome} />}
             {activeScreen === 'addPartner'     && <AddPartnerScreen onBack={goHome} />}
@@ -94,6 +96,14 @@ export default function App() {
                 onBack={goHome}
                 onChat={() => navigate('chat', screenData)}
                 onMatch={() => navigate('chat', screenData)}
+              />
+            )}
+            {activeScreen === 'courseDetail' && screenData && (
+              <CourseDetailScreen
+                course={screenData as Course}
+                onBack={goHome}
+                isPurchased={purchasedCourseIds.includes((screenData as Course).id)}
+                onPurchase={onPurchase}
               />
             )}
           </div>
