@@ -80,7 +80,7 @@ export const CoachDetailScreen: React.FC<CoachDetailScreenProps> = ({ coach, onB
 
         {/* Stats cards */}
         <div className="px-5 -mt-6">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-3 gap-3">
             <div className="bg-white rounded-2xl p-4 border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]">
               <p className="font-black text-slate-900 text-xl">{coachCourses.length}</p>
               <p className="font-bold text-slate-500 text-xs">Courses</p>
@@ -88,6 +88,10 @@ export const CoachDetailScreen: React.FC<CoachDetailScreenProps> = ({ coach, onB
             <div className="bg-white rounded-2xl p-4 border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]">
               <p className="font-black text-slate-900 text-xl">{coach.frequentGyms.length}</p>
               <p className="font-bold text-slate-500 text-xs">Gyms</p>
+            </div>
+            <div className="bg-[#FEF08A] rounded-2xl p-4 border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]">
+              <p className="font-black text-slate-900 text-lg leading-tight">{coach.price ?? '—'}</p>
+              <p className="font-bold text-slate-500 text-xs">Rate</p>
             </div>
           </div>
         </div>
@@ -268,7 +272,7 @@ export const CoachDetailScreen: React.FC<CoachDetailScreenProps> = ({ coach, onB
           onClick={() => setShowBookModal(true)}
           className={`flex-1 py-4 rounded-2xl font-black text-white bg-slate-900 border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] ${S.press} flex items-center justify-center gap-2`}>
           <Calendar className="w-5 h-5" strokeWidth={2.5} />
-          Book Time
+          Book · {coach.price ?? '—'}
         </button>
       </div>
 

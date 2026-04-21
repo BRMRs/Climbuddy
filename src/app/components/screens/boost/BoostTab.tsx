@@ -200,11 +200,16 @@ export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab, purch
                 {coach.name.charAt(0)}
               </div>
               <p className="font-black text-slate-900 text-xs text-center">{coach.name}</p>
-              <p className="text-slate-500 text-xs text-center">{coach.specialty}</p>
+              <p className="text-slate-500 text-[10px] text-center leading-tight">{coach.specialty}</p>
               <div className="flex items-center gap-1">
                 <span className="text-amber-500 text-xs">★</span>
                 <span className="text-xs font-bold text-slate-700">{coach.rating}</span>
               </div>
+              {coach.price && (
+                <span className="text-[10px] font-black text-slate-900 bg-[#FEF08A] border border-slate-900 px-1.5 py-0.5 rounded-md">
+                  {coach.price}
+                </span>
+              )}
             </button>
           ))}
         </div>

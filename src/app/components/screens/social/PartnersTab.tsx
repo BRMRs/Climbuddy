@@ -132,6 +132,7 @@ export const PartnersTab: React.FC<PartnersTabProps> = ({ onNavigate, switchTab 
                 style={{
                   transform: `translateX(${dragX}px) rotate(${rotation}deg)`,
                   transition: dragging ? 'none' : 'transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94)',
+                  touchAction: 'none',
                 }}
                 onPointerDown={onPointerDown}
                 onPointerMove={onPointerMove}
@@ -834,7 +835,7 @@ function MyRadarChart() {
   const anchors = ['middle', 'start', 'start', 'end', 'end'] as const;
 
   return (
-    <svg viewBox="0 0 240 230" className="w-full max-w-[200px]">
+    <svg viewBox="-60 -20 360 270" className="w-full max-w-[200px]">
       {[0.25,0.5,0.75,1].map(s => (
         <path key={s} d={toPath(pts(s))} fill="none" stroke="#e2e8f0"
           strokeWidth={s===1?1.5:0.8} strokeDasharray={s<1?'3,3':undefined} />

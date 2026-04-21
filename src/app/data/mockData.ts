@@ -62,7 +62,7 @@ export const GYMS_DATA: Gym[] = [
 export const GYM_COACHES: Record<string, Coach[]> = {
   g1: [
     { 
-      id: 'c1', name: 'Bob', rating: '5.0', specialty: 'Footwork Expert',
+      id: 'c1', name: 'Bob', rating: '5.0', specialty: 'Footwork Expert', price: '$75/hr',
       frequentGyms: ['g1', 'g2'],
       styles: ['Bouldering', 'Sport Climbing', 'Technique'],
       qualifications: [
@@ -76,7 +76,7 @@ export const GYM_COACHES: Record<string, Coach[]> = {
       courseIds: ['course1', 'course3'],
     },
     { 
-      id: 'c2', name: 'Jack', rating: '4.7', specialty: 'Lead Climbing',
+      id: 'c2', name: 'Jack', rating: '4.7', specialty: 'Lead Climbing', price: '$70/hr',
       frequentGyms: ['g1', 'g3'],
       styles: ['Lead Climbing', 'Trad', 'Mountaineering'],
       qualifications: [
@@ -90,7 +90,7 @@ export const GYM_COACHES: Record<string, Coach[]> = {
       courseIds: ['course2'],
     },
     { 
-      id: 'c3', name: 'John', rating: '4.8', specialty: 'Bouldering',
+      id: 'c3', name: 'John', rating: '4.8', specialty: 'Bouldering', price: '$65/hr',
       frequentGyms: ['g1'],
       styles: ['Bouldering', 'Power', 'Campus Board'],
       qualifications: [
@@ -106,7 +106,7 @@ export const GYM_COACHES: Record<string, Coach[]> = {
   ],
   g2: [
     { 
-      id: 'c4', name: 'Sara', rating: '4.6', specialty: 'Yoga + Climb',
+      id: 'c4', name: 'Sara', rating: '4.6', specialty: 'Yoga + Climb', price: '$60/hr',
       frequentGyms: ['g2'],
       styles: ['Yoga', 'Mindfulness', 'Beginner'],
       qualifications: [
@@ -120,7 +120,7 @@ export const GYM_COACHES: Record<string, Coach[]> = {
       courseIds: [],
     },
     { 
-      id: 'c5', name: 'Liam', rating: '4.5', specialty: 'Beginner Expert',
+      id: 'c5', name: 'Liam', rating: '4.5', specialty: 'Beginner Expert', price: '$55/hr',
       frequentGyms: ['g2', 'g1'],
       styles: ['Beginner', 'Technique', 'Foundation'],
       qualifications: [
@@ -136,7 +136,7 @@ export const GYM_COACHES: Record<string, Coach[]> = {
   ],
   g3: [
     { 
-      id: 'c6', name: 'Kai', rating: '4.9', specialty: 'Competition',
+      id: 'c6', name: 'Kai', rating: '4.9', specialty: 'Competition', price: '$90/hr',
       frequentGyms: ['g3', 'g1'],
       styles: ['Competition', 'Power', 'Bouldering'],
       qualifications: [
@@ -150,7 +150,7 @@ export const GYM_COACHES: Record<string, Coach[]> = {
       courseIds: ['course2', 'course3'],
     },
     { 
-      id: 'c7', name: 'Mia', rating: '4.8', specialty: 'Lead Climbing',
+      id: 'c7', name: 'Mia', rating: '4.8', specialty: 'Lead Climbing', price: '$80/hr',
       frequentGyms: ['g3'],
       styles: ['Lead Climbing', 'Endurance', 'Route Reading'],
       qualifications: [
@@ -164,7 +164,7 @@ export const GYM_COACHES: Record<string, Coach[]> = {
       courseIds: ['course2'],
     },
     { 
-      id: 'c8', name: 'Rex', rating: '4.7', specialty: 'Strength',
+      id: 'c8', name: 'Rex', rating: '4.7', specialty: 'Strength', price: '$70/hr',
       frequentGyms: ['g3'],
       styles: ['Strength Training', 'Fingerboard', 'Conditioning'],
       qualifications: [

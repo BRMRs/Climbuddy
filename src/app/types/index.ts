@@ -22,6 +22,7 @@ export interface Coach {
   qualifications: { label: string; score: number }[];
   bio: string;
   courseIds: string[];
+  price?: string;
 }
 
 export interface Partner {

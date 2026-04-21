@@ -170,6 +170,11 @@ export const GymDetailScreen: React.FC<GymDetailScreenProps> = ({ gym, onBack, o
                     <p className="font-semibold text-slate-500 text-xs">{c.specialty}</p>
                   </div>
                   <div className="flex items-center gap-2">
+                    {c.price && (
+                      <div className={`bg-[#FEF08A] px-2.5 py-1 rounded-lg ${S.border}`}>
+                        <span className="font-black text-xs text-slate-900">{c.price}</span>
+                      </div>
+                    )}
                     <div className={`flex items-center gap-1 bg-white px-2.5 py-1 rounded-lg ${S.border}`}>
                       <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
                       <span className="font-black text-sm">{c.rating}</span>
