@@ -13,6 +13,7 @@ import Modal from '../../layout/Modal';
 
 export const ProgressTab: React.FC<{
   onNavigate: (screen: string, data?: unknown) => void;
+  onResetOnboarding?: () => void;
   switchTab?: (tab: any) => void;
   sessions: SessionLog[];
   calendarEvents: CalendarEvent[];
@@ -21,7 +22,7 @@ export const ProgressTab: React.FC<{
   addCoachReview?: (review: CoachReview) => void;
   addPartnerReview?: (review: PartnerReview) => void;
   markEventReviewed: (eventId: string) => void;
-}> = ({ onNavigate, switchTab, sessions, calendarEvents, addSession, addReview, addCoachReview, addPartnerReview, markEventReviewed }) => {
+}> = ({ onNavigate, switchTab, sessions, calendarEvents, addSession, addReview, addCoachReview, addPartnerReview, markEventReviewed, onResetOnboarding }) => {
   const [heartRate, setHeartRate] = useState(142);
   const [badges, setBadges] = useState<Badge[]>(BADGES);
   const [selectedBadge, setSelectedBadge] = useState<Badge | null>(null);

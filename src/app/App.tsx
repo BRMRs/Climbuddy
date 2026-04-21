@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { SESSIONS, CALENDAR_EVENTS, VENUE_REVIEWS, COACH_REVIEWS } from './data/mockData';
 import { SessionLog, CalendarEvent, VenueReview, CoachReview, PartnerReview } from './types';
 import { ScreenType, TabType } from './types';
+import { useOnboarding } from './hooks/useOnboarding';
+import { WelcomeCards } from './components/onboarding/WelcomeCards';
+import { SpotlightTour } from './components/onboarding/SpotlightTour';
 
 // Layout
 import { BottomNav } from './components/layout/BottomNav';
@@ -36,6 +39,18 @@ export default function App() {
   const [coachReviews, setCoachReviews] = useState<CoachReview[]>(COACH_REVIEWS);
   const [partnerReviews, setPartnerReviews] = useState<PartnerReview[]>([]);
   const [purchasedCourseIds, setPurchasedCourseIds] = useState<string[]>(['crs-warmup', 'crs-stretch', 'crs-recovery', 'crs-plateau']);
+
+  const { showWelcome, showTour, completeWelcome, skipWelcome, completeTour, skipTour, resetOnboarding } = useOnboarding();
+  const [tourReady, setTourReady] = useState(false);
+
+  React.useEffect(() => {
+    if (!showWelcome && showTour) {
+      const t = setTimeout(() => setTourReady(true), 300);
+      return () => clearTimeout(t);
+    } else {
+      setTourReady(false);
+    }
+  }, [showWelcome, showTour]);
 
   const addSession = (session: SessionLog) => {
     setSessions(prev => [session, ...prev]);
@@ -112,6 +127,7 @@ export default function App() {
                     addCoachReview={addCoachReview}
                     addPartnerReview={addPartnerReview}
                     markEventReviewed={markEventReviewed}
+                    onResetOnboarding={resetOnboarding}
                   />
                 )}
                 {activeTab === 'boost'     && <BoostTab onNavigate={navigate} switchTab={switchTab} purchasedCourseIds={purchasedCourseIds} onPurchase={onPurchase} />}
@@ -152,6 +168,21 @@ export default function App() {
               />
             )}
           </div>
+
+          {/* Onboarding overlays inside phone frame */}
+          {showWelcome && (
+            <WelcomeCards
+              onComplete={() => completeWelcome()}
+              onGettingStarted={() => {
+                completeWelcome();
+                completeTour();
+                navigate('gettingStarted');
+              }}
+            />
+          )}
+          {!showWelcome && showTour && tourReady && (
+            <SpotlightTour onComplete={completeTour} switchTab={switchTab as any} />
+          )}
 
           {/* Bottom Nav — only on home */}
           {activeScreen === 'home' && (
