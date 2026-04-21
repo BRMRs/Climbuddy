@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, Star } from 'lucide-react';
+import { ShieldCheck, Star, MessageCircle } from 'lucide-react';
 import { ScreenHeader } from '../../layout/ScreenHeader';
 import { S } from '../../../constants/styles';
 import { Partner, PartnerRating } from '../../../types';
@@ -8,12 +8,12 @@ import { PARTNER_RATINGS, MOCK_REVIEWS } from '../../../data/mockData';
 interface PartnerProfileScreenProps {
   partner: Partner;
   onBack: () => void;
-  onChat: () => void;
-  onMatch: () => void;
+  onChat?: () => void;
+  onMatch?: () => void;
 }
 
 export const PartnerProfileScreen: React.FC<PartnerProfileScreenProps> = ({
-  partner, onBack, onChat, onMatch,
+  partner, onBack, onChat,
 }) => {
   const rating = PARTNER_RATINGS[partner.id] ?? {
     reliability: 4, safety: 4, encouragement: 4, skillMatch: 4, communication: 4,
@@ -25,7 +25,7 @@ export const PartnerProfileScreen: React.FC<PartnerProfileScreenProps> = ({
     <div className="flex flex-col h-full bg-[#F8FAFC] animate-in slide-in-from-right duration-300">
       <ScreenHeader onBack={onBack} transparent />
 
-      <div className="flex-1 overflow-y-auto custom-scrollbar pb-28">
+      <div className="flex-1 overflow-y-auto custom-scrollbar pb-4">
         {/* Hero */}
         <div className="relative w-full h-52 -mt-[72px]">
           <img src={partner.image} className="w-full h-full object-cover" alt={partner.name} />
@@ -136,17 +136,18 @@ export const PartnerProfileScreen: React.FC<PartnerProfileScreenProps> = ({
         </div>
       </div>
 
-      {/* CTAs */}
-      <div className={`absolute bottom-0 inset-x-0 bg-white border-t-2 border-slate-900 p-4 flex gap-3`}>
-        <button onClick={onChat}
-          className={`flex-1 py-3.5 rounded-2xl font-black text-base ${S.border} ${S.shadowSm} ${S.press} bg-white text-slate-900`}>
-          💬 Chat
-        </button>
-        <button onClick={onMatch}
-          className={`flex-1 py-3.5 rounded-2xl font-black text-base ${S.border} ${S.shadow} ${S.press} bg-[#FEF08A] text-slate-900`}>
-          🤝 Plan Together
-        </button>
-      </div>
+      {/* Sticky Chat Button */}
+      {onChat && (
+        <div className="shrink-0 px-5 py-4 bg-white border-t-2 border-slate-100">
+          <button
+            onClick={onChat}
+            className={`w-full flex items-center justify-center gap-2 bg-[#FEF08A] text-slate-900 font-black text-base py-3.5 rounded-2xl border-2 border-slate-900 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] ${S.press}`}
+          >
+            <MessageCircle className="w-5 h-5" strokeWidth={2.5} />
+            Chat
+          </button>
+        </div>
+      )}
     </div>
   );
 };
@@ -162,7 +163,7 @@ const RADAR_DIMS = [
 
 /* ── Radar Chart SVG ─────────────────────── */
 function RadarChart({ rating }: { rating: PartnerRating }) {
-  const cx = 120, cy = 115, r = 72;
+  const cx = 130, cy = 125, r = 72;
   const n = 5;
 
   function pts(scale: number) {
@@ -178,7 +179,7 @@ function RadarChart({ rating }: { rating: PartnerRating }) {
     const v = rating[key] / 5;
     return { x: cx + r * v * Math.cos(a), y: cy + r * v * Math.sin(a) };
   });
-  const labels = pts(1.42);
+  const labels = pts(1.38);
 
   const toPath = (v: {x:number;y:number}[]) =>
     v.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ') + ' Z';
@@ -186,7 +187,7 @@ function RadarChart({ rating }: { rating: PartnerRating }) {
   const anchors = ['middle', 'start', 'start', 'end', 'end'] as const;
 
   return (
-    <svg viewBox="0 0 240 230" className="w-full max-w-[220px]">
+    <svg viewBox="-20 -20 400 310" className="w-full max-w-[260px]" overflow="visible">
       {/* Grid rings */}
       {[0.25, 0.5, 0.75, 1].map(s => (
         <path key={s} d={toPath(pts(s))} fill="none"
@@ -208,7 +209,7 @@ function RadarChart({ rating }: { rating: PartnerRating }) {
         <text key={i}
           x={labels[i].x} y={labels[i].y}
           textAnchor={anchors[i]} dominantBaseline="middle"
-          fontSize="9" fontWeight="700" fill="#475569"
+          fontSize="10" fontWeight="700" fill="#475569"
         >
           {d.emoji} {d.label}
         </text>
