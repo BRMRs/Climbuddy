@@ -15,36 +15,44 @@ interface SpotlightRect {
 
 const STEPS = [
   {
-    target: 'bottom-nav',
-    title: 'Your Navigation Hub',
-    body: 'These 4 tabs are your home base. Explore gyms, find partners, boost your training, and track your journey.',
+    target: 'tab-explore',
+    title: 'Explore',
+    body: 'Find climbing gyms near you.',
     tooltipPosition: 'above' as const,
-  },
-  {
-    target: 'search-bar',
-    title: 'Find Nearby Gyms',
-    body: 'Search for climbing gyms by name or style. Filter by Beginner, Bouldering, Lead, or Near Me.',
-    tooltipPosition: 'below' as const,
-  },
-  {
-    target: 'getting-started-banner',
-    title: 'New to Climbing?',
-    body: 'Tap here for safety tips, gear basics, and gym etiquette. Perfect for your first session!',
-    tooltipPosition: 'below' as const,
+    isBottomNav: true,
   },
   {
     target: 'tab-partners',
-    title: 'Find Your Partner',
-    body: 'Swipe to match with climbing partners at your level. Chat and plan sessions together!',
+    title: 'Matches',
+    body: 'Find climbing partners.',
     tooltipPosition: 'above' as const,
+    isBottomNav: true,
   },
   {
     target: 'tab-boost',
-    title: 'Level Up Your Training',
-    body: 'Access AI coaching, daily training plans, and premium courses to accelerate your progress.',
+    title: 'Boost',
+    body: 'Training plans & skills.',
     tooltipPosition: 'above' as const,
+    isBottomNav: true,
+  },
+  {
+    target: 'tab-journey',
+    title: 'Journey',
+    body: 'Track your progress.',
+    tooltipPosition: 'above' as const,
+    isBottomNav: true,
+  },
+  {
+    target: 'getting-started-banner',
+    title: 'Getting Started',
+    body: 'Learn climbing safety basics and gear essentials.',
+    tooltipPosition: 'below' as const,
   },
 ];
+
+const W = 390;
+const H = 844;
+const R = 12;
 
 export const SpotlightTour: React.FC<SpotlightTourProps> = ({ onComplete, switchTab }) => {
   const [stepIndex, setStepIndex] = useState(0);
@@ -55,10 +63,7 @@ export const SpotlightTour: React.FC<SpotlightTourProps> = ({ onComplete, switch
 
   useEffect(() => {
     switchTab('gyms');
-    
-    const timer = setTimeout(() => {
-      calculateSpotlight();
-    }, 100);
+    const timer = setTimeout(() => calculateSpotlight(), 150);
     return () => clearTimeout(timer);
   }, [stepIndex, switchTab]);
 
@@ -66,10 +71,10 @@ export const SpotlightTour: React.FC<SpotlightTourProps> = ({ onComplete, switch
     const el = document.querySelector(`[data-onboarding="${STEPS[stepIndex].target}"]`);
     const container = containerRef.current;
     if (!el || !container) return;
-    
+
     const elRect = el.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
-    
+
     const PADDING = 8;
     setSpotlightRect({
       top: elRect.top - containerRect.top - PADDING,
@@ -87,37 +92,46 @@ export const SpotlightTour: React.FC<SpotlightTourProps> = ({ onComplete, switch
     }
   };
 
+  const getTooltipTop = () => {
+    if (!spotlightRect) return 8;
+    const TOOLTIP_HEIGHT = 148;
+    if (currentStep.isBottomNav) {
+      return Math.max(8, spotlightRect.top - TOOLTIP_HEIGHT - 38);
+    }
+    if (currentStep.tooltipPosition === 'above') {
+      return Math.max(8, spotlightRect.top - TOOLTIP_HEIGHT);
+    }
+    return Math.min(spotlightRect.top + spotlightRect.height + 8, H - 180);
+  };
+
+  const clipPath = spotlightRect
+    ? `M0,0 H${W} V${H} H0 Z M${spotlightRect.left + R},${spotlightRect.top} H${spotlightRect.left + spotlightRect.width - R} Q${spotlightRect.left + spotlightRect.width},${spotlightRect.top} ${spotlightRect.left + spotlightRect.width},${spotlightRect.top + R} V${spotlightRect.top + spotlightRect.height - R} Q${spotlightRect.left + spotlightRect.width},${spotlightRect.top + spotlightRect.height} ${spotlightRect.left + spotlightRect.width - R},${spotlightRect.top + spotlightRect.height} H${spotlightRect.left + R} Q${spotlightRect.left},${spotlightRect.top + spotlightRect.height} ${spotlightRect.left},${spotlightRect.top + spotlightRect.height - R} V${spotlightRect.top + R} Q${spotlightRect.left},${spotlightRect.top} ${spotlightRect.left + R},${spotlightRect.top} Z`
+    : `M0,0 H${W} V${H} H0 Z`;
+
   return (
     <div ref={containerRef} className="absolute inset-0 z-[60] overflow-hidden">
-      <div className="absolute inset-0 bg-slate-900/75 pointer-events-auto" />
-      
-      {spotlightRect && (
-        <div
-          className="absolute rounded-xl"
-          style={{
-            top: spotlightRect.top,
-            left: spotlightRect.left,
-            width: spotlightRect.width,
-            height: spotlightRect.height,
-            boxShadow: '0 0 0 9999px rgba(15, 23, 42, 0.75)',
-            backgroundColor: 'transparent',
-            zIndex: 61,
-            pointerEvents: 'none',
-          }}
+      <svg
+        className="absolute inset-0 pointer-events-none"
+        width={W}
+        height={H}
+        style={{ zIndex: 61 }}
+      >
+        <path
+          d={clipPath}
+          fill="rgba(15, 23, 42, 0.75)"
+          fillRule="evenodd"
         />
-      )}
-      
+      </svg>
+
       {spotlightRect && (
         <div
           className="absolute"
           style={{
-            left: Math.max(12, Math.min(spotlightRect.left, 390 - 300 - 12)),
+            left: Math.max(12, Math.min(spotlightRect.left, W - 300 - 12)),
+            top: getTooltipTop(),
             width: 300,
             zIndex: 62,
             pointerEvents: 'auto',
-            ...(currentStep.tooltipPosition === 'above'
-              ? { top: Math.max(8, spotlightRect.top - 148) }
-              : { top: Math.min(spotlightRect.top + spotlightRect.height + 8, 844 - 180) }),
           }}
         >
           <div className={`bg-white rounded-2xl ${S.border} ${S.shadow} p-4`}>
