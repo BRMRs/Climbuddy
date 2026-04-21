@@ -14,6 +14,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ activeTab, setActiveTab })
         onClick={() => setActiveTab('gyms')} 
         className="flex flex-col items-center justify-center transition-transform hover:scale-110 active:scale-95 gap-1 flex-1"
         data-tab="gyms"
+        data-onboarding="tab-explore"
       >
         <Triangle className={`w-7 h-7 transition-colors ${activeTab === 'gyms' ? 'text-teal-600 fill-teal-600' : 'text-slate-400'}`} strokeWidth={activeTab === 'gyms' ? 3 : 2.5} fill={activeTab === 'gyms' ? 'currentColor' : 'none'} />
         <span className={`text-[10px] font-black uppercase tracking-wider ${activeTab === 'gyms' ? 'text-slate-900' : 'text-slate-400'}`}>Explore</span>
@@ -41,6 +42,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ activeTab, setActiveTab })
         onClick={() => setActiveTab('progress')} 
         className="flex flex-col items-center justify-center transition-transform hover:scale-110 active:scale-95 gap-1 flex-1"
         data-tab="progress"
+        data-onboarding="tab-journey"
       >
         <TrendingUp className={`w-7 h-7 transition-colors ${activeTab === 'progress' ? 'text-rose-500' : 'text-slate-400'}`} strokeWidth={activeTab === 'progress' ? 3 : 2.5} />
         <span className={`text-[10px] font-black uppercase tracking-wider ${activeTab === 'progress' ? 'text-slate-900' : 'text-slate-400'}`}>Journey</span>
