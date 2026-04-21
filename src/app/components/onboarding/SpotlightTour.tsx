@@ -11,6 +11,8 @@ interface SpotlightRect {
   left: number;
   width: number;
   height: number;
+  containerWidth: number;
+  containerHeight: number;
 }
 
 const STEPS = [
@@ -50,8 +52,6 @@ const STEPS = [
   },
 ];
 
-const W = 390;
-const H = 844;
 const R = 12;
 
 export const SpotlightTour: React.FC<SpotlightTourProps> = ({ onComplete, switchTab }) => {
@@ -74,6 +74,8 @@ export const SpotlightTour: React.FC<SpotlightTourProps> = ({ onComplete, switch
 
     const elRect = el.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
+    const containerWidth = containerRect.width;
+    const containerHeight = containerRect.height;
 
     const PADDING = 8;
     setSpotlightRect({
@@ -81,6 +83,8 @@ export const SpotlightTour: React.FC<SpotlightTourProps> = ({ onComplete, switch
       left: elRect.left - containerRect.left - PADDING,
       width: elRect.width + PADDING * 2,
       height: elRect.height + PADDING * 2,
+      containerWidth,
+      containerHeight,
     });
   };
 
@@ -94,6 +98,7 @@ export const SpotlightTour: React.FC<SpotlightTourProps> = ({ onComplete, switch
 
   const getTooltipTop = () => {
     if (!spotlightRect) return 8;
+    const H = spotlightRect.containerHeight;
     const TOOLTIP_HEIGHT = 148;
     if (currentStep.isBottomNav) {
       return Math.max(8, spotlightRect.top - TOOLTIP_HEIGHT - 38);
@@ -104,30 +109,42 @@ export const SpotlightTour: React.FC<SpotlightTourProps> = ({ onComplete, switch
     return Math.min(spotlightRect.top + spotlightRect.height + 8, H - 180);
   };
 
-  const clipPath = spotlightRect
-    ? `M0,0 H${W} V${H} H0 Z M${spotlightRect.left + R},${spotlightRect.top} H${spotlightRect.left + spotlightRect.width - R} Q${spotlightRect.left + spotlightRect.width},${spotlightRect.top} ${spotlightRect.left + spotlightRect.width},${spotlightRect.top + R} V${spotlightRect.top + spotlightRect.height - R} Q${spotlightRect.left + spotlightRect.width},${spotlightRect.top + spotlightRect.height} ${spotlightRect.left + spotlightRect.width - R},${spotlightRect.top + spotlightRect.height} H${spotlightRect.left + R} Q${spotlightRect.left},${spotlightRect.top + spotlightRect.height} ${spotlightRect.left},${spotlightRect.top + spotlightRect.height - R} V${spotlightRect.top + R} Q${spotlightRect.left},${spotlightRect.top} ${spotlightRect.left + R},${spotlightRect.top} Z`
-    : `M0,0 H${W} V${H} H0 Z`;
+  const getClipPath = () => {
+    if (!spotlightRect) return '';
+    const W = spotlightRect.containerWidth;
+    const H = spotlightRect.containerHeight;
+    return `M0,0 H${W} V${H} H0 Z M${spotlightRect.left + R},${spotlightRect.top} H${spotlightRect.left + spotlightRect.width - R} Q${spotlightRect.left + spotlightRect.width},${spotlightRect.top} ${spotlightRect.left + spotlightRect.width},${spotlightRect.top + R} V${spotlightRect.top + spotlightRect.height - R} Q${spotlightRect.left + spotlightRect.width},${spotlightRect.top + spotlightRect.height} ${spotlightRect.left + spotlightRect.width - R},${spotlightRect.top + spotlightRect.height} H${spotlightRect.left + R} Q${spotlightRect.left},${spotlightRect.top + spotlightRect.height} ${spotlightRect.left},${spotlightRect.top + spotlightRect.height - R} V${spotlightRect.top + R} Q${spotlightRect.left},${spotlightRect.top} ${spotlightRect.left + R},${spotlightRect.top} Z`;
+  };
+
+  const getFullScreenPath = () => {
+    if (!spotlightRect) return '';
+    const W = spotlightRect.containerWidth;
+    const H = spotlightRect.containerHeight;
+    return `M0,0 H${W} V${H} H0 Z`;
+  };
 
   return (
     <div ref={containerRef} className="absolute inset-0 z-[60] overflow-hidden">
-      <svg
-        className="absolute inset-0 pointer-events-none"
-        width={W}
-        height={H}
-        style={{ zIndex: 61 }}
-      >
-        <path
-          d={clipPath}
-          fill="rgba(15, 23, 42, 0.75)"
-          fillRule="evenodd"
-        />
-      </svg>
+      {spotlightRect && (
+        <svg
+          className="absolute inset-0 pointer-events-none"
+          width={spotlightRect.containerWidth}
+          height={spotlightRect.containerHeight}
+          style={{ zIndex: 61 }}
+        >
+          <path
+            d={getClipPath() || getFullScreenPath()}
+            fill="rgba(15, 23, 42, 0.75)"
+            fillRule="evenodd"
+          />
+        </svg>
+      )}
 
       {spotlightRect && (
         <div
           className="absolute"
           style={{
-            left: Math.max(12, Math.min(spotlightRect.left, W - 300 - 12)),
+            left: Math.max(12, Math.min(spotlightRect.left, spotlightRect.containerWidth - 300 - 12)),
             top: getTooltipTop(),
             width: 300,
             zIndex: 62,

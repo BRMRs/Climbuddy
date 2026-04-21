@@ -89,10 +89,10 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#E2E8F0] flex flex-col items-center justify-center p-4 font-sans selection:bg-teal-200">
+    <div className="min-h-screen bg-[#E2E8F0] md:flex md:flex-col md:items-center md:justify-center md:p-4 font-sans selection:bg-teal-200">
 
       {/* App Title */}
-      <div className="mb-5 text-center">
+      <div className="hidden md:block mb-5 text-center">
         <h1 className="text-3xl font-black text-slate-900 tracking-tighter">Climbuddy</h1>
         <span className="text-slate-600 font-bold text-xs bg-white border-2 border-slate-900 inline-block px-3 py-1 rounded-full shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
           Emma's Journey Prototype
@@ -100,15 +100,15 @@ export default function App() {
       </div>
 
       {/* Phone Frame */}
-      <div className="w-[390px] h-[844px] bg-white border-[6px] border-slate-900 rounded-[3.5rem] shadow-[16px_16px_0px_0px_rgba(15,23,42,0.12)] relative overflow-hidden flex flex-col ring-8 ring-slate-300/40">
+      <div className="w-full h-screen md:w-[390px] md:h-[844px] bg-white md:border-[6px] md:border-slate-900 md:rounded-[3.5rem] md:shadow-[16px_16px_0px_0px_rgba(15,23,42,0.12)] relative overflow-hidden flex flex-col md:ring-8 md:ring-slate-300/40">
 
         {/* Notch */}
-        <div className="absolute top-0 inset-x-0 h-7 bg-white z-50 flex justify-center items-end pb-1.5">
+        <div className="hidden md:flex absolute top-0 inset-x-0 h-7 bg-white z-50 justify-center items-end pb-1.5">
           <div className="w-20 h-1.5 bg-slate-200 rounded-full" />
         </div>
 
         {/* Screen */}
-        <div className="flex-1 w-full bg-[#F8FAFC] relative overflow-hidden flex flex-col pt-7">
+        <div className="flex-1 w-full bg-[#F8FAFC] relative overflow-hidden flex flex-col md:pt-7">
           <div className="flex-1 overflow-hidden relative">
 
             {/* Home tabs */}
@@ -191,7 +191,7 @@ export default function App() {
         </div>
 
         {/* Home indicator */}
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-slate-900 rounded-full opacity-15 z-50 pointer-events-none" />
+        <div className="hidden md:block absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-slate-900 rounded-full opacity-15 z-50 pointer-events-none" />
       </div>
     </div>
   );
