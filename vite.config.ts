@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  base: './',
+  base: '/CPT208_C2-3/Climbuddy/',
   build: {
     outDir: 'dist',
     sourcemap: false,
