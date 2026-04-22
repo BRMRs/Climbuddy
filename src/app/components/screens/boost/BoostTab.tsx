@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { COURSES, DAILY_PLAN, COACH_COURSES, GYM_COACHES } from '../../../data/mockData';
+import { COURSES, COACH_COURSES, GYM_COACHES } from '../../../data/mockData';
 import { S } from '../../../constants/styles';
 import { DailyTask, Coach } from '../../../types';
 
@@ -8,27 +8,16 @@ interface BoostTabProps {
   switchTab?: (tab: any) => void;
   purchasedCourseIds: string[];
   onPurchase: (courseId: string) => void;
+  tasks: DailyTask[];
+  onToggleTask: (taskId: string) => void;
 }
 
-export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab, purchasedCourseIds, onPurchase }) => {
-  const [tasks, setTasks] = useState<DailyTask[]>(DAILY_PLAN);
+export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab, purchasedCourseIds, onPurchase, tasks, onToggleTask }) => {
   const [showAllPremium, setShowAllPremium] = useState(false);
   const freeCourses = COURSES.filter(c => c.type === 'free');
   const paidCourses = COURSES.filter(c => c.type === 'paid');
   const visiblePaidCourses = showAllPremium ? paidCourses : paidCourses.slice(0, 2);
   const allCoaches = Object.values(GYM_COACHES).flat();
-
-  const getBgColor = (thumbnail: string) => {
-    switch (thumbnail) {
-      case '🔥': return 'bg-orange-100';
-      case '🧘': return 'bg-blue-100';
-      case '💨': return 'bg-sky-100';
-      case '💪': return 'bg-red-100';
-      case '🖐️': return 'bg-purple-100';
-      case '👣': return 'bg-green-100';
-      default: return 'bg-slate-100';
-    }
-  };
 
   return (
     <div className="p-5 pb-28 flex flex-col gap-6 animate-in fade-in duration-300">
@@ -58,14 +47,14 @@ export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab, purch
           const isLocked = isPaid && !purchasedCourseIds.includes(task.courseId ?? '');
           return (
             <div
-              key={task.id}
-              className={`border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] rounded-2xl p-4 bg-white flex items-start gap-3 ${task.completed ? 'opacity-60' : ''}`}
-            >
-              {/* Checkbox */}
-              <button
-                onClick={() => setTasks(prev => prev.map(t => t.id === task.id ? { ...t, completed: !t.completed } : t))}
-                className={`mt-0.5 w-6 h-6 rounded-full border-2 border-slate-900 flex items-center justify-center flex-shrink-0 ${task.completed ? 'bg-green-500' : 'bg-white'}`}
+                key={task.id}
+                className={`border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] rounded-2xl p-4 bg-white flex items-start gap-3 ${task.completed ? 'opacity-60' : ''}`}
               >
+                {/* Checkbox */}
+                <button
+                  onClick={() => onToggleTask(task.id)}
+                  className={`mt-0.5 w-6 h-6 rounded-full border-2 border-slate-900 flex items-center justify-center flex-shrink-0 ${task.completed ? 'bg-green-500' : 'bg-white'}`}
+                >
                 {task.completed && <span className="text-white text-xs">✓</span>}
               </button>
               
@@ -119,8 +108,8 @@ export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab, purch
               onClick={() => onNavigate('courseDetail', course)}
               className={`w-40 shrink-0 bg-white rounded-2xl p-3 flex flex-col gap-3 text-left ${S.border} ${S.shadowSm} ${S.press}`}
             >
-              <div className={`w-full h-24 rounded-xl flex items-center justify-center ${getBgColor(course.thumbnail)} ${S.border}`}>
-                <span className="text-4xl">{course.thumbnail}</span>
+              <div className="w-full h-24 rounded-xl overflow-hidden border-2 border-slate-900">
+                <img src={course.thumbnail} alt={course.title} className="w-full h-full object-cover" />
               </div>
               <div className="flex flex-col gap-1">
                 <span className="font-black text-sm text-slate-900 leading-tight line-clamp-2">{course.title}</span>
@@ -148,8 +137,8 @@ export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab, purch
                 onClick={() => onNavigate('courseDetail', course)}
                 className={`w-full bg-white rounded-2xl p-3 flex items-center gap-3 text-left ${S.border} ${S.shadowSm} ${S.press}`}
               >
-                <div className={`w-16 h-16 shrink-0 rounded-xl flex items-center justify-center ${getBgColor(course.thumbnail)} ${S.border}`}>
-                  <span className="text-2xl">{course.thumbnail}</span>
+                <div className="w-16 h-16 shrink-0 rounded-xl overflow-hidden border-2 border-slate-900">
+                  <img src={course.thumbnail} alt={course.title} className="w-full h-full object-cover" />
                 </div>
                 <div className="flex-1 flex flex-col">
                   <span className="font-black text-sm text-slate-900 leading-tight">{course.title}</span>
@@ -183,11 +172,10 @@ export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab, purch
         )}
       </div>
 
-      {/* Train with a Coach Section */}
+{/* Train with a Coach Section */}
       <div className="flex flex-col gap-3">
         <h2 className="text-xl font-black text-slate-900">👨‍🏫 Train with a Coach</h2>
         
-        {/* Coach cards — horizontal scroll */}
         <div className="flex gap-3 overflow-x-auto pb-2 -mx-5 px-5">
           {allCoaches.map(coach => (
             <button
@@ -195,9 +183,14 @@ export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab, purch
               onClick={() => onNavigate('coachDetail', coach)}
               className="flex-shrink-0 w-28 border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] rounded-2xl p-3 bg-white flex flex-col items-center gap-2 active:translate-y-1 active:translate-x-1 active:shadow-none"
             >
-              {/* Avatar circle with initials */}
-              <div className="w-12 h-12 rounded-full bg-teal-100 border-2 border-slate-900 flex items-center justify-center font-black text-teal-700 text-lg">
-                {coach.name.charAt(0)}
+<div className="w-12 h-12 rounded-full border-2 border-slate-900 overflow-hidden">
+                {coach.image ? (
+                  <img src={coach.image} alt={coach.name} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full bg-teal-100 flex items-center justify-center font-black text-teal-700 text-lg">
+                    {coach.name.charAt(0)}
+                  </div>
+                )}
               </div>
               <p className="font-black text-slate-900 text-xs text-center">{coach.name}</p>
               <p className="text-slate-500 text-[10px] text-center leading-tight">{coach.specialty}</p>
@@ -227,8 +220,8 @@ export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab, purch
                 onClick={() => onNavigate('courseDetail', course)}
                 className="border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] rounded-2xl p-4 bg-white flex items-center gap-3 active:translate-y-1 active:translate-x-1 active:shadow-none text-left w-full"
               >
-                <div className="w-14 h-14 rounded-xl bg-purple-100 border-2 border-slate-900 flex items-center justify-center text-2xl flex-shrink-0">
-                  {course.thumbnail}
+                <div className="w-14 h-14 rounded-xl overflow-hidden border-2 border-slate-900 flex-shrink-0">
+                  <img src={course.thumbnail} alt={course.title} className="w-full h-full object-cover" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-black text-slate-900 text-sm">{course.title}</p>

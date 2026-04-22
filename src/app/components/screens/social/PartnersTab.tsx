@@ -8,6 +8,10 @@ import { Partner, MyPreferences, ChatHistoryItem } from '../../../types';
 interface PartnersTabProps {
   onNavigate: (screen: string, data?: any) => void;
   switchTab?: (tab: any) => void;
+  chatHistory?: ChatHistoryItem[];
+  onChatHistoryChange?: (next: ChatHistoryItem[]) => void;
+  preferences?: MyPreferences;
+  onPreferencesChange?: (next: MyPreferences) => void;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -15,6 +19,8 @@ interface PartnersTabProps {
 const LEVELS  = ['V0–V1', 'V1–V2', 'V2–V3', 'V3–V4', 'V4–V5', 'V5–V6', 'V6+'];
 const STYLES  = ['Boulder', 'Lead', 'Top Rope'];
 const AVAILS  = ['Weekday mornings', 'Weekday evenings', 'Weekend mornings', 'Weekend afternoons'];
+const GENDERS = ['Male', 'Female', 'Non-binary', 'Prefer not to say'];
+const PARTNER_GENDER_PREFS = ['Male', 'Female', 'Non-binary', 'Any'];
 
 function toggleArr(arr: string[], val: string) {
   return arr.includes(val) ? arr.filter(v => v !== val) : [...arr, val];
@@ -36,7 +42,14 @@ const DAYS = getNextDays(7);
 
 // ─── Main Component ────────────────────────────────────────────────────────────
 
-export const PartnersTab: React.FC<PartnersTabProps> = ({ onNavigate, switchTab }) => {
+export const PartnersTab: React.FC<PartnersTabProps> = ({
+  onNavigate,
+  switchTab,
+  chatHistory,
+  onChatHistoryChange,
+  preferences,
+  onPreferencesChange,
+}) => {
   const [queue,   setQueue]   = useState<Partner[]>([...PARTNERS_DATA]);
   const [matched, setMatched] = useState<Partner | null>(null);
 
@@ -45,11 +58,42 @@ export const PartnersTab: React.FC<PartnersTabProps> = ({ onNavigate, switchTab 
   const [showHistory, setShowHistory] = useState(false);
 
   // Local prefs state (copy from mock so user can edit)
-  const [prefs, setPrefs] = useState<MyPreferences>({ ...MY_PREFERENCES });
+  const [localPrefs, setLocalPrefs] = useState<MyPreferences>({ ...(preferences ?? MY_PREFERENCES) });
 
   // Chat history with review capability
-  const [history,  setHistory]  = useState<ChatHistoryItem[]>([...CHAT_HISTORY]);
+  const [localHistory,  setLocalHistory]  = useState<ChatHistoryItem[]>([...(chatHistory ?? CHAT_HISTORY)]);
   const [reviewing, setReviewing] = useState<ChatHistoryItem | null>(null);
+
+  const prefs = preferences ?? localPrefs;
+  const history = chatHistory ?? localHistory;
+
+  useEffect(() => {
+    if (preferences) setLocalPrefs({ ...preferences });
+  }, [preferences]);
+
+  useEffect(() => {
+    if (chatHistory) setLocalHistory([...chatHistory]);
+  }, [chatHistory]);
+
+  const setPrefs = (updater: MyPreferences | ((prev: MyPreferences) => MyPreferences)) => {
+    const base = prefs;
+    const next = typeof updater === 'function' ? (updater as (prev: MyPreferences) => MyPreferences)(base) : updater;
+    if (onPreferencesChange) {
+      onPreferencesChange(next);
+    } else {
+      setLocalPrefs(next);
+    }
+  };
+
+  const setHistory = (updater: ChatHistoryItem[] | ((prev: ChatHistoryItem[]) => ChatHistoryItem[])) => {
+    const base = history;
+    const next = typeof updater === 'function' ? (updater as (prev: ChatHistoryItem[]) => ChatHistoryItem[])(base) : updater;
+    if (onChatHistoryChange) {
+      onChatHistoryChange(next);
+    } else {
+      setLocalHistory(next);
+    }
+  };
 
   // Drag
   const [dragX,    setDragX]    = useState(0);
@@ -551,6 +595,18 @@ function PrefsSheet({ prefs, setPrefs, onClose }: {
             ))}
           </div>
 
+          {/* My gender */}
+          <p className="font-black text-slate-700 text-xs uppercase tracking-wider mb-2">My Gender</p>
+          <div className="flex flex-wrap gap-2 mb-4">
+            {GENDERS.map(g => (
+              <button key={g} onClick={() => setPrefs(p => ({ ...p, myGender: g }))}
+                className={`px-3 py-1.5 rounded-full border-2 font-black text-xs transition-all ${S.press}
+                  ${prefs.myGender === g ? 'bg-purple-500 text-white border-purple-500' : 'bg-white text-slate-600 border-slate-300'}`}>
+                {g}
+              </button>
+            ))}
+          </div>
+
           {/* My stats radar */}
           <div className={`bg-[#F8FAFC] rounded-2xl p-4 ${S.border}`}>
             <p className="font-black text-slate-900 text-xs uppercase tracking-wider mb-3">📊 Your Partner Ratings</p>
@@ -613,6 +669,18 @@ function PrefsSheet({ prefs, setPrefs, onClose }: {
               </button>
             ))}
           </div>
+
+          {/* Partner gender preference */}
+          <p className="font-black text-slate-700 text-xs uppercase tracking-wider mb-2">Partner Gender Preference</p>
+          <div className="flex flex-wrap gap-2 mb-4">
+            {PARTNER_GENDER_PREFS.map(g => (
+              <button key={g} onClick={() => setPrefs(p => ({ ...p, wantGender: toggleArr(p.wantGender || [], g) }))}
+                className={`px-3 py-1.5 rounded-full border-2 font-black text-xs transition-all ${S.press}
+                  ${(prefs.wantGender || []).includes(g) ? 'bg-pink-500 text-white border-pink-500' : 'bg-white text-slate-600 border-slate-300'}`}>
+                {g}
+              </button>
+            ))}
+          </div>
         </section>
 
         <button onClick={onClose}
@@ -633,9 +701,9 @@ function ChatHistorySheet({ history, onClose, onChat, onReview }: {
   onReview: (item: ChatHistoryItem) => void;
 }) {
   return (
-    <div className="absolute inset-x-0 bottom-[120px] z-50" onClick={onClose}>
+    <div className="absolute inset-x-0 bottom-0 z-50" onClick={onClose}>
       <div
-        className={`w-full bg-white rounded-t-3xl ${S.border} shadow-[0px_-4px_0px_0px_rgba(15,23,42,1)] animate-in slide-in-from-bottom-4 duration-300 max-h-[70vh] flex flex-col`}
+        className={`w-full bg-white rounded-t-3xl ${S.border} shadow-[0px_-4px_0px_0px_rgba(15,23,42,1)] animate-in slide-in-from-bottom-4 duration-300 max-h-[70vh] flex flex-col pb-28`}
         onClick={e => e.stopPropagation()}
       >
         <div className="px-5 pt-5 pb-3 flex items-center justify-between border-b-2 border-slate-100 flex-shrink-0">

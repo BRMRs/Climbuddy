@@ -48,9 +48,17 @@ interface GymDetailScreenProps {
   onBack: () => void;
   onNavigate: (screen: string, data?: any) => void;
   venueReviews?: VenueReview[];
+  onCreateCalendarEvent?: (event: {
+    date: string;
+    type: 'booking' | 'coach';
+    gymId: string;
+    gymName: string;
+    coachName?: string;
+    slot: string;
+  }) => void;
 }
 
-export const GymDetailScreen: React.FC<GymDetailScreenProps> = ({ gym, onBack, onNavigate, venueReviews }) => {
+export const GymDetailScreen: React.FC<GymDetailScreenProps> = ({ gym, onBack, onNavigate, venueReviews, onCreateCalendarEvent }) => {
   const [tab, setTab] = useState<Tab>('Info');
   const [photoIdx, setPhotoIdx] = useState(0);
   // 'visit' = book the gym, coach name = book that coach, null = closed
@@ -258,9 +266,20 @@ export const GymDetailScreen: React.FC<GymDetailScreenProps> = ({ gym, onBack, o
       {/* Booking Modal */}
       {bookingTarget !== null && (
         <BookingModal
+          gymId={gym.id}
           gymName={gym.name}
           target={bookingTarget}
           onClose={() => setBookingTarget(null)}
+          onConfirmBooking={({ date, slot, targetName }) => {
+            onCreateCalendarEvent?.({
+              date,
+              slot,
+              gymId: gym.id,
+              gymName: gym.name,
+              type: targetName === 'visit' ? 'booking' : 'coach',
+              coachName: targetName === 'visit' ? undefined : targetName,
+            });
+          }}
           onChatWith={(booker) => {
             setBookingTarget(null);
             onNavigate('chat', {
@@ -358,11 +377,13 @@ function RouteCard({ route }: { route: Route }) {
 }
 
 /* ── Booking Modal ─────────────────────────────── */
-function BookingModal({ gymName, target, onClose, onChatWith }: {
+function BookingModal({ gymId, gymName, target, onClose, onChatWith, onConfirmBooking }: {
+  gymId: string;
   gymName: string;
   target: string;
   onClose: () => void;
   onChatWith: (b: SlotBooker) => void;
+  onConfirmBooking: (payload: { date: string; slot: string; targetName: string; gymId: string; gymName: string }) => void;
 }) {
   const [dayIdx, setDayIdx] = useState(0);
   const [slot, setSlot]     = useState<string | null>(null);
@@ -492,7 +513,17 @@ function BookingModal({ gymName, target, onClose, onChatWith }: {
 
       {/* Confirm */}
       <button
-        onClick={() => slot && setConfirmed(true)}
+        onClick={() => {
+          if (!slot) return;
+          onConfirmBooking({
+            date: DAYS[dayIdx].label,
+            slot,
+            targetName: target,
+            gymId,
+            gymName,
+          });
+          setConfirmed(true);
+        }}
         disabled={!slot}
         className={`w-full py-4 rounded-2xl font-black text-lg border-2 border-slate-900 transition-all ${S.press}
           ${slot

@@ -1,6 +1,27 @@
-import React, { useState } from 'react';
-import { SESSIONS, CALENDAR_EVENTS, VENUE_REVIEWS, COACH_REVIEWS } from './data/mockData';
-import { SessionLog, CalendarEvent, VenueReview, CoachReview, PartnerReview } from './types';
+import React, { useEffect, useState } from 'react';
+import {
+  SESSIONS,
+  CALENDAR_EVENTS,
+  VENUE_REVIEWS,
+  COACH_REVIEWS,
+  PARTNER_REVIEWS,
+  CHAT_HISTORY,
+  MY_PREFERENCES,
+  DAILY_PLAN,
+} from './data/mockData';
+import {
+  SessionLog,
+  CalendarEvent,
+  VenueReview,
+  CoachReview,
+  PartnerReview,
+  ChatHistoryItem,
+  MyPreferences,
+  Message,
+  MeetingProposal,
+  DailyTask,
+  Partner,
+} from './types';
 import { ScreenType, TabType } from './types';
 import { useOnboarding } from './hooks/useOnboarding';
 import { WelcomeCards } from './components/onboarding/WelcomeCards';
@@ -28,17 +49,79 @@ import { AICoachChatScreen } from './components/screens/boost/AICoachChatScreen'
 import { CoachDetailScreen } from './components/coach/CoachDetailScreen';
 import { Course, Coach } from './types';
 
+type ChatMessagesByThread = Record<string, Message[]>;
+
+interface DomainState {
+  sessions: SessionLog[];
+  calendarEvents: CalendarEvent[];
+  venueReviews: VenueReview[];
+  coachReviews: CoachReview[];
+  partnerReviews: PartnerReview[];
+  purchasedCourseIds: string[];
+  chatHistory: ChatHistoryItem[];
+  myPreferences: MyPreferences;
+  chatMessagesByThread: ChatMessagesByThread;
+  dailyTasks: DailyTask[];
+}
+
+const DOMAIN_STORAGE_KEY = 'climbuddy_domain_state_v1';
+
+const DEFAULT_DOMAIN_STATE: DomainState = {
+  sessions: SESSIONS,
+  calendarEvents: CALENDAR_EVENTS,
+  venueReviews: VENUE_REVIEWS,
+  coachReviews: COACH_REVIEWS,
+  partnerReviews: PARTNER_REVIEWS,
+  purchasedCourseIds: ['crs-warmup', 'crs-stretch', 'crs-recovery', 'crs-plateau'],
+  chatHistory: CHAT_HISTORY,
+  myPreferences: MY_PREFERENCES,
+  chatMessagesByThread: {},
+  dailyTasks: DAILY_PLAN,
+};
+
+function loadDomainState(): DomainState {
+  try {
+    const raw = localStorage.getItem(DOMAIN_STORAGE_KEY);
+    if (!raw) return DEFAULT_DOMAIN_STATE;
+    const parsed = JSON.parse(raw) as Partial<DomainState>;
+    return {
+      ...DEFAULT_DOMAIN_STATE,
+      ...parsed,
+      sessions: parsed.sessions ?? DEFAULT_DOMAIN_STATE.sessions,
+      calendarEvents: parsed.calendarEvents ?? DEFAULT_DOMAIN_STATE.calendarEvents,
+      venueReviews: parsed.venueReviews ?? DEFAULT_DOMAIN_STATE.venueReviews,
+      coachReviews: parsed.coachReviews ?? DEFAULT_DOMAIN_STATE.coachReviews,
+      partnerReviews: parsed.partnerReviews ?? DEFAULT_DOMAIN_STATE.partnerReviews,
+      purchasedCourseIds: parsed.purchasedCourseIds ?? DEFAULT_DOMAIN_STATE.purchasedCourseIds,
+      chatHistory: parsed.chatHistory ?? DEFAULT_DOMAIN_STATE.chatHistory,
+      myPreferences: parsed.myPreferences ?? DEFAULT_DOMAIN_STATE.myPreferences,
+      chatMessagesByThread: parsed.chatMessagesByThread ?? DEFAULT_DOMAIN_STATE.chatMessagesByThread,
+      dailyTasks: parsed.dailyTasks ?? DEFAULT_DOMAIN_STATE.dailyTasks,
+    };
+  } catch {
+    return DEFAULT_DOMAIN_STATE;
+  }
+}
+
+function toUniqueHistory(history: ChatHistoryItem[]): ChatHistoryItem[] {
+  const map = new Map<string, ChatHistoryItem>();
+  history.forEach(item => {
+    map.set(item.partnerId, item);
+  });
+  return Array.from(map.values());
+}
+
+function getThreadId(data: unknown, isCoach = false): string {
+  const entity = data as { id?: string; name?: string } | null;
+  const base = entity?.id ?? entity?.name ?? 'unknown';
+  return isCoach ? `coach:${base}` : `partner:${base}`;
+}
+
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('gyms');
   const [activeScreen, setActiveScreen] = useState<ScreenType>('home');
   const [screenData, setScreenData] = useState<any>(null);
-  // Lifted shared state
-  const [sessions, setSessions] = useState<SessionLog[]>(SESSIONS);
-  const [calendarEvents, setCalendarEvents] = useState<CalendarEvent[]>(CALENDAR_EVENTS);
-  const [venueReviews, setVenueReviews] = useState<VenueReview[]>(VENUE_REVIEWS);
-  const [coachReviews, setCoachReviews] = useState<CoachReview[]>(COACH_REVIEWS);
-  const [partnerReviews, setPartnerReviews] = useState<PartnerReview[]>([]);
-  const [purchasedCourseIds, setPurchasedCourseIds] = useState<string[]>(['crs-warmup', 'crs-stretch', 'crs-recovery', 'crs-plateau']);
+  const [domainState, setDomainState] = useState<DomainState>(loadDomainState);
 
   const { showWelcome, showTour, completeWelcome, skipWelcome, completeTour, skipTour, resetOnboarding } = useOnboarding();
   const [tourReady, setTourReady] = useState(false);
@@ -52,28 +135,127 @@ export default function App() {
     }
   }, [showWelcome, showTour]);
 
+  useEffect(() => {
+    try {
+      localStorage.setItem(DOMAIN_STORAGE_KEY, JSON.stringify(domainState));
+    } catch {
+    }
+  }, [domainState]);
+
   const addSession = (session: SessionLog) => {
-    setSessions(prev => [session, ...prev]);
+    setDomainState(prev => ({ ...prev, sessions: [session, ...prev.sessions] }));
   };
 
   const addReview = (review: VenueReview) => {
-    setVenueReviews(prev => [...prev, review]);
+    setDomainState(prev => ({ ...prev, venueReviews: [...prev.venueReviews, review] }));
   };
 
   const addCoachReview = (review: CoachReview) => {
-    setCoachReviews(prev => [...prev, review]);
+    setDomainState(prev => ({ ...prev, coachReviews: [...prev.coachReviews, review] }));
   };
 
   const addPartnerReview = (review: PartnerReview) => {
-    setPartnerReviews(prev => [...prev, review]);
+    setDomainState(prev => ({ ...prev, partnerReviews: [...prev.partnerReviews, review] }));
   };
 
   const markEventReviewed = (eventId: string) => {
-    setCalendarEvents(prev => prev.map(e => (e.id === eventId ? { ...e, isReviewed: true } : e)));
+    setDomainState(prev => ({
+      ...prev,
+      calendarEvents: prev.calendarEvents.map(e => (e.id === eventId ? { ...e, isReviewed: true } : e)),
+    }));
   };
 
   const onPurchase = (courseId: string) => {
-    setPurchasedCourseIds(prev => [...prev, courseId]);
+    setDomainState(prev => {
+      if (prev.purchasedCourseIds.includes(courseId)) return prev;
+      return { ...prev, purchasedCourseIds: [...prev.purchasedCourseIds, courseId] };
+    });
+  };
+
+  const toggleDailyTask = (taskId: string) => {
+    setDomainState(prev => ({
+      ...prev,
+      dailyTasks: prev.dailyTasks.map(task => (task.id === taskId ? { ...task, completed: !task.completed } : task)),
+    }));
+  };
+
+  const addCalendarEvent = (event: Omit<CalendarEvent, 'id' | 'isExpired' | 'isReviewed'>) => {
+    setDomainState(prev => ({
+      ...prev,
+      calendarEvents: [
+        {
+          id: `ev-${Date.now()}-${Math.random().toString(16).slice(2, 8)}`,
+          isExpired: false,
+          isReviewed: false,
+          ...event,
+        },
+        ...prev.calendarEvents,
+      ],
+    }));
+  };
+
+  const updateChatHistory = (updater: (current: ChatHistoryItem[]) => ChatHistoryItem[]) => {
+    setDomainState(prev => ({ ...prev, chatHistory: toUniqueHistory(updater(prev.chatHistory)) }));
+  };
+
+  const upsertChatHistory = (partnerId: string, patch: Partial<ChatHistoryItem>) => {
+    updateChatHistory(current => {
+      const existing = current.find(item => item.partnerId === partnerId);
+      if (existing) {
+        return current.map(item => (item.partnerId === partnerId ? { ...item, ...patch, partnerId } : item));
+      }
+      return [
+        {
+          partnerId,
+          lastMessage: patch.lastMessage ?? '',
+          time: patch.time ?? 'Now',
+          unread: patch.unread ?? 0,
+          sessionStatus: patch.sessionStatus,
+          sessionDate: patch.sessionDate,
+          sessionGym: patch.sessionGym,
+          sessionSlot: patch.sessionSlot,
+        },
+        ...current,
+      ];
+    });
+  };
+
+  const setPreferences = (preferences: MyPreferences) => {
+    setDomainState(prev => ({ ...prev, myPreferences: preferences }));
+  };
+
+  const setThreadMessages = (threadId: string, messages: Message[]) => {
+    setDomainState(prev => ({
+      ...prev,
+      chatMessagesByThread: {
+        ...prev.chatMessagesByThread,
+        [threadId]: messages,
+      },
+    }));
+  };
+
+  const handlePartnerMessageUpdate = (partner: Partner, lastMessage: string, time: string) => {
+    upsertChatHistory(partner.id, { lastMessage, time, unread: 0 });
+  };
+
+  const handleProposalAccepted = (partner: Partner, proposal: MeetingProposal) => {
+    addCalendarEvent({
+      date: proposal.date,
+      type: 'social',
+      gymId: proposal.gymId,
+      gymName: proposal.gym,
+      partnerName: partner.name,
+      slot: proposal.slot,
+    });
+    upsertChatHistory(partner.id, {
+      sessionStatus: 'upcoming',
+      sessionDate: proposal.date,
+      sessionGym: proposal.gym,
+      sessionSlot: proposal.slot,
+      unread: 0,
+      lastMessage: `Confirmed: ${proposal.gym} · ${proposal.date} · ${proposal.slot}`,
+      time: 'Now',
+    });
   };
 
   const navigate = (screen: string, data?: any) => {
@@ -115,13 +297,22 @@ export default function App() {
             {activeScreen === 'home' && (
               <div className="h-full overflow-y-auto custom-scrollbar">
                 {activeTab === 'gyms'     && <GymsTab onNavigate={navigate} switchTab={switchTab} />}
-                {activeTab === 'partners' && <PartnersTab onNavigate={navigate} switchTab={switchTab} />}
+                {activeTab === 'partners' && (
+                  <PartnersTab
+                    onNavigate={navigate}
+                    switchTab={switchTab}
+                    chatHistory={domainState.chatHistory}
+                    onChatHistoryChange={(next) => setDomainState(prev => ({ ...prev, chatHistory: toUniqueHistory(next) }))}
+                    preferences={domainState.myPreferences}
+                    onPreferencesChange={setPreferences}
+                  />
+                )}
                 {activeTab === 'progress' && (
                   <ProgressTab
                     onNavigate={navigate}
                     switchTab={switchTab}
-                    sessions={sessions}
-                    calendarEvents={calendarEvents}
+                    sessions={domainState.sessions}
+                    calendarEvents={domainState.calendarEvents}
                     addSession={addSession}
                     addReview={addReview}
                     addCoachReview={addCoachReview}
@@ -130,15 +321,48 @@ export default function App() {
                     onResetOnboarding={resetOnboarding}
                   />
                 )}
-                {activeTab === 'boost'     && <BoostTab onNavigate={navigate} switchTab={switchTab} purchasedCourseIds={purchasedCourseIds} onPurchase={onPurchase} />}
+                {activeTab === 'boost'     && (
+                  <BoostTab
+                    onNavigate={navigate}
+                    switchTab={switchTab}
+                    purchasedCourseIds={domainState.purchasedCourseIds}
+                    onPurchase={onPurchase}
+                    tasks={domainState.dailyTasks}
+                    onToggleTask={toggleDailyTask}
+                  />
+                )}
               </div>
             )}
 
             {/* Detail screens */}
-            {activeScreen === 'gymDetail'      && <GymDetailScreen gym={screenData} onBack={goHome} onNavigate={navigate} venueReviews={venueReviews} />}
+            {activeScreen === 'gymDetail'      && (
+              <GymDetailScreen
+                gym={screenData}
+                onBack={goHome}
+                onNavigate={navigate}
+                venueReviews={domainState.venueReviews}
+                onCreateCalendarEvent={(event) => addCalendarEvent(event)}
+              />
+            )}
             {activeScreen === 'gettingStarted' && <GettingStartedScreen onBack={goHome} switchTab={switchTab} onNavigateToBoost={() => { switchTab('boost'); goHome(); }} />}
-            {activeScreen === 'chat'           && <ChatScreen partner={screenData} onBack={goHome} />}
-            {activeScreen === 'coachChat'     && <ChatScreen partner={screenData} onBack={() => navigate('coachDetail', screenData)} />}
+            {activeScreen === 'chat'           && (
+              <ChatScreen
+                partner={screenData}
+                onBack={goHome}
+                initialMessages={domainState.chatMessagesByThread[getThreadId(screenData)]}
+                onMessagesChange={(messages) => setThreadMessages(getThreadId(screenData), messages)}
+                onLastMessage={(lastMessage, time) => handlePartnerMessageUpdate(screenData as Partner, lastMessage, time)}
+                onMeetingAccepted={(proposal) => handleProposalAccepted(screenData as Partner, proposal)}
+              />
+            )}
+            {activeScreen === 'coachChat'     && (
+              <ChatScreen
+                partner={screenData}
+                onBack={() => navigate('coachDetail', screenData)}
+                initialMessages={domainState.chatMessagesByThread[getThreadId(screenData, true)]}
+                onMessagesChange={(messages) => setThreadMessages(getThreadId(screenData, true), messages)}
+              />
+            )}
             {activeScreen === 'addPartner'     && <AddPartnerScreen onBack={goHome} />}
             {activeScreen === 'partnerProfile' && (
               <PartnerProfileScreen
@@ -152,7 +376,7 @@ export default function App() {
               <CourseDetailScreen
                 course={screenData as Course}
                 onBack={goHome}
-                isPurchased={purchasedCourseIds.includes((screenData as Course).id)}
+                isPurchased={domainState.purchasedCourseIds.includes((screenData as Course).id)}
                 onPurchase={onPurchase}
               />
             )}
@@ -164,7 +388,8 @@ export default function App() {
                 onChat={() => navigate('coachChat', screenData)}
                 onBook={(coach: Coach) => navigate('bookCoach', coach)}
                 onNavigate={navigate}
-                coachReviews={coachReviews}
+                coachReviews={domainState.coachReviews}
+                onCreateCalendarEvent={(event) => addCalendarEvent(event)}
               />
             )}
           </div>

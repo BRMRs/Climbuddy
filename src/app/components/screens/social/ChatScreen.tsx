@@ -40,10 +40,24 @@ let replyIdx = 0;
 interface ChatScreenProps {
   partner: Partner;
   onBack: () => void;
+  initialMessages?: Message[];
+  onMessagesChange?: (messages: Message[]) => void;
+  onMeetingAccepted?: (proposal: MeetingProposal) => void;
+  onLastMessage?: (lastMessage: string, time: string) => void;
 }
 
-export const ChatScreen: React.FC<ChatScreenProps> = ({ partner, onBack }) => {
-  const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES);
+export const ChatScreen: React.FC<ChatScreenProps> = ({
+  partner,
+  onBack,
+  initialMessages,
+  onMessagesChange,
+  onMeetingAccepted,
+  onLastMessage,
+}) => {
+  const [messages, setMessages] = useState<Message[]>(() => {
+    if (initialMessages && initialMessages.length > 0) return initialMessages;
+    return INITIAL_MESSAGES;
+  });
   const [input,    setInput]    = useState('');
   const [typing,   setTyping]   = useState(false);
   const [showPropose, setShowPropose] = useState(false);
@@ -53,11 +67,16 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ partner, onBack }) => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, typing]);
 
+  useEffect(() => {
+    onMessagesChange?.(messages);
+  }, [messages, onMessagesChange]);
+
   const send = () => {
     const text = input.trim();
     if (!text) return;
     setInput('');
     setMessages(m => [...m, { id: `u${Date.now()}`, text, fromSelf: true, time: nowStr() }]);
+    onLastMessage?.(text, nowStr());
 
     setTyping(true);
     setTimeout(() => {
@@ -67,6 +86,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ partner, onBack }) => {
         text: AUTO_REPLIES[replyIdx++ % AUTO_REPLIES.length],
         fromSelf: false, time: nowStr(),
       }]);
+      onLastMessage?.(AUTO_REPLIES[(replyIdx - 1 + AUTO_REPLIES.length) % AUTO_REPLIES.length], nowStr());
     }, 1200 + Math.random() * 800);
   };
 
@@ -83,6 +103,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ partner, onBack }) => {
       time: nowStr(),
       meetingProposal: proposal,
     }]);
+    onLastMessage?.('Sent a climb invite', nowStr());
 
     // Simulate partner seeing it and accepting after ~2s
     setTyping(true);
@@ -101,6 +122,8 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ partner, onBack }) => {
         fromSelf: false,
         time: nowStr(),
       }]);
+      onLastMessage?.(`Confirmed: ${proposal.gym} · ${proposal.date} · ${proposal.slot}`, nowStr());
+      onMeetingAccepted?.(proposal);
     }, 2000);
   };
 

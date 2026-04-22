@@ -30,9 +30,17 @@ interface CoachDetailScreenProps {
   onBook: (coach: Coach) => void;
   onNavigate: (screen: string, data?: unknown) => void;
   coachReviews?: CoachReview[];
+  onCreateCalendarEvent?: (event: {
+    date: string;
+    type: 'coach';
+    gymId: string;
+    gymName: string;
+    coachName: string;
+    slot: string;
+  }) => void;
 }
 
-export const CoachDetailScreen: React.FC<CoachDetailScreenProps> = ({ coach, onBack, onChat, onBook, onNavigate, coachReviews = [] }) => {
+export const CoachDetailScreen: React.FC<CoachDetailScreenProps> = ({ coach, onBack, onChat, onBook, onNavigate, coachReviews = [], onCreateCalendarEvent }) => {
   const [showBookModal, setShowBookModal] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [bookingInfo, setBookingInfo] = useState<{gymName: string; date: string; slot: string} | null>(null);
@@ -61,11 +69,16 @@ export const CoachDetailScreen: React.FC<CoachDetailScreenProps> = ({ coach, onB
       <ScreenHeader onBack={onBack} />
 
       <div className="flex-1 overflow-y-auto custom-scrollbar">
-        {/* Header */}
         <div className="bg-gradient-to-b from-indigo-500 to-purple-600 p-5 text-white">
           <div className="flex items-center gap-4">
-            <div className="w-20 h-20 rounded-full bg-white/20 border-4 border-white flex items-center justify-center font-black text-white text-3xl">
-              {coach.name.charAt(0)}
+            <div className="w-20 h-20 rounded-full border-4 border-white overflow-hidden">
+              {coach.image ? (
+                <img src={coach.image} alt={coach.name} className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full bg-white/20 flex items-center justify-center font-black text-white text-3xl">
+                  {coach.name.charAt(0)}
+                </div>
+              )}
             </div>
             <div>
               <p className="font-black text-2xl">{coach.name}</p>
@@ -243,8 +256,8 @@ export const CoachDetailScreen: React.FC<CoachDetailScreenProps> = ({ coach, onB
                   onClick={() => onNavigate('courseDetail', course)}
                   className="w-full bg-white rounded-2xl p-4 flex items-center gap-3 border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] active:translate-y-1 active:translate-x-1 active:shadow-none transition-all"
                 >
-                  <div className="w-12 h-12 rounded-xl bg-purple-100 border-2 border-slate-900 flex items-center justify-center text-xl">
-                    {course.thumbnail}
+                  <div className="w-12 h-12 rounded-xl overflow-hidden border-2 border-slate-900">
+                    <img src={course.thumbnail} alt={course.title} className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1 text-left">
                     <p className="font-black text-slate-900 text-sm">{course.title}</p>
@@ -282,6 +295,14 @@ export const CoachDetailScreen: React.FC<CoachDetailScreenProps> = ({ coach, onB
           coach={coach}
           onClose={() => setShowBookModal(false)}
           onBookingSuccess={(info) => {
+            onCreateCalendarEvent?.({
+              date: info.date,
+              type: 'coach',
+              gymId: info.gymId,
+              gymName: info.gymName,
+              coachName: coach.name,
+              slot: info.slot,
+            });
             setBookingInfo(info);
             setShowSuccess(true);
             setTimeout(() => {
@@ -317,7 +338,7 @@ export const CoachDetailScreen: React.FC<CoachDetailScreenProps> = ({ coach, onB
   );
 };
 
-function BookingModal({ coach, onClose, onBookingSuccess }: { coach: Coach; onClose: () => void; onBookingSuccess: (info: {gymName: string; date: string; slot: string}) => void }) {
+function BookingModal({ coach, onClose, onBookingSuccess }: { coach: Coach; onClose: () => void; onBookingSuccess: (info: {gymId: string; gymName: string; date: string; slot: string}) => void }) {
   const [step, setStep] = useState<0 | 1 | 2>(0);
   const [selectedGym, setSelectedGym] = useState<string | null>(null);
   const [dayIdx, setDayIdx] = useState(0);
@@ -330,6 +351,7 @@ function BookingModal({ coach, onClose, onBookingSuccess }: { coach: Coach; onCl
     const gym = GYMS_DATA.find(g => g.id === selectedGym);
     if (gym) {
       onBookingSuccess({
+        gymId: gym.id,
         gymName: gym.name,
         date: DAYS[dayIdx].label,
         slot: slot
