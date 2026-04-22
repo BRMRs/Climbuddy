@@ -701,9 +701,9 @@ function ChatHistorySheet({ history, onClose, onChat, onReview }: {
   onReview: (item: ChatHistoryItem) => void;
 }) {
   return (
-    <div className="absolute inset-x-0 bottom-0 z-50" onClick={onClose}>
+    <div className="absolute inset-0 z-50 flex items-end" onClick={onClose}>
       <div
-        className={`w-full bg-white rounded-t-3xl ${S.border} shadow-[0px_-4px_0px_0px_rgba(15,23,42,1)] animate-in slide-in-from-bottom-4 duration-300 max-h-[70vh] flex flex-col pb-28`}
+        className={`w-full h-[76vh] bg-white rounded-t-3xl ${S.border} shadow-[0px_-4px_0px_0px_rgba(15,23,42,1)] animate-in slide-in-from-bottom-4 duration-300 flex flex-col`}
         onClick={e => e.stopPropagation()}
       >
         <div className="px-5 pt-5 pb-3 flex items-center justify-between border-b-2 border-slate-100 flex-shrink-0">
@@ -712,15 +712,15 @@ function ChatHistorySheet({ history, onClose, onChat, onReview }: {
             <X className="w-4 h-4 text-slate-600" />
           </button>
         </div>
-        <div className="flex-1 overflow-y-auto custom-scrollbar px-5 py-4 flex flex-col gap-3">
+        <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar overscroll-contain px-5 py-4 flex flex-col gap-3 pb-6">
           {history.length === 0 && (
             <p className="text-center text-slate-400 font-bold py-8">No chats yet.</p>
           )}
-          {history.map(item => {
+          {history.map((item, index) => {
             const partner = PARTNERS_DATA.find(p => p.id === item.partnerId);
             if (!partner) return null;
             return (
-              <div key={item.partnerId} className={`rounded-2xl ${S.border} ${S.shadowSm} overflow-hidden bg-white`}>
+              <div key={`${item.partnerId}-${item.time}-${index}`} className={`rounded-2xl ${S.border} ${S.shadowSm} overflow-hidden bg-white`}>
                 {/* Session badge */}
                 {item.sessionStatus === 'upcoming' && (
                   <div className="bg-teal-50 border-b-2 border-teal-200 px-4 py-2 flex items-center gap-2">
@@ -749,7 +749,7 @@ function ChatHistorySheet({ history, onClose, onChat, onReview }: {
                 {/* Chat row */}
                 <button
                   onClick={() => onChat(partner)}
-                  className="w-full flex items-center gap-3 p-4 hover:bg-slate-50 transition-colors text-left"
+                  className="w-full min-h-[76px] flex items-center gap-3 p-4 hover:bg-slate-50 transition-colors text-left"
                 >
                   <div className={`w-12 h-12 rounded-full overflow-hidden ${S.border} shrink-0`}>
                     <img src={partner.image} className="w-full h-full object-cover" alt={partner.name} />

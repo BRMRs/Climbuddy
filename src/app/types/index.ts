@@ -23,6 +23,7 @@ export interface Coach {
   bio: string;
   courseIds: string[];
   price?: string;
+  image?: string;
 }
 
 export interface Partner {
@@ -108,9 +109,11 @@ export interface MyPreferences {
   myStyles: string[];
   myAvailability: string[];
   myGym: string;
+  myGender?: string;
   wantLevel: string;
   wantStyles: string[];
   wantAvailability: string[];
+  wantGender?: string[];
 }
 
 export interface ChatHistoryItem {

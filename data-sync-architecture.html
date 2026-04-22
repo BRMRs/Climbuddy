@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Climbuddy 数据实体关系图</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --c-bg: #f8fafc;
+      --c-canvas: #ffffff;
+      --c-border: #cbd5e1;
+      --c-text-main: #0f172a;
+      --c-text-sub: #64748b;
+      --c-accent: #dc2626;
+      --c-sync: #059669;
+      --font-ui: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-ui);
+      background: var(--c-bg);
+      padding: 40px;
+      min-height: 100vh;
+    }
+
+    .diagram-container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .diagram-canvas {
+      background: var(--c-canvas);
+      border: 1px solid var(--c-border);
+      padding: 32px;
+      margin-bottom: 32px;
+    }
+
+    .diagram-header {
+      border-bottom: 1px solid var(--c-border);
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+    }
+
+    .diagram-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--c-text-main);
+      margin-bottom: 4px;
+    }
+
+    .diagram-subtitle {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--c-text-sub);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Entity Styles */
+    .entity-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .entity-card {
+      border: 1px solid var(--c-border);
+      padding: 16px;
+      background: var(--c-canvas);
+      position: relative;
+    }
+
+    .entity-card.central {
+      border: 2px solid var(--c-text-main);
+      background: #fafafa;
+    }
+
+    .entity-type {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--c-text-sub);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+
+    .entity-name {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: var(--c-text-main);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .entity-fields {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--c-text-sub);
+      line-height: 1.6;
+    }
+
+    .relation-badge {
+      position: absolute;
+      top: -8px;
+      right: 8px;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      padding: 2px 6px;
+      border: 1px solid var(--c-border);
+      background: var(--c-canvas);
+      color: var(--c-text-sub);
+    }
+
+    /* Section Headers */
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--c-text-main);
+      margin: 24px 0 16px 0;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--c-border);
+    }
+
+    /* Relationship Table */
+    .relation-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+
+    .relation-table th,
+    .relation-table td {
+      border: 1px solid var(--c-border);
+      padding: 10px 12px;
+      text-align: left;
+    }
+
+    .relation-table th {
+      background: #f8fafc;
+      font-weight: 600;
+      color: var(--c-text-main);
+      text-transform: uppercase;
+      font-size: 10px;
+      letter-spacing: 0.03em;
+    }
+
+    .relation-table td {
+      color: var(--c-text-sub);
+    }
+
+    .relation-connector {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      padding: 2px 8px;
+      border: 1px solid var(--c-border);
+      background: #f8fafc;
+      margin: 0 4px;
+    }
+
+    /* Legend */
+    .legend {
+      display: flex;
+      gap: 24px;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--c-border);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--c-text-sub);
+    }
+
+    .legend-box {
+      width: 16px;
+      height: 16px;
+      border: 1px solid var(--c-border);
+    }
+
+    .legend-box.central {
+      border: 2px solid var(--c-text-main);
+      background: #fafafa;
+    }
+
+    /* Flow Diagram Styles */
+    .flow-container {
+      display: grid;
+      grid-template-columns: 180px 1fr 180px;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .flow-column {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .flow-column-title {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--c-text-sub);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--c-border);
+      margin-bottom: 8px;
+    }
+
+    .page-node {
+      border: 1px solid var(--c-border);
+      padding: 12px;
+      background: var(--c-canvas);
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+
+    .page-node.producer {
+      border-left: 3px solid var(--c-sync);
+    }
+
+    .page-node.consumer {
+      border-left: 3px solid var(--c-accent);
+    }
+
+    .page-node.both {
+      border-left: 3px solid var(--c-text-main);
+    }
+
+    .page-name {
+      font-weight: 600;
+      color: var(--c-text-main);
+      margin-bottom: 4px;
+    }
+
+    .page-data {
+      font-size: 10px;
+      color: var(--c-text-sub);
+      line-height: 1.5;
+    }
+
+    .flow-connector {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 400px;
+    }
+
+    .sync-legend {
+      display: flex;
+      gap: 16px;
+      margin-top: 16px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+    }
+
+    .sync-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sync-indicator {
+      width: 12px;
+      height: 12px;
+      border: 1px solid var(--c-border);
+    }
+
+    .sync-indicator.producer { background: var(--c-sync); border-color: var(--c-sync); }
+    .sync-indicator.consumer { background: var(--c-accent); border-color: var(--c-accent); }
+    .sync-indicator.both { background: var(--c-text-main); border-color: var(--c-text-main); }
+  </style>
+</head>
+<body>
+  <div class="diagram-container">
+    <!-- 图1: 数据实体关系图 -->
+    <div class="diagram-canvas">
+      <div class="diagram-header">
+        <div class="diagram-title">Climbuddy 数据实体关系图</div>
+        <div class="diagram-subtitle">Entity Relationship Diagram / v1.0</div>
+      </div>
+
+      <div class="section-title">核心实体定义 (Core Entities)</div>
+      
+      <div class="entity-grid">
+        <!-- 中央实体 -->
+        <div class="entity-card central">
+          <span class="relation-badge">CENTRAL</span>
+          <div class="entity-type">Booking / Event</div>
+          <div class="entity-name">CalendarEvent</div>
+          <div class="entity-fields">
+            id, date, type<br>
+            gymId → Gym<br>
+            partnerName → Partner<br>
+            coachName → Coach<br>
+            slot, isExpired<br>
+            isReviewed
+          </div>
+        </div>
+
+        <div class="entity-card">
+          <div class="entity-type">Venue</div>
+          <div class="entity-name">Gym</div>
+          <div class="entity-fields">
+            id, name, rating<br>
+            amenities[], photos[]<br>
+            address, tags[]<br>
+            ← VenueReview[]
+          </div>
+        </div>
+
+        <div class="entity-card">
+          <div class="entity-type">Social</div>
+          <div class="entity-name">Partner</div>
+          <div class="entity-fields">
+            id, name, level<br>
+            gym → Gym<br>
+            trustScore, verified<br>
+            ← PartnerReview[]<br>
+            ← ChatHistoryItem[]
+          </div>
+        </div>
+
+        <div class="entity-card">
+          <div class="entity-type">Training</div>
+          <div class="entity-name">Coach</div>
+          <div class="entity-fields">
+            id, name, specialty<br>
+            frequentGyms[] → Gym<br>
+            courseIds[] → Course[]<br>
+            ← CoachReview[]
+          </div>
+        </div>
+
+        <div class="entity-card">
+          <div class="entity-type">Communication</div>
+          <div class="entity-name">Message</div>
+          <div class="entity-fields">
+            id, text, fromSelf<br>
+            time, partnerId<br>
+            meetingProposal? →<br>
+            MeetingProposal
+          </div>
+        </div>
+
+        <div class="entity-card">
+          <div class="entity-type">Booking Proposal</div>
+          <div class="entity-name">MeetingProposal</div>
+          <div class="entity-fields">
+            gymId → Gym<br>
+            date, slot<br>
+            status: pending|<br>
+            accepted|declined<br>
+            (嵌入在 Message 中)
+          </div>
+        </div>
+
+        <div class="entity-card">
+          <div class="entity-type">Course</div>
+          <div class="entity-name">Course / CoachCourse</div>
+          <div class="entity-fields">
+            id, title, type<br>
+            (free|paid)<br>
+            coachId → Coach<br>
+            category, duration
+          </div>
+        </div>
+
+        <div class="entity-card">
+          <div class="entity-type">User Profile</div>
+          <div class="entity-name">MyPreferences</div>
+          <div class="entity-fields">
+            myLevel, myStyles[]<br>
+            myGym → Gym<br>
+            wantLevel, wantStyles[]<br>
+            (匹配算法 Source)
+          </div>
+        </div>
+
+        <div class="entity-card">
+          <div class="entity-type">Logging</div>
+          <div class="entity-name">SessionLog</div>
+          <div class="entity-fields">
+            date, routes[]<br>
+            level, duration<br>
+            heartRate, fatigueLevel<br>
+            (攀爬记录)
+          </div>
+        </div>
+
+        <div class="entity-card">
+          <div class="entity-type">Reviews</div>
+          <div class="entity-name">Reviews (3 Types)</div>
+          <div class="entity-fields">
+            VenueReview → gymId<br>
+            CoachReview → coachId<br>
+            PartnerReview → partnerId<br>
+            rating, comment, date
+          </div>
+        </div>
+
+        <div class="entity-card">
+          <div class="entity-type">Chat History</div>
+          <div class="entity-name">ChatHistoryItem</div>
+          <div class="entity-fields">
+            partnerId → Partner<br>
+            lastMessage, unread<br>
+            sessionStatus:<br>
+            upcoming|completed|...
+          </div>
+        </div>
+
+        <div class="entity-card">
+          <div class="entity-type">Daily Task</div>
+          <div class="entity-name">DailyTask</div>
+          <div class="entity-fields">
+            id, title, completed<br>
+            courseId → Course<br>
+            (训练计划任务)
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title">实体关系矩阵 (Entity Relationship Matrix)</div>
+      
+      <table class="relation-table">
+        <thead>
+          <tr>
+            <th>实体 A</th>
+            <th>关系</th>
+            <th>实体 B</th>
+            <th>关联字段</th>
+            <th>同步场景</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>CalendarEvent</strong></td>
+            <td><span class="relation-connector">N:1</span></td>
+            <td>Gym</td>
+            <td>gymId</td>
+            <td>预订场地 → Calendar 显示</td>
+          </tr>
+          <tr>
+            <td><strong>CalendarEvent</strong></td>
+            <td><span class="relation-connector">1:1</span></td>
+            <td>Partner</td>
+            <td>partnerName</td>
+            <td>约 Partner → Calendar 显示</td>
+          </tr>
+          <tr>
+            <td><strong>CalendarEvent</strong></td>
+            <td><span class="relation-connector">1:1</span></td>
+            <td>Coach</td>
+            <td>coachName</td>
+            <td>约教练课程 → Calendar 显示</td>
+          </tr>
+          <tr>
+            <td><strong>Message</strong></td>
+            <td><span class="relation-connector">0:1</span></td>
+            <td>MeetingProposal</td>
+            <td>meetingProposal (嵌套)</td>
+            <td>聊天中发送预约提议</td>
+          </tr>
+          <tr>
+            <td><strong>MeetingProposal</strong></td>
+            <td><span class="relation-connector">N:1</span></td>
+            <td>Gym</td>
+            <td>gymId</td>
+            <td>提议中包含场地信息</td>
+          </tr>
+          <tr>
+            <td><strong>ChatHistoryItem</strong></td>
+            <td><span class="relation-connector">1:1</span></td>
+            <td>Partner</td>
+            <td>partnerId</td>
+            <td>Partner 列表显示聊天状态</td>
+          </tr>
+          <tr>
+            <td><strong>Coach</strong></td>
+            <td><span class="relation-connector">N:M</span></td>
+            <td>Gym</td>
+            <td>frequentGyms[]</td>
+            <td>教练常驻场馆</td>
+          </tr>
+          <tr>
+            <td><strong>Coach</strong></td>
+            <td><span class="relation-connector">1:N</span></td>
+            <td>Course</td>
+            <td>courseIds[] / coachId</td>
+            <td>教练开设课程</td>
+          </tr>
+          <tr>
+            <td><strong>SessionLog</strong></td>
+            <td><span class="relation-connector">N:1</span></td>
+            <td>CalendarEvent</td>
+            <td>date</td>
+            <td>完成行程 → 记录 Session</td>
+          </tr>
+          <tr>
+            <td><strong>PartnerReview</strong></td>
+            <td><span class="relation-connector">N:1</span></td>
+            <td>CalendarEvent</td>
+            <td>partnerName</td>
+            <td>完成社交行程 → 评价 Partner</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-box central"></div>
+          <span>中央实体 (数据同步核心)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-box"></div>
+          <span>关联实体</span>
+        </div>
+        <div class="legend-item">
+          <span style="font-family: var(--font-mono); font-size: 10px; color: var(--c-text-sub);">
+            N:1 = 多对一 | 1:1 = 一对一 | 1:N = 一对多 | N:M = 多对多
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 图2: 数据同步流转图 -->
+    <div class="diagram-canvas">
+      <div class="diagram-header">
+        <div class="diagram-title">Climbuddy 页面数据同步流转图</div>
+        <div class="diagram-subtitle">Data Synchronization Flow / v1.0</div>
+      </div>
+
+      <div class="flow-container">
+        <!-- 左侧：数据生产者 -->
+        <div class="flow-column">
+          <div class="flow-column-title">数据生产者 (Producers)</div>
+          
+          <div class="page-node producer">
+            <div class="page-name">Explore / Gyms</div>
+            <div class="page-data">
+              产生: CalendarEvent<br>
+              (场地预订)
+            </div>
+          </div>
+
+          <div class="page-node producer">
+            <div class="page-name">Chat / 聊天</div>
+            <div class="page-data">
+              产生: Message, MeetingProposal<br>
+              (社交预约提议)
+            </div>
+          </div>
+
+          <div class="page-node producer">
+            <div class="page-name">Coach / 教练</div>
+            <div class="page-data">
+              产生: CalendarEvent<br>
+              (课程预约), DailyTask
+            </div>
+          </div>
+
+          <div class="page-node producer">
+            <div class="page-name">CalendarSection</div>
+            <div class="page-data">
+              产生: VenueReview<br>
+              CoachReview, PartnerReview<br>
+              (完成行程 → 触发评价)
+            </div>
+          </div>
+
+          <div class="page-node producer">
+            <div class="page-name">SessionHistory</div>
+            <div class="page-data">
+              产生: SessionLog<br>
+              (手动记录攀爬)
+            </div>
+          </div>
+
+          <div class="page-node producer">
+            <div class="page-name">PartnersTab</div>
+            <div class="page-data">
+              产生: MyPreferences<br>
+              (更新匹配偏好)
+            </div>
+          </div>
+        </div>
+
+        <!-- 中间：核心数据存储 -->
+        <div class="flow-column" style="flex: 1;">
+          <div class="flow-column-title" style="text-align: center;">核心数据存储 (Central Store)</div>
+          
+          <div style="border: 2px solid var(--c-text-main); padding: 20px; background: #fafafa; margin-bottom: 16px;">
+            <div style="font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--c-text-main); margin-bottom: 12px; text-align: center;">
+              App.tsx (Current)
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 10px; color: var(--c-text-sub); line-height: 1.8;">
+              const [calendarEvents, setCalendarEvents] = useState([])<br>
+              const [sessions, setSessions] = useState([])<br>
+              const [venueReviews, setVenueReviews] = useState([])<br>
+              const [coachReviews, setCoachReviews] = useState([])<br>
+              const [chatHistory, setChatHistory] = useState([])<br>
+              const [messages, setMessages] = useState([])<br>
+              ...
+            </div>
+          </div>
+
+          <div style="border: 1px dashed var(--c-border); padding: 16px; background: #f8fafc;">
+            <div style="font-family: var(--font-mono); font-size: 10px; color: var(--c-text-sub); line-height: 1.6;">
+              <strong style="color: var(--c-accent);">⚠ 当前问题:</strong><br>
+              1. Prop Drilling 严重<br>
+              2. ChatScreen 等组件使用本地 useState<br>
+              3. 页面刷新后所有数据丢失<br>
+              4. 没有订阅/监听机制
+            </div>
+          </div>
+
+          <div style="margin-top: 16px; border: 2px solid var(--c-sync); padding: 16px; background: #f0fdf4;">
+            <div style="font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--c-sync); margin-bottom: 8px; text-align: center;">
+              建议: 内存级同步架构
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 10px; color: var(--c-text-sub); line-height: 1.6;">
+              • 全局 Store (Zustand/Redux)<br>
+              • 内存订阅机制<br>
+              • 跨页面数据同步<br>
+              • localStorage 持久化 (可选)
+            </div>
+          </div>
+        </div>
+
+        <!-- 右侧：数据消费者 -->
+        <div class="flow-column">
+          <div class="flow-column-title">数据消费者 (Consumers)</div>
+          
+          <div class="page-node consumer">
+            <div class="page-name">Calendar / 日历</div>
+            <div class="page-data">
+              消费: CalendarEvent[]<br>
+              (显示所有预订)
+            </div>
+          </div>
+
+          <div class="page-node consumer">
+            <div class="page-name">History / 历史</div>
+            <div class="page-data">
+              消费: SessionLog[]<br>
+              CalendarEvent[] (已完成)
+            </div>
+          </div>
+
+          <div class="page-node consumer">
+            <div class="page-name">Partner / 搭档</div>
+            <div class="page-data">
+              消费: Partner[], ChatHistoryItem[]<br>
+              MyPreferences, PartnerRating[]
+            </div>
+          </div>
+
+          <div class="page-node consumer">
+            <div class="page-name">GymDetail</div>
+            <div class="page-data">
+              消费: VenueReview[]<br>
+              (显示场地评价)
+            </div>
+          </div>
+
+          <div class="page-node consumer">
+            <div class="page-name">CoachDetail</div>
+            <div class="page-data">
+              消费: CoachReview[]<br>
+              Course[]
+            </div>
+          </div>
+
+          <div class="page-node consumer">
+            <div class="page-name">Boost / 训练</div>
+            <div class="page-data">
+              消费: DailyTask[]<br>
+              Course[], SessionLog[]
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title">关键数据同步路径 (Critical Sync Paths)</div>
+      
+      <table class="relation-table">
+        <thead>
+          <tr>
+            <th>同步场景</th>
+            <th>数据流</th>
+            <th>涉及实体</th>
+            <th>当前状态</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>场地预订 → Calendar</strong></td>
+            <td>Explore/GymDetail → Calendar</td>
+            <td>CalendarEvent (type='booking')</td>
+            <td>需要同步</td>
+          </tr>
+          <tr>
+            <td><strong>聊天约 Partner → Calendar</strong></td>
+            <td>Chat/MeetingProposal → Calendar</td>
+            <td>MeetingProposal → CalendarEvent</td>
+            <td>需要同步</td>
+          </tr>
+          <tr>
+            <td><strong>完成行程 → History</strong></td>
+            <td>Calendar → SessionHistory</td>
+            <td>CalendarEvent → SessionLog</td>
+            <td>需要同步</td>
+          </tr>
+          <tr>
+            <td><strong>聊天历史 → Partner 列表</strong></td>
+            <td>Chat → PartnersTab</td>
+            <td>Message[] → ChatHistoryItem[]</td>
+            <td>需要同步</td>
+          </tr>
+          <tr>
+            <td><strong>完成评价 → 详情页</strong></td>
+            <td>Calendar → GymDetail/CoachDetail</td>
+            <td>Review → Venue/Coach Reviews</td>
+            <td>需要同步</td>
+          </tr>
+          <tr>
+            <td><strong>课程购买 → 任务列表</strong></td>
+            <td>Boost → Boost (DailyTask)</td>
+            <td>purchasedCourseIds → DailyTask[]</td>
+            <td>需要同步</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="sync-legend">
+        <div class="sync-item">
+          <div class="sync-indicator producer"></div>
+          <span>数据生产者 (Write)</span>
+        </div>
+        <div class="sync-item">
+          <div class="sync-indicator consumer"></div>
+          <span>数据消费者 (Read)</span>
+        </div>
+        <div class="sync-item">
+          <div class="sync-indicator both"></div>
+          <span>读+写 (Read/Write)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 图3: 推荐架构 -->
+    <div class="diagram-canvas">
+      <div class="diagram-header">
+        <div class="diagram-title">推荐: 内存级数据同步架构</div>
+        <div class="diagram-subtitle">Proposed Memory-Level Sync Architecture / v2.0</div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 200px 1fr 200px; gap: 32px; align-items: center;">
+        <!-- 左侧：数据源 -->
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div style="font-family: var(--font-mono); font-size: 10px; color: var(--c-text-sub); text-transform: uppercase; margin-bottom: 8px;">数据来源</div>
+          
+          <div class="page-node">
+            <div class="page-name">User Actions</div>
+            <div class="page-data">预订、聊天、记录</div>
+          </div>
+          
+          <div class="page-node">
+            <div class="page-name">Mock Data</div>
+            <div class="page-data">初始数据 (开发)</div>
+          </div>
+          
+          <div class="page-node">
+            <div class="page-name">localStorage</div>
+            <div class="page-data">持久化存储</div>
+          </div>
+        </div>
+
+        <!-- 中间：核心架构 -->
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <!-- Store Layer -->
+          <div style="border: 2px solid var(--c-text-main); padding: 20px; background: #fafafa; text-align: center;">
+            <div style="font-family: var(--font-mono); font-size: 14px; font-weight: 600; color: var(--c-text-main); margin-bottom: 12px;">
+              Global Store (Zustand/Redux)
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; font-family: var(--font-mono); font-size: 10px;">
+              <div style="border: 1px solid var(--c-border); padding: 8px;">calendarEvents</div>
+              <div style="border: 1px solid var(--c-border); padding: 8px;">sessions</div>
+              <div style="border: 1px solid var(--c-border); padding: 8px;">messages</div>
+              <div style="border: 1px solid var(--c-border); padding: 8px;">reviews</div>
+              <div style="border: 1px solid var(--c-border); padding: 8px;">chatHistory</div>
+              <div style="border: 1px solid var(--c-border); padding: 8px;">preferences</div>
+            </div>
+          </div>
+
+          <!-- Sync Layer -->
+          <div style="border: 1px solid var(--c-sync); padding: 16px; background: #f0fdf4; text-align: center;">
+            <div style="font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--c-sync); margin-bottom: 8px;">
+              Sync Layer (同步层)
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 10px; color: var(--c-text-sub); line-height: 1.6;">
+              • Actions/Reducers 处理数据变更<br>
+              • Selectors 提供派生数据<br>
+              • Persistence Middleware 自动保存到 localStorage
+            </div>
+          </div>
+
+          <!-- Subscription Layer -->
+          <div style="border: 1px dashed var(--c-border); padding: 16px; background: #f8fafc; text-align: center;">
+            <div style="font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--c-text-main); margin-bottom: 8px;">
+              Subscription Layer (订阅层)
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 10px; color: var(--c-text-sub); line-height: 1.6;">
+              • useStore hooks 订阅状态变更<br>
+              • 组件自动重渲染<br>
+              • 跨页面数据同步无需 Prop Drilling
+            </div>
+          </div>
+        </div>
+
+        <!-- 右侧：消费者 -->
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div style="font-family: var(--font-mono); font-size: 10px; color: var(--c-text-sub); text-transform: uppercase; margin-bottom: 8px;">页面组件</div>
+          
+          <div class="page-node consumer">
+            <div class="page-name">Calendar</div>
+            <div class="page-data">订阅 calendarEvents</div>
+          </div>
+          
+          <div class="page-node consumer">
+            <div class="page-name">History</div>
+            <div class="page-data">订阅 sessions</div>
+          </div>
+          
+          <div class="page-node consumer">
+            <div class="page-name">Partner</div>
+            <div class="page-data">订阅 chatHistory</div>
+          </div>
+          
+          <div class="page-node consumer">
+            <div class="page-name">Chat</div>
+            <div class="page-data">订阅 messages</div>
+          </div>
+          
+          <div class="page-node consumer">
+            <div class="page-name">Explore</div>
+            <div class="page-data">订阅 reviews</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 24px; padding: 16px; border: 1px solid var(--c-border); background: #fafafa;">
+        <div style="font-family: var(--font-mono); font-size: 11px; color: var(--c-text-main); line-height: 1.8;">
+          <strong>实现建议:</strong><br>
+          1. <strong>引入 Zustand</strong> - 轻量级状态管理，支持订阅模式和持久化中间件<br>
+          2. <strong>标准化 Actions</strong> - 定义 BOOK_GYM, SEND_MESSAGE, LOG_SESSION 等统一操作<br>
+          3. <strong>分离 Chat 状态</strong> - 将 ChatScreen 的本地 useState 迁移到全局 Store<br>
+          4. <strong>持久化层</strong> - 使用 Zustand persist middleware 自动同步到 localStorage<br>
+          5. <strong>选择性订阅</strong> - 各页面只订阅需要的数据切片，避免不必要的重渲染
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
