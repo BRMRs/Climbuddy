@@ -4,7 +4,7 @@ export const PORTRAITS = {
   emma:  "https://images.unsplash.com/photo-1546872041-03da29ccc3f3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
   alice: "https://images.unsplash.com/photo-1582515572488-8b9c7da08e3e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
   bob:   "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
-  chen:  "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
+  chen:  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
   maya:  "https://images.unsplash.com/photo-1544005313-94ddf0286df2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
 };
 
@@ -63,7 +63,7 @@ export const GYM_COACHES: Record<string, Coach[]> = {
   g1: [
     {
       id: 'c1', name: 'Bob', rating: '5.0', specialty: 'Footwork Expert', price: '$75/hr',
-      image: '/Climbuddy/images/coaches/bob.jpg',
+      image: 'https://images.unsplash.com/photo-1603415526960-f7e0328c63b1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400',
       frequentGyms: ['g1', 'g2'],
       styles: ['Bouldering', 'Sport Climbing', 'Technique'],
       qualifications: [
@@ -78,7 +78,7 @@ export const GYM_COACHES: Record<string, Coach[]> = {
     },
     {
       id: 'c2', name: 'Jack', rating: '4.7', specialty: 'Lead Climbing', price: '$70/hr',
-      image: "/Climbuddy/images/coaches/jack.jpg",
+      image: 'https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400',
       frequentGyms: ['g1', 'g3'],
       styles: ['Lead Climbing', 'Trad', 'Mountaineering'],
       qualifications: [
@@ -93,7 +93,7 @@ export const GYM_COACHES: Record<string, Coach[]> = {
     },
     {
       id: 'c3', name: 'John', rating: '4.8', specialty: 'Bouldering', price: '$65/hr',
-      image: "/Climbuddy/images/coaches/john.jpg",
+      image: 'https://images.unsplash.com/photo-1552058544-f2b08422138a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400',
       frequentGyms: ['g1'],
       styles: ['Bouldering', 'Power', 'Campus Board'],
       qualifications: [
@@ -110,7 +110,7 @@ export const GYM_COACHES: Record<string, Coach[]> = {
   g2: [
     {
       id: 'c4', name: 'Sara', rating: '4.6', specialty: 'Yoga + Climb', price: '$60/hr',
-      image: "/Climbuddy/images/coaches/sara.jpg",
+      image: 'https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400',
       frequentGyms: ['g2'],
       styles: ['Yoga', 'Mindfulness', 'Beginner'],
       qualifications: [
@@ -125,7 +125,7 @@ export const GYM_COACHES: Record<string, Coach[]> = {
     },
     {
       id: 'c5', name: 'Liam', rating: '4.5', specialty: 'Beginner Expert', price: '$55/hr',
-      image: "/Climbuddy/images/coaches/liam.jpg",
+      image: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400',
       frequentGyms: ['g2', 'g1'],
       styles: ['Beginner', 'Technique', 'Foundation'],
       qualifications: [
@@ -142,7 +142,7 @@ export const GYM_COACHES: Record<string, Coach[]> = {
   g3: [
     {
       id: 'c6', name: 'Kai', rating: '4.9', specialty: 'Competition', price: '$90/hr',
-      image: "/Climbuddy/images/coaches/kai.jpg",
+      image: 'https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400',
       frequentGyms: ['g3', 'g1'],
       styles: ['Competition', 'Power', 'Bouldering'],
       qualifications: [
@@ -157,7 +157,7 @@ export const GYM_COACHES: Record<string, Coach[]> = {
     },
     {
       id: 'c7', name: 'Mia', rating: '4.8', specialty: 'Lead Climbing', price: '$80/hr',
-      image: "/Climbuddy/images/coaches/mia.jpg",
+      image: 'https://images.unsplash.com/photo-1531727991582-cfd25ce79613?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400',
       frequentGyms: ['g3'],
       styles: ['Lead Climbing', 'Endurance', 'Route Reading'],
       qualifications: [
@@ -172,7 +172,7 @@ export const GYM_COACHES: Record<string, Coach[]> = {
     },
     {
       id: 'c8', name: 'Rex', rating: '4.7', specialty: 'Strength', price: '$70/hr',
-      image: "/Climbuddy/images/coaches/rex.jpg",
+      image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400',
       frequentGyms: ['g3'],
       styles: ['Strength Training', 'Fingerboard', 'Conditioning'],
       qualifications: [
@@ -369,16 +369,16 @@ export const BADGES: Badge[] = [
  
 
 export const COURSES: Course[] = [
-  { id: 'crs-warmup', title: 'Warm-Up Routine', thumbnail: "/Climbuddy/images/courses/warmup.jpg", duration: '15 min', type: 'free', description: 'Gentle warm-up sequence to prep the body', category: 'Warm-up', coachId: 'c1' },
-  { id: 'crs-stretch', title: 'Essential Stretching', thumbnail: "/Climbuddy/images/courses/stretching.jpg", duration: '20 min', type: 'free', description: 'Full-body stretching for mobility', category: 'Flexibility', coachId: 'c2' },
-  { id: 'crs-breathe', title: 'Breathing Techniques', thumbnail: "/Climbuddy/images/courses/breathing.jpg", duration: '10 min', type: 'free', description: 'Breath control for performance', category: 'Breath', coachId: 'c3' },
-  { id: 'crs-plateau', title: 'Plateau Breaker: Core Strength', thumbnail: "/Climbuddy/images/courses/core-strength.jpg", duration: '25 min', type: 'paid', price: 9.99, description: 'Core strength to break plateaus', category: 'Strength', coachId: 'c4' },
-  { id: 'crs-finger', title: 'Finger Strength Training', thumbnail: "/Climbuddy/images/courses/finger-strength.jpg", duration: '15 min', type: 'paid', price: 14.99, description: 'Finger strength for advanced climbers', category: 'Grip', coachId: 'c5' },
-  { id: 'crs-footwork', title: 'Advanced Footwork Drills', thumbnail: "/Climbuddy/images/courses/footwork.jpg", duration: '20 min', type: 'paid', price: 12.99, description: 'Technique for precise footwork', category: 'Technique', coachId: 'c6' },
-  { id: 'crs-overhang', title: 'Overhang Mastery', thumbnail: "/Climbuddy/images/courses/overhang.jpg", duration: '30 min', type: 'paid', price: 19.99, description: 'Master steep angles and roof climbing', category: 'Technique', coachId: 'c7' },
-  { id: 'crs-endurance', title: 'Endurance Circuit', thumbnail: "/Climbuddy/images/courses/endurance.jpg", duration: '45 min', type: 'paid', price: 15.99, description: 'Build climbing stamina with interval training', category: 'Endurance', coachId: 'c8' },
-  { id: 'crs-beginner', title: 'Beginner Foundations', thumbnail: "/Climbuddy/images/courses/beginner.jpg", duration: '40 min', type: 'free', description: 'Essential basics for new climbers', category: 'Beginner', coachId: 'c5' },
-  { id: 'crs-recovery', title: 'Active Recovery', thumbnail: "/Climbuddy/images/courses/recovery.jpg", duration: '25 min', type: 'free', description: 'Light movement for rest days', category: 'Recovery', coachId: 'c4' },
+  { id: 'crs-warmup',   title: 'Warm-Up Routine',              thumbnail: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800", duration: '15 min', type: 'free',                description: 'Gentle warm-up sequence to prep the body',        category: 'Warm-up',   coachId: 'c1' },
+  { id: 'crs-stretch',  title: 'Essential Stretching',         thumbnail: "https://images.unsplash.com/photo-1548690312-e3b507d8c110?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800", duration: '20 min', type: 'free',                description: 'Full-body stretching for mobility',               category: 'Flexibility', coachId: 'c2' },
+  { id: 'crs-breathe',  title: 'Breathing Techniques',         thumbnail: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800", duration: '10 min', type: 'free',                description: 'Breath control for performance',                  category: 'Breath',    coachId: 'c3' },
+  { id: 'crs-plateau',  title: 'Plateau Breaker: Core Strength', thumbnail: "https://images.unsplash.com/photo-1616803689943-5601631c7fec?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800", duration: '25 min', type: 'paid', price: 9.99,  description: 'Core strength to break plateaus',                 category: 'Strength',  coachId: 'c4' },
+  { id: 'crs-finger',   title: 'Finger Strength Training',     thumbnail: "https://images.unsplash.com/photo-1601422407692-ec4eeec1d9b3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800", duration: '15 min', type: 'paid', price: 14.99, description: 'Finger strength for advanced climbers',            category: 'Grip',      coachId: 'c5' },
+  { id: 'crs-footwork', title: 'Advanced Footwork Drills',     thumbnail: "https://images.unsplash.com/photo-1546872041-03da29ccc3f3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800", duration: '20 min', type: 'paid', price: 12.99, description: 'Technique for precise footwork',                  category: 'Technique', coachId: 'c6' },
+  { id: 'crs-overhang', title: 'Overhang Mastery',             thumbnail: "https://images.unsplash.com/photo-1522163182402-834f871fd851?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800", duration: '30 min', type: 'paid', price: 19.99, description: 'Master steep angles and roof climbing',           category: 'Technique', coachId: 'c7' },
+  { id: 'crs-endurance',title: 'Endurance Circuit',            thumbnail: "https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800", duration: '45 min', type: 'paid', price: 15.99, description: 'Build climbing stamina with interval training',   category: 'Endurance', coachId: 'c8' },
+  { id: 'crs-beginner', title: 'Beginner Foundations',         thumbnail: "https://images.unsplash.com/photo-1633859023075-fada2199a42e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800", duration: '40 min', type: 'free',                description: 'Essential basics for new climbers',               category: 'Beginner',  coachId: 'c5' },
+  { id: 'crs-recovery', title: 'Active Recovery',              thumbnail: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800", duration: '25 min', type: 'free',                description: 'Light movement for rest days',                    category: 'Recovery',  coachId: 'c4' },
 ];
 
 export const CALENDAR_EVENTS: CalendarEvent[] = [
