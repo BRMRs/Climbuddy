@@ -12,6 +12,7 @@ interface PartnersTabProps {
   onChatHistoryChange?: (next: ChatHistoryItem[]) => void;
   preferences?: MyPreferences;
   onPreferencesChange?: (next: MyPreferences) => void;
+  userPortrait?: string;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -49,6 +50,7 @@ export const PartnersTab: React.FC<PartnersTabProps> = ({
   onChatHistoryChange,
   preferences,
   onPreferencesChange,
+  userPortrait,
 }) => {
   const [queue,   setQueue]   = useState<Partner[]>([...PARTNERS_DATA]);
   const [matched, setMatched] = useState<Partner | null>(null);
@@ -145,6 +147,7 @@ export const PartnersTab: React.FC<PartnersTabProps> = ({
         partner={matched}
         onChat={() => { setMatched(null); onNavigate('chat', matched); }}
         onContinue={() => setMatched(null)}
+        userPortrait={userPortrait}
       />
     );
   }
@@ -319,8 +322,8 @@ export const PartnersTab: React.FC<PartnersTabProps> = ({
 
 // ─── Match Screen ───────────────────────────────────────────────────────────────
 
-function MatchScreen({ partner, onChat, onContinue }: {
-  partner: Partner; onChat: () => void; onContinue: () => void;
+function MatchScreen({ partner, onChat, onContinue, userPortrait }: {
+  partner: Partner; onChat: () => void; onContinue: () => void; userPortrait?: string;
 }) {
   return (
     <div className="flex flex-col items-center justify-center h-full bg-slate-900 animate-in fade-in duration-300 p-6 gap-6">
@@ -331,7 +334,7 @@ function MatchScreen({ partner, onChat, onContinue }: {
       </div>
       <div className="flex gap-4">
         <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-[#FEF08A] shadow-[0_0_20px_rgba(254,240,138,0.4)]">
-          <img src="https://images.unsplash.com/photo-1546872041-03da29ccc3f3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400" className="w-full h-full object-cover" alt="You" />
+          <img src={userPortrait || "https://images.unsplash.com/photo-1546872041-03da29ccc3f3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400"} className="w-full h-full object-cover" alt="You" />
         </div>
         <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-[#FEF08A] shadow-[0_0_20px_rgba(254,240,138,0.4)]">
           <img src={partner.image} className="w-full h-full object-cover" alt={partner.name} />

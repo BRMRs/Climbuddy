@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Pencil, Check } from 'lucide-react';
+import { Pencil, Check, Camera } from 'lucide-react';
 import { S } from '../../../constants/styles';
+import { MediaPickerSheet } from '../../ui/MediaPickerSheet';
+import { useMediaPicker } from '../../../hooks/useMediaPicker';
 
 export interface ProfileCardProps {
   name: string;
@@ -11,12 +13,19 @@ export interface ProfileCardProps {
   sessions: number;
   calories: number;
   onNameChange?: (name: string) => void;
+  onPortraitChange?: (url: string) => void;
 }
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ name, portrait, level, progressPercent, routes, sessions, calories, onNameChange }) => {
+const ProfileCard: React.FC<ProfileCardProps> = ({ name, portrait, level, progressPercent, routes, sessions, calories, onNameChange, onPortraitChange }) => {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(name);
+  const [showPicker, setShowPicker] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { url: pickedUrl, trigger } = useMediaPicker('image');
+
+  useEffect(() => {
+    if (pickedUrl) onPortraitChange?.(pickedUrl);
+  }, [pickedUrl]);
 
   useEffect(() => {
     if (editing) inputRef.current?.focus();
@@ -38,10 +47,29 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ name, portrait, level, progre
 
   return (
     <div className={`bg-white rounded-3xl p-5 flex flex-col gap-4 ${S.border} ${S.shadow}`}>
+      {showPicker && (
+        <MediaPickerSheet
+          isOpen={showPicker}
+          onClose={() => setShowPicker(false)}
+          onPick={(mode) => trigger(mode)}
+          title="Change Avatar"
+        />
+      )}
       <div className="flex items-center gap-4">
-        <div className={`w-16 h-16 rounded-full overflow-hidden ${S.border} ${S.shadowSm}`}>
-          <img src={portrait} className="w-full h-full object-cover" alt={name} />
-        </div>
+        <button
+          onClick={() => onPortraitChange && setShowPicker(true)}
+          className="relative w-16 h-16 rounded-full overflow-hidden shrink-0 group"
+          style={{ cursor: onPortraitChange ? 'pointer' : 'default' }}
+        >
+          <div className={`w-full h-full rounded-full overflow-hidden ${S.border} ${S.shadowSm}`}>
+            <img src={portrait} className="w-full h-full object-cover" alt={name} />
+          </div>
+          {onPortraitChange && (
+            <div className="absolute inset-0 rounded-full bg-slate-900/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <Camera className="w-5 h-5 text-white" strokeWidth={2.5} />
+            </div>
+          )}
+        </button>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             {editing ? (

@@ -24,7 +24,9 @@ export const ProgressTab: React.FC<{
   markEventReviewed: (eventId: string) => void;
   userName?: string;
   onUserNameChange?: (name: string) => void;
-}> = ({ onNavigate, switchTab, sessions, calendarEvents, addSession, addReview, addCoachReview, addPartnerReview, markEventReviewed, onResetOnboarding, userName = 'Emma', onUserNameChange }) => {
+  userPortrait?: string;
+  onPortraitChange?: (url: string) => void;
+}> = ({ onNavigate, switchTab, sessions, calendarEvents, addSession, addReview, addCoachReview, addPartnerReview, markEventReviewed, onResetOnboarding, userName = 'Emma', onUserNameChange, userPortrait, onPortraitChange }) => {
   const [heartRate, setHeartRate] = useState(142);
   const [badges, setBadges] = useState<Badge[]>(BADGES);
   const [selectedBadge, setSelectedBadge] = useState<Badge | null>(null);
@@ -68,13 +70,14 @@ export const ProgressTab: React.FC<{
       {/* Profile Card */}
       <ProfileCard
         name={userName}
-        portrait={PORTRAITS.emma}
+        portrait={userPortrait ?? PORTRAITS.emma}
         level="V2"
         progressPercent={68}
         routes={19}
         sessions={3}
         calories={580}
         onNameChange={onUserNameChange}
+        onPortraitChange={onPortraitChange}
       />
 
       {/* Live Health Data */}

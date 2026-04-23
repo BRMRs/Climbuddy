@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { Camera, X } from 'lucide-react';
 import { CalendarEvent, VenueReview, CoachReview, PartnerReview } from '../../../types';
 import { S } from '../../../constants/styles';
 import { GYMS_DATA } from '../../../data/mockData';
 import Modal from '../../layout/Modal';
+import { MediaPickerSheet } from '../../ui/MediaPickerSheet';
+import { useMediaPicker } from '../../../hooks/useMediaPicker';
 
 interface CalendarSectionProps {
   calendarEvents: CalendarEvent[];
@@ -31,6 +34,16 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
   const [coachRatings, setCoachRatings] = useState({ professionalism: 0, teachingSkill: 0, communication: 0, valueForMoney: 0 });
   const [partnerRatings, setPartnerRatings] = useState({ reliability: 0, safety: 0, encouragement: 0, skillMatch: 0, communication: 0 });
   const [reviewText, setReviewText] = useState('');
+  const [reviewPhotos, setReviewPhotos] = useState<string[]>([]);
+  const [showPhotoPicker, setShowPhotoPicker] = useState(false);
+  const { url: latestPhotoUrl, trigger: triggerPhoto, reset: resetLatestPhoto } = useMediaPicker('image');
+
+  React.useEffect(() => {
+    if (latestPhotoUrl && reviewPhotos.length < 3) {
+      setReviewPhotos(prev => [...prev, latestPhotoUrl]);
+      resetLatestPhoto();
+    }
+  }, [latestPhotoUrl]);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -81,6 +94,7 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
     setCoachRatings({ professionalism: 0, teachingSkill: 0, communication: 0, valueForMoney: 0 });
     setPartnerRatings({ reliability: 0, safety: 0, encouragement: 0, skillMatch: 0, communication: 0 });
     setReviewText('');
+    setReviewPhotos([]);
   };
 
   const submitVenueReview = () => {
@@ -307,6 +321,14 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
           onClose={closeReviewModal}
           title={`Review Venue: ${reviewingEvent.gymName ?? getGymName(reviewingEvent)}`}
         >
+          {showPhotoPicker && (
+            <MediaPickerSheet
+              isOpen={showPhotoPicker}
+              onClose={() => setShowPhotoPicker(false)}
+              onPick={(mode) => triggerPhoto(mode)}
+              title="Add Photo"
+            />
+          )}
           <div className="flex flex-col gap-4">
             {(['environment', 'routeDesign', 'equipment', 'value'] as const).map(dim => {
               const labels: Record<string, string> = {
@@ -346,6 +368,12 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
               <p className="text-xs text-slate-400 text-right">{reviewText.length}/200</p>
             </div>
 
+            <ReviewPhotoRow
+              photos={reviewPhotos}
+              onAdd={() => setShowPhotoPicker(true)}
+              onRemove={(i) => setReviewPhotos(prev => prev.filter((_, idx) => idx !== i))}
+            />
+
             <button
               type="button"
               onClick={submitVenueReview}
@@ -364,6 +392,14 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
           onClose={closeReviewModal}
           title={`Review Coach: ${reviewingEvent.coachName}`}
         >
+          {showPhotoPicker && (
+            <MediaPickerSheet
+              isOpen={showPhotoPicker}
+              onClose={() => setShowPhotoPicker(false)}
+              onPick={(mode) => triggerPhoto(mode)}
+              title="Add Photo"
+            />
+          )}
           <div className="flex flex-col gap-4">
             {(['professionalism', 'teachingSkill', 'communication', 'valueForMoney'] as const).map(dim => {
               const labels: Record<string, string> = {
@@ -403,6 +439,12 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
               <p className="text-xs text-slate-400 text-right">{reviewText.length}/200</p>
             </div>
 
+            <ReviewPhotoRow
+              photos={reviewPhotos}
+              onAdd={() => setShowPhotoPicker(true)}
+              onRemove={(i) => setReviewPhotos(prev => prev.filter((_, idx) => idx !== i))}
+            />
+
             <button
               type="button"
               onClick={submitCoachReview}
@@ -421,6 +463,14 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
           onClose={closeReviewModal}
           title={`Review Partner: ${reviewingEvent.partnerName}`}
         >
+          {showPhotoPicker && (
+            <MediaPickerSheet
+              isOpen={showPhotoPicker}
+              onClose={() => setShowPhotoPicker(false)}
+              onPick={(mode) => triggerPhoto(mode)}
+              title="Add Photo"
+            />
+          )}
           <div className="flex flex-col gap-4">
             {(['reliability', 'safety', 'encouragement', 'skillMatch', 'communication'] as const).map(dim => {
               const labels: Record<string, string> = {
@@ -461,6 +511,12 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
               <p className="text-xs text-slate-400 text-right">{reviewText.length}/200</p>
             </div>
 
+            <ReviewPhotoRow
+              photos={reviewPhotos}
+              onAdd={() => setShowPhotoPicker(true)}
+              onRemove={(i) => setReviewPhotos(prev => prev.filter((_, idx) => idx !== i))}
+            />
+
             <button
               type="button"
               onClick={submitPartnerReview}
@@ -475,5 +531,39 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
     </div>
   );
 };
+
+const ReviewPhotoRow: React.FC<{
+  photos: string[];
+  onAdd: () => void;
+  onRemove: (index: number) => void;
+}> = ({ photos, onAdd, onRemove }) => (
+  <div>
+    <label className="text-sm font-bold text-slate-700 block mb-2">Photos (optional, up to 3)</label>
+    <div className="flex gap-2 flex-wrap">
+      {photos.map((url, i) => (
+        <div key={i} className="relative w-20 h-20 rounded-xl overflow-hidden border-2 border-slate-900">
+          <img src={url} alt="" className="w-full h-full object-cover" />
+          <button
+            type="button"
+            onClick={() => onRemove(i)}
+            className="absolute top-0.5 right-0.5 w-5 h-5 bg-slate-900/70 rounded-full flex items-center justify-center"
+          >
+            <X className="w-3 h-3 text-white" strokeWidth={3} />
+          </button>
+        </div>
+      ))}
+      {photos.length < 3 && (
+        <button
+          type="button"
+          onClick={onAdd}
+          className="w-20 h-20 rounded-xl border-2 border-dashed border-slate-300 flex flex-col items-center justify-center gap-1 text-slate-400 hover:border-slate-500 hover:text-slate-600 transition-colors"
+        >
+          <Camera className="w-5 h-5" strokeWidth={2} />
+          <span className="text-xs font-bold">Add</span>
+        </button>
+      )}
+    </div>
+  </div>
+);
 
 export default CalendarSection;

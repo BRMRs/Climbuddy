@@ -64,6 +64,7 @@ interface DomainState {
   chatMessagesByThread: ChatMessagesByThread;
   dailyTasks: DailyTask[];
   userName: string;
+  userPortrait: string;
 }
 
 const DOMAIN_STORAGE_KEY = 'climbuddy_domain_state_v6';
@@ -80,6 +81,7 @@ const DEFAULT_DOMAIN_STATE: DomainState = {
   chatMessagesByThread: PAST_PARTNERS_MESSAGES,
   dailyTasks: DAILY_PLAN,
   userName: 'Emma',
+  userPortrait: '',
 };
 
 function loadDomainState(): DomainState {
@@ -101,6 +103,7 @@ function loadDomainState(): DomainState {
       chatMessagesByThread: parsed.chatMessagesByThread ?? DEFAULT_DOMAIN_STATE.chatMessagesByThread,
       dailyTasks: parsed.dailyTasks ?? DEFAULT_DOMAIN_STATE.dailyTasks,
       userName: parsed.userName ?? DEFAULT_DOMAIN_STATE.userName,
+      userPortrait: parsed.userPortrait ?? DEFAULT_DOMAIN_STATE.userPortrait,
     };
   } catch {
     return DEFAULT_DOMAIN_STATE;
@@ -309,6 +312,7 @@ export default function App() {
                     onChatHistoryChange={(next) => setDomainState(prev => ({ ...prev, chatHistory: toUniqueHistory(next) }))}
                     preferences={domainState.myPreferences}
                     onPreferencesChange={setPreferences}
+                    userPortrait={domainState.userPortrait || undefined}
                   />
                 )}
                 {activeTab === 'progress' && (
@@ -325,6 +329,8 @@ export default function App() {
                     onResetOnboarding={resetOnboarding}
                     userName={domainState.userName}
                     onUserNameChange={(name) => setDomainState(prev => ({ ...prev, userName: name }))}
+                    userPortrait={domainState.userPortrait || undefined}
+                    onPortraitChange={(url) => setDomainState(prev => ({ ...prev, userPortrait: url }))}
                   />
                 )}
                 {activeTab === 'boost'     && (

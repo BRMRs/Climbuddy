@@ -2,6 +2,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { S } from '../../../constants/styles';
 import { SessionLog } from '../../../types';
 import Modal from '../../layout/Modal';
+import { MediaPickerSheet } from '../../ui/MediaPickerSheet';
+import { useMediaPicker } from '../../../hooks/useMediaPicker';
 
 export interface SessionRow {
   date: string;
@@ -102,35 +104,10 @@ const LogSessionModal: React.FC<{
   const [heartRateInput, setHeartRateInput] = useState('');
   const [caloriesInput, setCaloriesInput] = useState('');
   const [fatigueLevel, setFatigueLevel] = useState<number | undefined>(undefined);
-  const [uploading, setUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [videoUrl, setVideoUrl] = useState<string>('');
+  const [showVideoPicker, setShowVideoPicker] = useState(false);
+  const { url: videoUrl, trigger: triggerVideo, reset: resetVideo } = useMediaPicker('video');
 
   const fatigueStatus = useMemo(() => fatigueMeta(fatigueLevel), [fatigueLevel]);
-
-  useEffect(() => {
-    if (!isOpen) {
-      setUploading(false);
-      setUploadProgress(0);
-    }
-  }, [isOpen]);
-
-  const simulateUpload = () => {
-    if (uploading) return;
-    setUploading(true);
-    setUploadProgress(0);
-    const interval = setInterval(() => {
-      setUploadProgress((p) => {
-        if (p >= 100) {
-          clearInterval(interval);
-          setUploading(false);
-          setVideoUrl('mock-video-session.mp4');
-          return 100;
-        }
-        return Math.min(p + 10, 100);
-      });
-    }, 200);
-  };
 
   const resetForm = () => {
     setRoutesInput('');
@@ -139,13 +116,13 @@ const LogSessionModal: React.FC<{
     setHeartRateInput('');
     setCaloriesInput('');
     setFatigueLevel(undefined);
-    setUploading(false);
-    setUploadProgress(0);
-    setVideoUrl('');
+    resetVideo();
   };
 
   const handleSubmit = () => {
     if (!routesInput || !levelInput || !durationInput) return;
+
+    const savedVideoUrl = videoUrl ?? undefined;
 
     const newSession: SessionLog = {
       date: new Date().toISOString().split('T')[0],
@@ -155,12 +132,17 @@ const LogSessionModal: React.FC<{
       heartRate: Number(heartRateInput) || 0,
       calories: Number(caloriesInput) || 0,
       notes: '',
-      videoUrl: videoUrl || undefined,
+      videoUrl: savedVideoUrl,
       fatigueLevel: fatigueLevel || undefined,
     };
 
     addSession?.(newSession);
-    resetForm();
+    setRoutesInput('');
+    setLevelInput('');
+    setDurationInput('');
+    setHeartRateInput('');
+    setCaloriesInput('');
+    setFatigueLevel(undefined);
     onClose();
   };
 
@@ -183,28 +165,39 @@ const LogSessionModal: React.FC<{
         </div>
 
         <div className={`bg-slate-50 rounded-2xl p-4 ${S.border}`}>
-          <p className="font-black text-slate-900 mb-3">Video</p>
-          <button
-            type="button"
-            onClick={simulateUpload}
-            disabled={uploading}
-            className={`w-full py-2.5 text-sm font-black rounded-xl bg-indigo-200 text-slate-900 ${S.border} ${S.shadowSm} ${S.press} disabled:opacity-60`}
-          >
-            🎬 Attach Video
-          </button>
-
-          {uploading && (
-            <div className="mt-3">
-              <div className={`w-full h-2.5 bg-white rounded-full overflow-hidden ${S.border}`}>
-                <div className="h-full bg-indigo-500 transition-all duration-200" style={{ width: `${uploadProgress}%` }} />
-              </div>
-              <p className="text-xs font-black text-indigo-700 mt-1">Uploading... {uploadProgress}%</p>
-            </div>
+          {showVideoPicker && (
+            <MediaPickerSheet
+              isOpen={showVideoPicker}
+              onClose={() => setShowVideoPicker(false)}
+              onPick={(mode) => triggerVideo(mode)}
+              title="Add Video"
+            />
           )}
+          <p className="font-black text-slate-900 mb-3">Video</p>
 
-          {!!videoUrl && !uploading && (
-            <div className={`mt-3 w-full h-28 rounded-xl bg-slate-700 flex items-center justify-center text-white text-3xl ${S.border}`}>
-              ▶
+          {!videoUrl ? (
+            <button
+              type="button"
+              onClick={() => setShowVideoPicker(true)}
+              className={`w-full py-2.5 text-sm font-black rounded-xl bg-indigo-200 text-slate-900 ${S.border} ${S.shadowSm} ${S.press}`}
+            >
+              🎬 Attach Video
+            </button>
+          ) : (
+            <div className="mt-1 flex flex-col gap-2">
+              <video
+                src={videoUrl}
+                controls
+                className={`w-full rounded-xl ${S.border} bg-slate-900`}
+                style={{ maxHeight: 160 }}
+              />
+              <button
+                type="button"
+                onClick={resetVideo}
+                className={`w-full py-2 text-xs font-black rounded-xl bg-white text-slate-500 ${S.border} ${S.press}`}
+              >
+                ✕ Remove Video
+              </button>
             </div>
           )}
         </div>
@@ -282,10 +275,12 @@ const SessionDetailModal: React.FC<{
         {session.videoUrl && (
           <div className="mt-1">
             <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Video</p>
-            <div className={`w-full h-[120px] rounded-xl bg-slate-700 flex flex-col items-center justify-center text-white ${S.border}`}>
-              <span className="text-3xl">▶</span>
-              <span className="text-xs font-bold mt-1">Video recorded</span>
-            </div>
+            <video
+              src={session.videoUrl}
+              controls
+              className={`w-full rounded-xl ${S.border} bg-slate-900`}
+              style={{ maxHeight: 160 }}
+            />
           </div>
         )}
       </div>
