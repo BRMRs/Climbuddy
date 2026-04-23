@@ -52,7 +52,7 @@ export const CoachDetailScreen: React.FC<CoachDetailScreenProps> = ({ coach, onB
     .map(cc => COURSES.find(c => c.id === cc.courseId))
     .filter((c): c is Course => c !== undefined);
 
-  const thisCoachReviews = coachReviews.filter(r => r.coachId === coach.name);
+  const thisCoachReviews = coachReviews.filter(r => r.coachId === coach.id);
   const reviewCount = thisCoachReviews.length;
 
   const avgRatings = reviewCount > 0 ? {
