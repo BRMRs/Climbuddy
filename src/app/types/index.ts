@@ -177,6 +177,7 @@ export interface VenueReview {
   equipment: number;
   value: number;
   text?: string;
+  photos?: string[];
 }
 
 export interface CoachReview {
@@ -189,6 +190,7 @@ export interface CoachReview {
   communication: number;
   valueForMoney: number;
   text?: string;
+  photos?: string[];
 }
 
 export interface PartnerReview {
@@ -203,6 +205,7 @@ export interface PartnerReview {
   skillMatch: number;
   communication: number;
   text?: string;
+  photos?: string[];
 }
 
 export interface DailyTask {

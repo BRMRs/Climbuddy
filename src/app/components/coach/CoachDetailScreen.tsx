@@ -233,6 +233,13 @@ export const CoachDetailScreen: React.FC<CoachDetailScreenProps> = ({ coach, onB
                           ))}
                         </div>
                         {review.text && <p className="text-xs text-slate-600">{review.text}</p>}
+                        {review.photos && review.photos.length > 0 && (
+                          <div className="flex gap-1.5 mt-2 flex-wrap">
+                            {review.photos.map((url, i) => (
+                              <img key={i} src={url} alt="" className="w-16 h-16 object-cover rounded-lg border-2 border-slate-200" />
+                            ))}
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>

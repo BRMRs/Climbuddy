@@ -249,6 +249,13 @@ export const GymDetailScreen: React.FC<GymDetailScreenProps> = ({ gym, onBack, o
                     <span>Value: {r.value}★</span>
                   </div>
                   {r.text && <p className="mt-1 text-sm text-slate-700">"{r.text}"</p>}
+                  {r.photos && r.photos.length > 0 && (
+                    <div className="flex gap-2 mt-2 flex-wrap">
+                      {r.photos.map((url, i) => (
+                        <img key={i} src={url} alt="" className="w-20 h-20 object-cover rounded-xl border-2 border-slate-200" />
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

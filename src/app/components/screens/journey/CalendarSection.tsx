@@ -36,12 +36,11 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
   const [reviewText, setReviewText] = useState('');
   const [reviewPhotos, setReviewPhotos] = useState<string[]>([]);
   const [showPhotoPicker, setShowPhotoPicker] = useState(false);
-  const { url: latestPhotoUrl, trigger: triggerPhoto, reset: resetLatestPhoto } = useMediaPicker('image');
+  const { url: latestPhotoUrl, trigger: triggerPhoto } = useMediaPicker('image');
 
   React.useEffect(() => {
     if (latestPhotoUrl && reviewPhotos.length < 3) {
       setReviewPhotos(prev => [...prev, latestPhotoUrl]);
-      resetLatestPhoto();
     }
   }, [latestPhotoUrl]);
 
@@ -110,6 +109,7 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
       equipment: venueRatings.equipment || venueRatings.environment,
       value: venueRatings.value || venueRatings.environment,
       text: reviewText || undefined,
+      photos: reviewPhotos.length > 0 ? [...reviewPhotos] : undefined,
     };
 
     addReview?.(newReview);
@@ -130,6 +130,7 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
       communication: coachRatings.communication || coachRatings.professionalism,
       valueForMoney: coachRatings.valueForMoney || coachRatings.professionalism,
       text: reviewText || undefined,
+      photos: reviewPhotos.length > 0 ? [...reviewPhotos] : undefined,
     };
 
     addCoachReview?.(newReview);
@@ -151,6 +152,7 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
       skillMatch: partnerRatings.skillMatch || partnerRatings.reliability,
       communication: partnerRatings.communication || partnerRatings.reliability,
       text: reviewText || undefined,
+      photos: reviewPhotos.length > 0 ? [...reviewPhotos] : undefined,
     };
 
     addPartnerReview?.(newReview);
