@@ -14,7 +14,7 @@ const AUTO_REPLIES: string[] = [
 ];
 
 const INITIAL_MESSAGES: Message[] = [
-  { id: 'm0', text: "Hey Emma! Ready to conquer some beginner routes this weekend? 🧗", fromSelf: false, time: '10:21' },
+  { id: 'm0', text: "Hey {userName}! Ready to conquer some beginner routes this weekend? 🧗", fromSelf: false, time: '10:21' },
 ];
 
 function nowStr(): string {
@@ -44,6 +44,7 @@ interface ChatScreenProps {
   onMessagesChange?: (messages: Message[]) => void;
   onMeetingAccepted?: (proposal: MeetingProposal) => void;
   onLastMessage?: (lastMessage: string, time: string) => void;
+  userName?: string;
 }
 
 export const ChatScreen: React.FC<ChatScreenProps> = ({
@@ -53,7 +54,11 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   onMessagesChange,
   onMeetingAccepted,
   onLastMessage,
+  userName = 'Emma',
 }) => {
+  const resolveText = (text: string, fromSelf: boolean) =>
+    fromSelf ? text : text.replace(/\{userName\}/g, userName);
+
   const [messages, setMessages] = useState<Message[]>(() => {
     if (initialMessages && initialMessages.length > 0) return initialMessages;
     return INITIAL_MESSAGES;
@@ -168,7 +173,12 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
       {/* Messages */}
       <div className="flex-1 overflow-y-auto custom-scrollbar px-4 py-4 flex flex-col gap-3">
         {messages.map(msg => (
-          <MessageBubble key={msg.id} msg={msg} partnerImg={partner.image} partnerName={partner.name} />
+          <MessageBubble
+            key={msg.id}
+            msg={{ ...msg, text: resolveText(msg.text, msg.fromSelf) }}
+            partnerImg={partner.image}
+            partnerName={partner.name}
+          />
         ))}
 
         {typing && (

@@ -8,6 +8,7 @@ import {
   CHAT_HISTORY,
   MY_PREFERENCES,
   DAILY_PLAN,
+  PAST_PARTNERS_MESSAGES,
 } from './data/mockData';
 import {
   SessionLog,
@@ -62,9 +63,10 @@ interface DomainState {
   myPreferences: MyPreferences;
   chatMessagesByThread: ChatMessagesByThread;
   dailyTasks: DailyTask[];
+  userName: string;
 }
 
-const DOMAIN_STORAGE_KEY = 'climbuddy_domain_state_v1';
+const DOMAIN_STORAGE_KEY = 'climbuddy_domain_state_v6';
 
 const DEFAULT_DOMAIN_STATE: DomainState = {
   sessions: SESSIONS,
@@ -75,8 +77,9 @@ const DEFAULT_DOMAIN_STATE: DomainState = {
   purchasedCourseIds: ['crs-warmup', 'crs-stretch', 'crs-recovery', 'crs-plateau'],
   chatHistory: CHAT_HISTORY,
   myPreferences: MY_PREFERENCES,
-  chatMessagesByThread: {},
+  chatMessagesByThread: PAST_PARTNERS_MESSAGES,
   dailyTasks: DAILY_PLAN,
+  userName: 'Emma',
 };
 
 function loadDomainState(): DomainState {
@@ -97,6 +100,7 @@ function loadDomainState(): DomainState {
       myPreferences: parsed.myPreferences ?? DEFAULT_DOMAIN_STATE.myPreferences,
       chatMessagesByThread: parsed.chatMessagesByThread ?? DEFAULT_DOMAIN_STATE.chatMessagesByThread,
       dailyTasks: parsed.dailyTasks ?? DEFAULT_DOMAIN_STATE.dailyTasks,
+      userName: parsed.userName ?? DEFAULT_DOMAIN_STATE.userName,
     };
   } catch {
     return DEFAULT_DOMAIN_STATE;
@@ -277,7 +281,7 @@ export default function App() {
       <div className="hidden md:block mb-5 text-center">
         <h1 className="text-3xl font-black text-slate-900 tracking-tighter">Climbuddy</h1>
         <span className="text-slate-600 font-bold text-xs bg-white border-2 border-slate-900 inline-block px-3 py-1 rounded-full shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
-          Emma's Journey Prototype
+          {domainState.userName}'s Journey Prototype
         </span>
       </div>
 
@@ -319,6 +323,8 @@ export default function App() {
                     addPartnerReview={addPartnerReview}
                     markEventReviewed={markEventReviewed}
                     onResetOnboarding={resetOnboarding}
+                    userName={domainState.userName}
+                    onUserNameChange={(name) => setDomainState(prev => ({ ...prev, userName: name }))}
                   />
                 )}
                 {activeTab === 'boost'     && (
@@ -342,9 +348,10 @@ export default function App() {
                 onNavigate={navigate}
                 venueReviews={domainState.venueReviews}
                 onCreateCalendarEvent={(event) => addCalendarEvent(event)}
+                userName={domainState.userName}
               />
             )}
-            {activeScreen === 'gettingStarted' && <GettingStartedScreen onBack={goHome} switchTab={switchTab} onNavigateToBoost={() => { switchTab('boost'); goHome(); }} />}
+            {activeScreen === 'gettingStarted' && <GettingStartedScreen onBack={goHome} switchTab={switchTab} onNavigateToBoost={() => { switchTab('boost'); goHome(); }} userName={domainState.userName} />}
             {activeScreen === 'chat'           && (
               <ChatScreen
                 partner={screenData}
@@ -353,6 +360,7 @@ export default function App() {
                 onMessagesChange={(messages) => setThreadMessages(getThreadId(screenData), messages)}
                 onLastMessage={(lastMessage, time) => handlePartnerMessageUpdate(screenData as Partner, lastMessage, time)}
                 onMeetingAccepted={(proposal) => handleProposalAccepted(screenData as Partner, proposal)}
+                userName={domainState.userName}
               />
             )}
             {activeScreen === 'coachChat'     && (
@@ -390,6 +398,7 @@ export default function App() {
                 onNavigate={navigate}
                 coachReviews={domainState.coachReviews}
                 onCreateCalendarEvent={(event) => addCalendarEvent(event)}
+                userName={domainState.userName}
               />
             )}
           </div>

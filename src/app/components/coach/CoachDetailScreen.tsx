@@ -30,6 +30,7 @@ interface CoachDetailScreenProps {
   onBook: (coach: Coach) => void;
   onNavigate: (screen: string, data?: unknown) => void;
   coachReviews?: CoachReview[];
+  userName?: string;
   onCreateCalendarEvent?: (event: {
     date: string;
     type: 'coach';
@@ -40,7 +41,8 @@ interface CoachDetailScreenProps {
   }) => void;
 }
 
-export const CoachDetailScreen: React.FC<CoachDetailScreenProps> = ({ coach, onBack, onChat, onBook, onNavigate, coachReviews = [], onCreateCalendarEvent }) => {
+export const CoachDetailScreen: React.FC<CoachDetailScreenProps> = ({ coach, onBack, onChat, onBook, onNavigate, coachReviews = [], onCreateCalendarEvent, userName = 'Emma' }) => {
+  const resolveAuthor = (name: string) => name.replace(/\{userName\}/g, userName);
   const [showBookModal, setShowBookModal] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [bookingInfo, setBookingInfo] = useState<{gymName: string; date: string; slot: string} | null>(null);
@@ -218,7 +220,7 @@ export const CoachDetailScreen: React.FC<CoachDetailScreenProps> = ({ coach, onB
                     {thisCoachReviews.slice(0, 3).map(review => (
                       <div key={review.id} className="bg-slate-50 rounded-xl p-3">
                         <div className="flex items-center justify-between mb-1">
-                          <span className="font-bold text-slate-900 text-sm">{review.authorName}</span>
+                          <span className="font-bold text-slate-900 text-sm">{resolveAuthor(review.authorName)}</span>
                           <span className="text-xs text-slate-400">{review.date}</span>
                         </div>
                         <div className="flex gap-1 mb-2">

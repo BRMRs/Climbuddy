@@ -77,7 +77,6 @@ export interface Route {
 }
 
 export interface SlotBooker {
-  partnerId: string;  // Reference to Partner.id
   name: string;
   image: string;
   level: string;

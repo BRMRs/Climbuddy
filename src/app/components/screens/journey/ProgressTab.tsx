@@ -22,7 +22,9 @@ export const ProgressTab: React.FC<{
   addCoachReview?: (review: CoachReview) => void;
   addPartnerReview?: (review: PartnerReview) => void;
   markEventReviewed: (eventId: string) => void;
-}> = ({ onNavigate, switchTab, sessions, calendarEvents, addSession, addReview, addCoachReview, addPartnerReview, markEventReviewed, onResetOnboarding }) => {
+  userName?: string;
+  onUserNameChange?: (name: string) => void;
+}> = ({ onNavigate, switchTab, sessions, calendarEvents, addSession, addReview, addCoachReview, addPartnerReview, markEventReviewed, onResetOnboarding, userName = 'Emma', onUserNameChange }) => {
   const [heartRate, setHeartRate] = useState(142);
   const [badges, setBadges] = useState<Badge[]>(BADGES);
   const [selectedBadge, setSelectedBadge] = useState<Badge | null>(null);
@@ -65,13 +67,14 @@ export const ProgressTab: React.FC<{
       {/* Thin orchestrator renders sub-components */}
       {/* Profile Card */}
       <ProfileCard
-        name="Emma"
+        name={userName}
         portrait={PORTRAITS.emma}
         level="V2"
         progressPercent={68}
         routes={19}
         sessions={3}
         calories={580}
+        onNameChange={onUserNameChange}
       />
 
       {/* Live Health Data */}
@@ -87,6 +90,7 @@ export const ProgressTab: React.FC<{
         addCoachReview={addCoachReview}
         addPartnerReview={addPartnerReview}
         markEventReviewed={markEventReviewed}
+        userName={userName}
       />
 
       {/* Badges */}

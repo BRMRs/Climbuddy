@@ -54,9 +54,10 @@ interface GettingStartedScreenProps {
   onBack: () => void;
   switchTab?: (tab: any) => void;
   onNavigateToBoost?: () => void;
+  userName?: string;
 }
 
-export const GettingStartedScreen: React.FC<GettingStartedScreenProps> = ({ onBack, switchTab, onNavigateToBoost }) => {
+export const GettingStartedScreen: React.FC<GettingStartedScreenProps> = ({ onBack, switchTab, onNavigateToBoost, userName = 'Emma' }) => {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
   const [readSet, setReadSet] = useState<Set<number>>(new Set());
   const [done, setDone] = useState(false);
@@ -80,7 +81,7 @@ export const GettingStartedScreen: React.FC<GettingStartedScreenProps> = ({ onBa
     }
   };
 
-  if (done) return <ReadyScreen onBack={onBack} />;
+  if (done) return <ReadyScreen onBack={onBack} userName={userName} />;
 
   return (
     <div className="flex flex-col h-full bg-[#F8FAFC] animate-in slide-in-from-right duration-300">
@@ -89,7 +90,7 @@ export const GettingStartedScreen: React.FC<GettingStartedScreenProps> = ({ onBa
       <div ref={scrollRef} className="flex-1 overflow-y-auto custom-scrollbar px-5 pt-4 pb-12 flex flex-col gap-5">
 
         <p className="font-semibold text-slate-600 text-sm leading-relaxed">
-          Welcome to climbing, Emma! 🎉 Open every section below before your first session.
+          Welcome to climbing, {userName}! 🎉 Open every section below before your first session.
         </p>
 
         {/* Progress bar */}
@@ -170,7 +171,7 @@ export const GettingStartedScreen: React.FC<GettingStartedScreenProps> = ({ onBa
 };
 
 /* ── Ready Screen ─────────────────────────────── */
-function ReadyScreen({ onBack }: { onBack: () => void }) {
+function ReadyScreen({ onBack, userName = 'Emma' }: { onBack: () => void; userName?: string }) {
   return (
     <div className="flex flex-col h-full bg-slate-900 animate-in fade-in duration-500 relative overflow-hidden">
       {/* Background glows */}
@@ -200,7 +201,7 @@ function ReadyScreen({ onBack }: { onBack: () => void }) {
           </h1>
           <p className="text-slate-400 font-semibold mt-3 text-sm leading-relaxed">
             You've completed the Getting Started guide.<br />
-            The wall is waiting for you, Emma. 🧗
+            The wall is waiting for you, {userName}. 🧗
           </p>
         </div>
 
