@@ -1,6 +1,10 @@
 import { Gym, Partner, Coach, Badge, Route, SlotBooker, PartnerRating, MyPreferences, ChatHistoryItem, Course, CalendarEvent, VenueReview, DailyTask, SessionLog, CoachCourse } from '../types';
 
-const img = (path: string) => new URL(path, import.meta.url).href;
+const img = (path: string) => {
+  const base = import.meta.env.BASE_URL;
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+  return `${base}${cleanPath}`;
+};
 
 export const PORTRAITS = {
   emma:  "https://images.unsplash.com/photo-1546872041-03da29ccc3f3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
