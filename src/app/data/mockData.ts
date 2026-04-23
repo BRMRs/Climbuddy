@@ -215,6 +215,23 @@ export const PARTNERS_DATA: Partner[] = [
   },
 ];
 
+export const CHAT_PARTNERS: Partner[] = [
+  {
+    id: 'chat1', name: 'Marcus Li', level: 'V4–V5',
+    hopePartner: 'Love outdoor bouldering. Looking for weekend adventure buddies!',
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400',
+    gym: 'Peak Bouldering',
+    trustScore: 92, verified: true, age: 29, climbingSince: '2021',
+  },
+  {
+    id: 'chat2', name: 'Sofia Chen', level: 'V2–V3',
+    hopePartner: 'Friendly climber who loves route reading challenges 🧗‍♀️',
+    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400',
+    gym: 'The Crux Gym',
+    trustScore: 94, verified: true, age: 27, climbingSince: '2023',
+  },
+];
+
 export const GYM_ROUTES: Record<string, Route[]> = {
   g1: [
     { id: 'r1', name: 'Blue Slab',     grade: 'V0', color: 'text-sky-700',    bgColor: 'bg-sky-100',    type: 'Boulder',  setter: 'Bob',  dateSet: 'Apr 10', holds: 'Crimps + Slopers' },
@@ -240,20 +257,20 @@ export const TIME_SLOTS = ['9:00–11:00', '11:00–13:00', '13:00–15:00', '15
 
 export const SLOT_BOOKERS: Record<string, SlotBooker[]> = {
   '9:00–11:00':  [
-    { name: 'Alice', image: "https://images.unsplash.com/photo-1582515572488-8b9c7da08e3e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400", level: 'V3–V4' },
-    { name: 'Bob',   image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400", level: 'V1–V2' },
+    { partnerId: 'p1', name: 'Alice', image: PORTRAITS.alice, level: 'V3–V4' },
+    { partnerId: 'p2', name: 'Bob',   image: PORTRAITS.bob, level: 'V1–V2' },
   ],
   '11:00–13:00': [
-    { name: 'Maya',  image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400", level: 'V2–V3' },
+    { partnerId: 'p4', name: 'Maya',  image: PORTRAITS.maya, level: 'V2–V3' },
   ],
   '15:00–17:00': [
-    { name: 'Chen',  image: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400", level: 'V5–V6' },
-    { name: 'Alice', image: "https://images.unsplash.com/photo-1582515572488-8b9c7da08e3e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400", level: 'V3–V4' },
-    { name: 'Bob',   image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400", level: 'V1–V2' },
+    { partnerId: 'p3', name: 'Chen',  image: PORTRAITS.chen, level: 'V5–V6' },
+    { partnerId: 'p1', name: 'Alice', image: PORTRAITS.alice, level: 'V3–V4' },
+    { partnerId: 'p2', name: 'Bob',   image: PORTRAITS.bob, level: 'V1–V2' },
   ],
   '17:00–19:00': [
-    { name: 'Maya',  image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400", level: 'V2–V3' },
-    { name: 'Chen',  image: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400", level: 'V5–V6' },
+    { partnerId: 'p4', name: 'Maya',  image: PORTRAITS.maya, level: 'V2–V3' },
+    { partnerId: 'p3', name: 'Chen',  image: PORTRAITS.chen, level: 'V5–V6' },
   ],
 };
 
@@ -304,14 +321,14 @@ export const MOCK_REVIEWS: Record<string, { from: string; text: string; date: st
 
 export const CHAT_HISTORY: ChatHistoryItem[] = [
   {
-    partnerId: 'p1', lastMessage: 'See you Saturday! 🧗', time: 'Yesterday', unread: 0,
+    partnerId: 'chat1', lastMessage: 'See you Saturday for outdoor! 🧗', time: 'Yesterday', unread: 0,
     sessionStatus: 'upcoming', sessionDate: 'Apr 19',
     sessionGym: 'Peak Bouldering', sessionSlot: '11:00–13:00',
   },
   {
-    partnerId: 'p3', lastMessage: "Let's project V5 next time!", time: 'Mon', unread: 0,
+    partnerId: 'chat2', lastMessage: "That route reading session was amazing! Let's do it again 🎯", time: 'Mon', unread: 0,
     sessionStatus: 'completed_unreviewed', sessionDate: 'Apr 14',
-    sessionGym: 'Iron Walls', sessionSlot: '15:00–17:00',
+    sessionGym: 'The Crux Gym', sessionSlot: '15:00–17:00',
   },
 ];
 

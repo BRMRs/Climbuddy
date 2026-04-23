@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Star, ShieldCheck, MapPin, CheckCircle2, User, X, Eye, EyeOff, MessageCircle } from 'lucide-react';
 import { ScreenHeader } from '../../layout/ScreenHeader';
-import { GYM_COACHES, GYM_ROUTES, TIME_SLOTS, SLOT_BOOKERS } from '../../../data/mockData';
+import { GYM_COACHES, GYM_ROUTES, TIME_SLOTS, SLOT_BOOKERS, PARTNERS_DATA } from '../../../data/mockData';
 import { S } from '../../../constants/styles';
 import { Gym, Route, SlotBooker, VenueReview } from '../../../types';
 import Modal from '../../layout/Modal';
@@ -282,18 +282,10 @@ export const GymDetailScreen: React.FC<GymDetailScreenProps> = ({ gym, onBack, o
           }}
           onChatWith={(booker) => {
             setBookingTarget(null);
-            onNavigate('chat', {
-              id: booker.name,
-              name: booker.name,
-              image: booker.image,
-              level: booker.level,
-              trustScore: 90,
-              verified: true,
-              gym: gym.name,
-              hopePartner: '',
-              age: 0,
-              climbingSince: '',
-            });
+            const partner = PARTNERS_DATA.find(p => p.id === booker.partnerId);
+            if (partner) {
+              onNavigate('chat', partner);
+            }
           }}
         />
       )}
