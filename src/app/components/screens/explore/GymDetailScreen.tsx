@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Star, ShieldCheck, MapPin, CheckCircle2, User, X, Eye, EyeOff, MessageCircle } from 'lucide-react';
 import { ScreenHeader } from '../../layout/ScreenHeader';
-import { GYM_COACHES, GYM_ROUTES, TIME_SLOTS, SLOT_BOOKERS, PARTNERS_DATA } from '../../../data/mockData';
+import { GYM_COACHES, GYM_ROUTES, TIME_SLOTS, SLOT_BOOKERS } from '../../../data/mockData';
 import { S } from '../../../constants/styles';
 import { Gym, Route, SlotBooker, VenueReview } from '../../../types';
 import Modal from '../../layout/Modal';
@@ -48,6 +48,7 @@ interface GymDetailScreenProps {
   onBack: () => void;
   onNavigate: (screen: string, data?: any) => void;
   venueReviews?: VenueReview[];
+  userName?: string;
   onCreateCalendarEvent?: (event: {
     date: string;
     type: 'booking' | 'coach';
@@ -58,7 +59,8 @@ interface GymDetailScreenProps {
   }) => void;
 }
 
-export const GymDetailScreen: React.FC<GymDetailScreenProps> = ({ gym, onBack, onNavigate, venueReviews, onCreateCalendarEvent }) => {
+export const GymDetailScreen: React.FC<GymDetailScreenProps> = ({ gym, onBack, onNavigate, venueReviews, onCreateCalendarEvent, userName = 'Emma' }) => {
+  const resolveAuthor = (name: string) => name.replace(/\{userName\}/g, userName);
   const [tab, setTab] = useState<Tab>('Info');
   const [photoIdx, setPhotoIdx] = useState(0);
   // 'visit' = book the gym, coach name = book that coach, null = closed
@@ -237,7 +239,7 @@ export const GymDetailScreen: React.FC<GymDetailScreenProps> = ({ gym, onBack, o
               {gymReviews.map(r => (
                 <div key={r.id} className="border-2 border-slate-900 rounded-2xl p-4 bg-white">
                   <div className="flex justify-between items-center mb-1">
-                    <span className="font-black text-slate-900">{r.authorName}</span>
+                    <span className="font-black text-slate-900">{resolveAuthor(r.authorName)}</span>
                     <span className="text-xs text-slate-500">{r.date}</span>
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-xs text-slate-600 mb-1">
@@ -282,10 +284,18 @@ export const GymDetailScreen: React.FC<GymDetailScreenProps> = ({ gym, onBack, o
           }}
           onChatWith={(booker) => {
             setBookingTarget(null);
-            const partner = PARTNERS_DATA.find(p => p.id === booker.partnerId);
-            if (partner) {
-              onNavigate('chat', partner);
-            }
+            onNavigate('chat', {
+              id: booker.name,
+              name: booker.name,
+              image: booker.image,
+              level: booker.level,
+              trustScore: 90,
+              verified: true,
+              gym: gym.name,
+              hopePartner: '',
+              age: 0,
+              climbingSince: '',
+            });
           }}
         />
       )}
@@ -385,6 +395,12 @@ function BookingModal({ gymId, gymName, target, onClose, onChatWith, onConfirmBo
   const isCoach = target !== 'visit';
   const bookers = (!isCoach && slot) ? (SLOT_BOOKERS[slot] ?? []) : [];
 
+  const isSlotPast = (s: string): boolean => {
+    if (dayIdx !== 0) return false;
+    const endHour = parseInt(s.split('–')[1]?.split(':')[0] ?? '23');
+    return new Date().getHours() >= endHour;
+  };
+
   if (confirmed) {
     return (
       <Modal isOpen={true} onClose={onClose} title="Booking Confirmed">
@@ -414,7 +430,7 @@ function BookingModal({ gymId, gymName, target, onClose, onChatWith, onConfirmBo
   }
 
   return (
-    <Modal isOpen={true} onClose={onClose} title={isCoach ? `📅 Book with ${target}` : '📅 Book a Visit'}>
+    <Modal isOpen={true} onClose={onClose}>
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <h3 className="font-black text-xl text-slate-900">
@@ -445,16 +461,26 @@ function BookingModal({ gymId, gymName, target, onClose, onChatWith, onConfirmBo
       <div className="grid grid-cols-2 gap-2 mb-5">
         {TIME_SLOTS.map(s => {
           const count = !isCoach ? (SLOT_BOOKERS[s] ?? []).length : 0;
+          const past = isSlotPast(s);
           return (
-            <button key={s} onClick={() => setSlot(s)}
-              className={`flex flex-col items-center py-3 rounded-xl border-2 transition-all ${S.press}
-                ${slot === s ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-700 border-slate-200'}`}>
+            <button key={s}
+              onClick={() => !past && setSlot(s)}
+              disabled={past}
+              className={`flex flex-col items-center py-3 rounded-xl border-2 transition-all
+                ${past
+                  ? 'bg-slate-50 text-slate-300 border-slate-200 cursor-not-allowed opacity-50'
+                  : slot === s
+                    ? `bg-slate-900 text-white border-slate-900 ${S.press}`
+                    : `bg-white text-slate-700 border-slate-200 ${S.press}`}`}>
               <span className="font-black text-sm">{s}</span>
-              {count > 0 && (
-                <span className={`text-[10px] font-bold mt-0.5 ${slot === s ? 'text-teal-300' : 'text-teal-600'}`}>
-                  {count} climber{count > 1 ? 's' : ''} going
-                </span>
-              )}
+              {past
+                ? <span className="text-[10px] font-bold mt-0.5 text-slate-300">Passed</span>
+                : count > 0 && (
+                  <span className={`text-[10px] font-bold mt-0.5 ${slot === s ? 'text-teal-300' : 'text-teal-600'}`}>
+                    {count} climber{count > 1 ? 's' : ''} going
+                  </span>
+                )
+              }
             </button>
           );
         })}

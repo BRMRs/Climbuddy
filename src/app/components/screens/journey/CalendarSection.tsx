@@ -11,6 +11,7 @@ interface CalendarSectionProps {
   addCoachReview?: (review: CoachReview) => void;
   addPartnerReview?: (review: PartnerReview) => void;
   markEventReviewed?: (eventId: string) => void;
+  userName?: string;
 }
 
 export const CalendarSection: React.FC<CalendarSectionProps> = ({
@@ -20,6 +21,7 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
   addCoachReview,
   addPartnerReview,
   markEventReviewed,
+  userName = 'Emma',
 }) => {
   const [currentDate, setCurrentDate] = useState(new Date(2026, 3, 1));
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
@@ -37,6 +39,20 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
 
   const today = new Date();
   const isToday = (day: number) => today.getFullYear() === year && today.getMonth() === month && today.getDate() === day;
+
+  const isEventPast = (event: CalendarEvent): boolean => {
+    const monthIdx = monthNames.indexOf(event.date.split(' ')[0]);
+    const dayNum = parseInt(event.date.split(' ')[1]);
+    if (monthIdx === -1 || isNaN(dayNum)) return event.isExpired;
+    const eventDate = new Date(today.getFullYear(), monthIdx, dayNum);
+    if (event.slot) {
+      const endHour = parseInt(event.slot.split('–')[1]?.split(':')[0] ?? '23');
+      eventDate.setHours(endHour, 0, 0, 0);
+    } else {
+      eventDate.setHours(23, 59, 59, 999);
+    }
+    return eventDate < today;
+  };
 
   const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const monthShort = monthNames[month];
@@ -73,7 +89,7 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
     const newReview: VenueReview = {
       id: `vr-${Date.now()}`,
       gymId: reviewingEvent.gymId ?? '',
-      authorName: 'Emma',
+      authorName: userName,
       date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
       environment: venueRatings.environment,
       routeDesign: venueRatings.routeDesign || venueRatings.environment,
@@ -93,7 +109,7 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
     const newReview: CoachReview = {
       id: `cr-${Date.now()}`,
       coachId: reviewingEvent.coachName,
-      authorName: 'Emma',
+      authorName: userName,
       date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
       professionalism: coachRatings.professionalism,
       teachingSkill: coachRatings.teachingSkill || coachRatings.professionalism,
@@ -113,7 +129,7 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
       id: `pr-${Date.now()}`,
       partnerId: reviewingEvent.partnerName,
       partnerName: reviewingEvent.partnerName,
-      authorName: 'Emma',
+      authorName: userName,
       date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
       reliability: partnerRatings.reliability,
       safety: partnerRatings.safety || partnerRatings.reliability,
@@ -229,7 +245,7 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
                       🕐 {event.slot || 'Time TBD'} · 📍 {getGymName(event)}
                     </p>
 
-                    {event.isExpired && (
+                    {isEventPast(event) && !event.isReviewed && (
                       <div className="flex flex-wrap gap-2">
                         <button
                           onClick={() => {
@@ -268,9 +284,9 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
                       </div>
                     )}
 
-                    {event.isExpired && event.isReviewed && (
+                    {isEventPast(event) && event.isReviewed && (
                       <span className="text-green-600 text-sm font-bold flex items-center gap-1">
-                        Gym Reviewed ✓
+                        Reviewed ✓
                       </span>
                     )}
                   </div>
