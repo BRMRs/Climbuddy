@@ -1,11 +1,5 @@
 import { Gym, Partner, Coach, Badge, Route, SlotBooker, PartnerRating, MyPreferences, ChatHistoryItem, Course, CalendarEvent, VenueReview, DailyTask, SessionLog, CoachCourse } from '../types';
 
-const img = (path: string) => {
-  const base = import.meta.env.BASE_URL;
-  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
-  return `${base}${cleanPath}`;
-};
-
 export const PORTRAITS = {
   emma:  "https://images.unsplash.com/photo-1546872041-03da29ccc3f3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
   alice: "https://images.unsplash.com/photo-1582515572488-8b9c7da08e3e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
@@ -69,7 +63,7 @@ export const GYM_COACHES: Record<string, Coach[]> = {
   g1: [
     {
       id: 'c1', name: 'Bob', rating: '5.0', specialty: 'Footwork Expert', price: '$75/hr',
-      image: img('/images/coaches/bob.jpg'),
+      image: '/Climbuddy/images/coaches/bob.jpg',
       frequentGyms: ['g1', 'g2'],
       styles: ['Bouldering', 'Sport Climbing', 'Technique'],
       qualifications: [
@@ -84,7 +78,7 @@ export const GYM_COACHES: Record<string, Coach[]> = {
     },
     {
       id: 'c2', name: 'Jack', rating: '4.7', specialty: 'Lead Climbing', price: '$70/hr',
-      image: img('/images/coaches/jack.jpg'),
+      image: "/Climbuddy/images/coaches/jack.jpg",
       frequentGyms: ['g1', 'g3'],
       styles: ['Lead Climbing', 'Trad', 'Mountaineering'],
       qualifications: [
@@ -99,7 +93,7 @@ export const GYM_COACHES: Record<string, Coach[]> = {
     },
     {
       id: 'c3', name: 'John', rating: '4.8', specialty: 'Bouldering', price: '$65/hr',
-      image: img('/images/coaches/john.jpg'),
+      image: "/Climbuddy/images/coaches/john.jpg",
       frequentGyms: ['g1'],
       styles: ['Bouldering', 'Power', 'Campus Board'],
       qualifications: [
@@ -116,7 +110,7 @@ export const GYM_COACHES: Record<string, Coach[]> = {
   g2: [
     {
       id: 'c4', name: 'Sara', rating: '4.6', specialty: 'Yoga + Climb', price: '$60/hr',
-      image: img('/images/coaches/sara.jpg'),
+      image: "/Climbuddy/images/coaches/sara.jpg",
       frequentGyms: ['g2'],
       styles: ['Yoga', 'Mindfulness', 'Beginner'],
       qualifications: [
@@ -131,7 +125,7 @@ export const GYM_COACHES: Record<string, Coach[]> = {
     },
     {
       id: 'c5', name: 'Liam', rating: '4.5', specialty: 'Beginner Expert', price: '$55/hr',
-      image: img('/images/coaches/liam.jpg'),
+      image: "/Climbuddy/images/coaches/liam.jpg",
       frequentGyms: ['g2', 'g1'],
       styles: ['Beginner', 'Technique', 'Foundation'],
       qualifications: [
@@ -148,7 +142,7 @@ export const GYM_COACHES: Record<string, Coach[]> = {
   g3: [
     {
       id: 'c6', name: 'Kai', rating: '4.9', specialty: 'Competition', price: '$90/hr',
-      image: img('/images/coaches/kai.jpg'),
+      image: "/Climbuddy/images/coaches/kai.jpg",
       frequentGyms: ['g3', 'g1'],
       styles: ['Competition', 'Power', 'Bouldering'],
       qualifications: [
@@ -163,7 +157,7 @@ export const GYM_COACHES: Record<string, Coach[]> = {
     },
     {
       id: 'c7', name: 'Mia', rating: '4.8', specialty: 'Lead Climbing', price: '$80/hr',
-      image: img('/images/coaches/mia.jpg'),
+      image: "/Climbuddy/images/coaches/mia.jpg",
       frequentGyms: ['g3'],
       styles: ['Lead Climbing', 'Endurance', 'Route Reading'],
       qualifications: [
@@ -178,7 +172,7 @@ export const GYM_COACHES: Record<string, Coach[]> = {
     },
     {
       id: 'c8', name: 'Rex', rating: '4.7', specialty: 'Strength', price: '$70/hr',
-      image: img('/images/coaches/rex.jpg'),
+      image: "/Climbuddy/images/coaches/rex.jpg",
       frequentGyms: ['g3'],
       styles: ['Strength Training', 'Fingerboard', 'Conditioning'],
       qualifications: [
@@ -339,16 +333,16 @@ export const BADGES: Badge[] = [
  
 
 export const COURSES: Course[] = [
-  { id: 'crs-warmup', title: 'Warm-Up Routine', thumbnail: img('/images/courses/warmup.jpg'), duration: '15 min', type: 'free', description: 'Gentle warm-up sequence to prep the body', category: 'Warm-up', coachId: 'c1' },
-  { id: 'crs-stretch', title: 'Essential Stretching', thumbnail: img('/images/courses/stretching.jpg'), duration: '20 min', type: 'free', description: 'Full-body stretching for mobility', category: 'Flexibility', coachId: 'c2' },
-  { id: 'crs-breathe', title: 'Breathing Techniques', thumbnail: img('/images/courses/breathing.jpg'), duration: '10 min', type: 'free', description: 'Breath control for performance', category: 'Breath', coachId: 'c3' },
-  { id: 'crs-plateau', title: 'Plateau Breaker: Core Strength', thumbnail: img('/images/courses/core-strength.jpg'), duration: '25 min', type: 'paid', price: 9.99, description: 'Core strength to break plateaus', category: 'Strength', coachId: 'c4' },
-  { id: 'crs-finger', title: 'Finger Strength Training', thumbnail: img('/images/courses/finger-strength.jpg'), duration: '15 min', type: 'paid', price: 14.99, description: 'Finger strength for advanced climbers', category: 'Grip', coachId: 'c5' },
-  { id: 'crs-footwork', title: 'Advanced Footwork Drills', thumbnail: img('/images/courses/footwork.jpg'), duration: '20 min', type: 'paid', price: 12.99, description: 'Technique for precise footwork', category: 'Technique', coachId: 'c6' },
-  { id: 'crs-overhang', title: 'Overhang Mastery', thumbnail: img('/images/courses/overhang.jpg'), duration: '30 min', type: 'paid', price: 19.99, description: 'Master steep angles and roof climbing', category: 'Technique', coachId: 'c7' },
-  { id: 'crs-endurance', title: 'Endurance Circuit', thumbnail: img('/images/courses/endurance.jpg'), duration: '45 min', type: 'paid', price: 15.99, description: 'Build climbing stamina with interval training', category: 'Endurance', coachId: 'c8' },
-  { id: 'crs-beginner', title: 'Beginner Foundations', thumbnail: img('/images/courses/beginner.jpg'), duration: '40 min', type: 'free', description: 'Essential basics for new climbers', category: 'Beginner', coachId: 'c5' },
-  { id: 'crs-recovery', title: 'Active Recovery', thumbnail: img('/images/courses/recovery.jpg'), duration: '25 min', type: 'free', description: 'Light movement for rest days', category: 'Recovery', coachId: 'c4' },
+  { id: 'crs-warmup', title: 'Warm-Up Routine', thumbnail: "/Climbuddy/images/courses/warmup.jpg", duration: '15 min', type: 'free', description: 'Gentle warm-up sequence to prep the body', category: 'Warm-up', coachId: 'c1' },
+  { id: 'crs-stretch', title: 'Essential Stretching', thumbnail: "/Climbuddy/images/courses/stretching.jpg", duration: '20 min', type: 'free', description: 'Full-body stretching for mobility', category: 'Flexibility', coachId: 'c2' },
+  { id: 'crs-breathe', title: 'Breathing Techniques', thumbnail: "/Climbuddy/images/courses/breathing.jpg", duration: '10 min', type: 'free', description: 'Breath control for performance', category: 'Breath', coachId: 'c3' },
+  { id: 'crs-plateau', title: 'Plateau Breaker: Core Strength', thumbnail: "/Climbuddy/images/courses/core-strength.jpg", duration: '25 min', type: 'paid', price: 9.99, description: 'Core strength to break plateaus', category: 'Strength', coachId: 'c4' },
+  { id: 'crs-finger', title: 'Finger Strength Training', thumbnail: "/Climbuddy/images/courses/finger-strength.jpg", duration: '15 min', type: 'paid', price: 14.99, description: 'Finger strength for advanced climbers', category: 'Grip', coachId: 'c5' },
+  { id: 'crs-footwork', title: 'Advanced Footwork Drills', thumbnail: "/Climbuddy/images/courses/footwork.jpg", duration: '20 min', type: 'paid', price: 12.99, description: 'Technique for precise footwork', category: 'Technique', coachId: 'c6' },
+  { id: 'crs-overhang', title: 'Overhang Mastery', thumbnail: "/Climbuddy/images/courses/overhang.jpg", duration: '30 min', type: 'paid', price: 19.99, description: 'Master steep angles and roof climbing', category: 'Technique', coachId: 'c7' },
+  { id: 'crs-endurance', title: 'Endurance Circuit', thumbnail: "/Climbuddy/images/courses/endurance.jpg", duration: '45 min', type: 'paid', price: 15.99, description: 'Build climbing stamina with interval training', category: 'Endurance', coachId: 'c8' },
+  { id: 'crs-beginner', title: 'Beginner Foundations', thumbnail: "/Climbuddy/images/courses/beginner.jpg", duration: '40 min', type: 'free', description: 'Essential basics for new climbers', category: 'Beginner', coachId: 'c5' },
+  { id: 'crs-recovery', title: 'Active Recovery', thumbnail: "/Climbuddy/images/courses/recovery.jpg", duration: '25 min', type: 'free', description: 'Light movement for rest days', category: 'Recovery', coachId: 'c4' },
 ];
 
 export const CALENDAR_EVENTS: CalendarEvent[] = [
