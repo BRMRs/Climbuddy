@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { Camera, Image, X } from 'lucide-react';
 import { S } from '../../constants/styles';
 import type { CaptureMode } from '../../hooks/useMediaPicker';
@@ -23,9 +24,9 @@ export const MediaPickerSheet: React.FC<MediaPickerSheetProps> = ({
     onPick(mode);
   };
 
-  return (
+  return ReactDOM.createPortal(
     <div
-      className="absolute inset-0 z-50 flex items-end bg-slate-900/50 backdrop-blur-sm"
+      className="fixed inset-0 z-[200] flex items-end bg-slate-900/50 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
@@ -70,6 +71,7 @@ export const MediaPickerSheet: React.FC<MediaPickerSheetProps> = ({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 };
