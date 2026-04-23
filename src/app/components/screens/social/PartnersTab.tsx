@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Modal from '../../layout/Modal';
 import { AlignJustify, ShieldCheck, X, Heart, CheckCircle2, CreditCard, Clock } from 'lucide-react';
-import { PARTNERS_DATA, CHAT_PARTNERS, GYMS_DATA, TIME_SLOTS, MY_PREFERENCES, MY_RATINGS, CHAT_HISTORY, PARTNER_RATINGS } from '../../../data/mockData';
+import { PARTNERS_DATA, PAST_PARTNERS, GYMS_DATA, TIME_SLOTS, MY_PREFERENCES, MY_RATINGS, CHAT_HISTORY, PARTNER_RATINGS } from '../../../data/mockData';
 import { S } from '../../../constants/styles';
 import { Partner, MyPreferences, ChatHistoryItem } from '../../../types';
 
@@ -295,21 +295,24 @@ export const PartnersTab: React.FC<PartnersTabProps> = ({
           onReview={item => { setShowHistory(false); setReviewing(item); }}
         />
       )}
-      {reviewing && (
-        <ReviewSheet
-          item={reviewing}
-          partner={[...PARTNERS_DATA, ...CHAT_PARTNERS].find(p => p.id === reviewing.partnerId)!}
-          onClose={() => setReviewing(null)}
-          onSubmit={() => {
-            setHistory(h => h.map(x =>
-              x.partnerId === reviewing!.partnerId
-                ? { ...x, sessionStatus: 'completed_reviewed' }
-                : x
-            ));
-            setReviewing(null);
-          }}
-        />
-      )}
+      {reviewing && (() => {
+        const partner = PARTNERS_DATA.find(p => p.id === reviewing.partnerId) || PAST_PARTNERS.find(p => p.id === reviewing.partnerId);
+        return partner ? (
+          <ReviewSheet
+            item={reviewing}
+            partner={partner}
+            onClose={() => setReviewing(null)}
+            onSubmit={() => {
+              setHistory(h => h.map(x =>
+                x.partnerId === reviewing!.partnerId
+                  ? { ...x, sessionStatus: 'completed_reviewed' }
+                  : x
+              ));
+              setReviewing(null);
+            }}
+          />
+        ) : null;
+      })()}
     </div>
   );
 };
@@ -717,7 +720,10 @@ function ChatHistorySheet({ history, onClose, onChat, onReview }: {
             <p className="text-center text-slate-400 font-bold py-8">No chats yet.</p>
           )}
           {history.map((item, index) => {
-            const partner = [...PARTNERS_DATA, ...CHAT_PARTNERS].find(p => p.id === item.partnerId);
+            let partner = PARTNERS_DATA.find(p => p.id === item.partnerId);
+            if (!partner) {
+              partner = PAST_PARTNERS.find(p => p.id === item.partnerId);
+            }
             if (!partner) return null;
             return (
               <div key={`${item.partnerId}-${item.time}-${index}`} className={`rounded-2xl ${S.border} ${S.shadowSm} overflow-hidden bg-white`}>

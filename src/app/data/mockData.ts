@@ -1,4 +1,4 @@
-import { Gym, Partner, Coach, Badge, Route, SlotBooker, PartnerRating, MyPreferences, ChatHistoryItem, Course, CalendarEvent, VenueReview, DailyTask, SessionLog, CoachCourse } from '../types';
+import { Gym, Partner, Coach, Badge, Route, SlotBooker, PartnerRating, MyPreferences, ChatHistoryItem, Course, CalendarEvent, VenueReview, DailyTask, SessionLog, CoachCourse, Message } from '../types';
 
 export const PORTRAITS = {
   emma:  "https://images.unsplash.com/photo-1546872041-03da29ccc3f3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
@@ -215,20 +215,28 @@ export const PARTNERS_DATA: Partner[] = [
   },
 ];
 
-export const CHAT_PARTNERS: Partner[] = [
+// Partners from chat history - people you've already climbed with
+export const PAST_PARTNERS: Partner[] = [
   {
-    id: 'chat1', name: 'Marcus Li', level: 'V4–V5',
-    hopePartner: 'Love outdoor bouldering. Looking for weekend adventure buddies!',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400',
+    id: 'past-user-1', name: 'Sophie', level: 'V2–V3',
+    hopePartner: 'Love teaching beginners! Always happy to share tips.',
+    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
     gym: 'Peak Bouldering',
-    trustScore: 92, verified: true, age: 29, climbingSince: '2021',
+    trustScore: 94, verified: true, age: 27, climbingSince: '2021',
   },
   {
-    id: 'chat2', name: 'Sofia Chen', level: 'V2–V3',
-    hopePartner: 'Friendly climber who loves route reading challenges 🧗‍♀️',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400',
+    id: 'past-user-2', name: 'Marcus', level: 'V4–V5',
+    hopePartner: 'Weekend climber looking for consistent partners.',
+    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
     gym: 'The Crux Gym',
-    trustScore: 94, verified: true, age: 27, climbingSince: '2023',
+    trustScore: 92, verified: true, age: 29, climbingSince: '2019',
+  },
+  {
+    id: 'past-user-3', name: 'David', level: 'V3–V4',
+    hopePartner: 'Into bouldering and lead climbing. Let\'s send some projects!',
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
+    gym: 'Iron Walls',
+    trustScore: 89, verified: true, age: 25, climbingSince: '2022',
   },
 ];
 
@@ -257,20 +265,20 @@ export const TIME_SLOTS = ['9:00–11:00', '11:00–13:00', '13:00–15:00', '15
 
 export const SLOT_BOOKERS: Record<string, SlotBooker[]> = {
   '9:00–11:00':  [
-    { partnerId: 'p1', name: 'Alice', image: PORTRAITS.alice, level: 'V3–V4' },
-    { partnerId: 'p2', name: 'Bob',   image: PORTRAITS.bob, level: 'V1–V2' },
+    { name: 'Alice', image: "https://images.unsplash.com/photo-1582515572488-8b9c7da08e3e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400", level: 'V3–V4' },
+    { name: 'Bob',   image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400", level: 'V1–V2' },
   ],
   '11:00–13:00': [
-    { partnerId: 'p4', name: 'Maya',  image: PORTRAITS.maya, level: 'V2–V3' },
+    { name: 'Maya',  image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400", level: 'V2–V3' },
   ],
   '15:00–17:00': [
-    { partnerId: 'p3', name: 'Chen',  image: PORTRAITS.chen, level: 'V5–V6' },
-    { partnerId: 'p1', name: 'Alice', image: PORTRAITS.alice, level: 'V3–V4' },
-    { partnerId: 'p2', name: 'Bob',   image: PORTRAITS.bob, level: 'V1–V2' },
+    { name: 'Chen',  image: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400", level: 'V5–V6' },
+    { name: 'Alice', image: "https://images.unsplash.com/photo-1582515572488-8b9c7da08e3e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400", level: 'V3–V4' },
+    { name: 'Bob',   image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400", level: 'V1–V2' },
   ],
   '17:00–19:00': [
-    { partnerId: 'p4', name: 'Maya',  image: PORTRAITS.maya, level: 'V2–V3' },
-    { partnerId: 'p3', name: 'Chen',  image: PORTRAITS.chen, level: 'V5–V6' },
+    { name: 'Maya',  image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400", level: 'V2–V3' },
+    { name: 'Chen',  image: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400", level: 'V5–V6' },
   ],
 };
 
@@ -319,16 +327,27 @@ export const MOCK_REVIEWS: Record<string, { from: string; text: string; date: st
   ],
 };
 
+function daysFromNow(n: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() + n);
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
 export const CHAT_HISTORY: ChatHistoryItem[] = [
   {
-    partnerId: 'chat1', lastMessage: 'See you Saturday for outdoor! 🧗', time: 'Yesterday', unread: 0,
-    sessionStatus: 'upcoming', sessionDate: 'Apr 19',
-    sessionGym: 'Peak Bouldering', sessionSlot: '11:00–13:00',
+    partnerId: 'past-user-1', lastMessage: 'Thanks! Really enjoyed climbing with you 😊', time: 'Yesterday', unread: 0,
+    sessionStatus: 'completed_reviewed', sessionDate: daysFromNow(-4),
+    sessionGym: 'Peak Bouldering', sessionSlot: '09:00–11:00',
   },
   {
-    partnerId: 'chat2', lastMessage: "That route reading session was amazing! Let's do it again 🎯", time: 'Mon', unread: 0,
-    sessionStatus: 'completed_unreviewed', sessionDate: 'Apr 14',
+    partnerId: 'past-user-2', lastMessage: 'Sounds good, see you there! 🧗', time: '2 days ago', unread: 0,
+    sessionStatus: 'completed_unreviewed', sessionDate: daysFromNow(-2),
     sessionGym: 'The Crux Gym', sessionSlot: '15:00–17:00',
+  },
+  {
+    partnerId: 'past-user-3', lastMessage: 'Can\'t wait, it\'s going to be a great session! 💪', time: '3 days ago', unread: 1,
+    sessionStatus: 'upcoming', sessionDate: daysFromNow(2),
+    sessionGym: 'Iron Walls', sessionSlot: '17:00–19:00',
   },
 ];
 
@@ -380,12 +399,12 @@ export const CALENDAR_EVENTS: CalendarEvent[] = [
 export const VENUE_REVIEWS: VenueReview[] = [
   { id: 'vr1', gymId: 'g1', authorName: 'Alice', date: 'Apr 12', environment: 5, routeDesign: 4, equipment: 4, value: 5, text: 'Great atmosphere and solid routes.' },
   { id: 'vr2', gymId: 'g1', authorName: 'Bob', date: 'Apr 01', environment: 4, routeDesign: 3, equipment: 4, value: 4, text: 'Wide range of holds and clean gym.' },
-  { id: 'vr3', gymId: 'g1', authorName: 'Emma', date: 'Apr 03', environment: 5, routeDesign: 5, equipment: 5, value: 5, text: 'Love the cafe and yoga room! Perfect for rest days.' },
+  { id: 'vr3', gymId: 'g1', authorName: '{userName}', date: 'Apr 03', environment: 5, routeDesign: 5, equipment: 5, value: 5, text: 'Love the cafe and yoga room! Perfect for rest days.' },
   { id: 'vr4', gymId: 'g2', authorName: 'Mika', date: 'Mar 28', environment: 3, routeDesign: 4, equipment: 3, value: 3 },
   { id: 'vr5', gymId: 'g2', authorName: 'Liam', date: 'Apr 06', environment: 5, routeDesign: 5, equipment: 5, value: 5, text: 'Top notch gear and staff.' },
-  { id: 'vr6', gymId: 'g2', authorName: 'Emma', date: 'Apr 06', environment: 4, routeDesign: 4, equipment: 3, value: 4, text: 'Good yoga classes but showers need updating.' },
+  { id: 'vr6', gymId: 'g2', authorName: '{userName}', date: 'Apr 06', environment: 4, routeDesign: 4, equipment: 3, value: 4, text: 'Good yoga classes but showers need updating.' },
   { id: 'vr7', gymId: 'g3', authorName: 'Marcus', date: 'Apr 15', environment: 4, routeDesign: 5, equipment: 5, value: 4, text: 'Amazing lead walls, great for training.' },
-  { id: 'vr8', gymId: 'g3', authorName: 'Emma', date: 'Apr 16', environment: 5, routeDesign: 4, equipment: 5, value: 4, text: 'Pro shop has everything you need. Great routes too.' },
+  { id: 'vr8', gymId: 'g3', authorName: '{userName}', date: 'Apr 16', environment: 5, routeDesign: 4, equipment: 5, value: 4, text: 'Pro shop has everything you need. Great routes too.' },
 ];
 
 export const DAILY_PLAN: DailyTask[] = [
@@ -469,7 +488,7 @@ export const COACH_REVIEWS = [
   {
     id: 'cr1',
     coachId: 'c1',
-    authorName: 'Emma',
+    authorName: '{userName}',
     date: 'Apr 13',
     professionalism: 5,
     teachingSkill: 5,
@@ -491,7 +510,7 @@ export const COACH_REVIEWS = [
   {
     id: 'cr3',
     coachId: 'c4',
-    authorName: 'Emma',
+    authorName: '{userName}',
     date: 'Apr 20',
     professionalism: 4,
     teachingSkill: 5,
@@ -528,7 +547,7 @@ export const PARTNER_REVIEWS = [
     id: 'pr1',
     partnerId: 'Marcus Li',
     partnerName: 'Marcus Li',
-    authorName: 'Emma',
+    authorName: '{userName}',
     date: 'Apr 19',
     reliability: 5,
     safety: 5,
@@ -541,7 +560,7 @@ export const PARTNER_REVIEWS = [
     id: 'pr2',
     partnerId: 'Alice Chen',
     partnerName: 'Alice Chen',
-    authorName: 'Emma',
+    authorName: '{userName}',
     date: 'Apr 9',
     reliability: 5,
     safety: 5,
@@ -554,7 +573,7 @@ export const PARTNER_REVIEWS = [
     id: 'pr3',
     partnerId: 'David Kim',
     partnerName: 'David Kim',
-    authorName: 'Emma',
+    authorName: '{userName}',
     date: 'Apr 29',
     reliability: 4,
     safety: 5,
@@ -564,3 +583,34 @@ export const PARTNER_REVIEWS = [
     text: 'David is very encouraging even though he is more advanced. Patient teacher.',
   }
 ];
+
+export const PAST_PARTNERS_MESSAGES: Record<string, Message[]> = {
+  'partner:past-user-1': [
+    { id: 's1-1', text: "Hey! Saw your profile — V2–V3 and Peak Bouldering too 😄 Want to climb together sometime?", fromSelf: true, time: '10:02' },
+    { id: 's1-2', text: "Hi {userName}! Yes, would love that! I'm usually there on weekday mornings.", fromSelf: false, time: '10:15' },
+    { id: 's1-3', text: "Same! How about we plan something?", fromSelf: true, time: '10:17' },
+    { id: 's1-4', text: '', fromSelf: true, time: '10:18', meetingProposal: { gym: 'Peak Bouldering', gymId: 'g1', date: daysFromNow(-4), slot: '09:00–11:00', status: 'accepted' } },
+    { id: 's1-5', text: `🎉 I'm in! See you at Peak Bouldering on ${daysFromNow(-4)} (09:00–11:00). Can't wait! 🧗`, fromSelf: false, time: '10:19' },
+    { id: 's1-6', text: "That blue slab route was so fun, thanks for showing me the technique!", fromSelf: true, time: '11:50' },
+    { id: 's1-7', text: "Thanks! Really enjoyed climbing with you 😊", fromSelf: true, time: '12:05' },
+  ],
+  'partner:past-user-2': [
+    { id: 's2-1', text: "Hey Marcus, you're at The Crux Gym right? I've been wanting to try it.", fromSelf: true, time: '09:30' },
+    { id: 's2-2', text: "Yeah it's great! The V4 overhang section is challenging. You should come!", fromSelf: false, time: '09:45' },
+    { id: 's2-3', text: "Let's climb together then! I'll send an invite 🧗", fromSelf: true, time: '09:47' },
+    { id: 's2-4', text: '', fromSelf: true, time: '09:48', meetingProposal: { gym: 'The Crux Gym', gymId: 'g2', date: daysFromNow(-2), slot: '15:00–17:00', status: 'accepted' } },
+    { id: 's2-5', text: `🎉 I'm in! See you at The Crux Gym on ${daysFromNow(-2)} (15:00–17:00). Can't wait! 🧗`, fromSelf: false, time: '09:49' },
+    { id: 's2-6', text: "Just finished! You really pushed me on those V4s 🔥", fromSelf: false, time: '17:10' },
+    { id: 's2-7', text: "Sounds good, see you there! 🧗", fromSelf: true, time: '17:15' },
+  ],
+  'partner:past-user-3': [
+    { id: 's3-1', text: "Hi David! I've heard Iron Walls has amazing lead walls. Ever been?", fromSelf: true, time: '14:00' },
+    { id: 's3-2', text: "It's my home gym! The new routes they set last week are incredible.", fromSelf: false, time: '14:10' },
+    { id: 's3-3', text: "We should go together! I'll book a slot.", fromSelf: true, time: '14:12' },
+    { id: 's3-4', text: '', fromSelf: true, time: '14:13', meetingProposal: { gym: 'Iron Walls', gymId: 'g3', date: daysFromNow(2), slot: '17:00–19:00', status: 'accepted' } },
+    { id: 's3-5', text: `🎉 I'm in! See you at Iron Walls on ${daysFromNow(2)} (17:00–19:00). Can't wait! 🧗`, fromSelf: false, time: '14:14' },
+    { id: 's3-6', text: "Should I bring my own harness or does the gym rent them?", fromSelf: true, time: '14:20' },
+    { id: 's3-7', text: "They have rentals but bringing your own is more comfortable. See you there!", fromSelf: false, time: '14:25' },
+    { id: 's3-8', text: "Can't wait, it's going to be a great session! 💪", fromSelf: true, time: '14:26' },
+  ],
+};
