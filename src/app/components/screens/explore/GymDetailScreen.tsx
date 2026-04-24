@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Star, ShieldCheck, MapPin, CheckCircle2, User, X, Eye, EyeOff, MessageCircle } from 'lucide-react';
+import { Star, ShieldCheck, MapPin, CheckCircle2, X, Eye, EyeOff, MessageCircle } from 'lucide-react';
 import { ScreenHeader } from '../../layout/ScreenHeader';
 import { GYM_COACHES, GYM_ROUTES, TIME_SLOTS, SLOT_BOOKERS } from '../../../data/mockData';
 import { S } from '../../../constants/styles';
@@ -172,8 +172,11 @@ export const GymDetailScreen: React.FC<GymDetailScreenProps> = ({ gym, onBack, o
               {coaches.map(c => (
                 <button key={c.id} onClick={() => onNavigate('coachDetail', c)}
                   className={`flex items-center gap-4 p-4 bg-[#FEF3C7] rounded-2xl ${S.border} ${S.shadow} active:translate-y-1 active:translate-x-1 active:shadow-none text-left w-full`}>
-                  <div className={`w-12 h-12 rounded-full bg-white flex items-center justify-center ${S.border}`}>
-                    <User className="w-6 h-6 text-slate-600" strokeWidth={2.5} />
+                  <div className={`w-12 h-12 rounded-full bg-white overflow-hidden flex items-center justify-center ${S.border}`}>
+                    {c.image
+                      ? <img src={c.image} alt={c.name} className="w-full h-full object-cover" />
+                      : <span className="font-black text-slate-600 text-lg">{c.name.charAt(0)}</span>
+                    }
                   </div>
                   <div className="flex-1">
                     <p className="font-black text-slate-900">{c.name}</p>
