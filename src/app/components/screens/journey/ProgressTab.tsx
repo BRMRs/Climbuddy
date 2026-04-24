@@ -30,6 +30,7 @@ export const ProgressTab: React.FC<{
   const [heartRate, setHeartRate] = useState(142);
   const [badges, setBadges] = useState<Badge[]>(BADGES);
   const [selectedBadge, setSelectedBadge] = useState<Badge | null>(null);
+  const [showGuideConfirm, setShowGuideConfirm] = useState(false);
 
   // Animated heart rate
   useEffect(() => {
@@ -57,7 +58,7 @@ export const ProgressTab: React.FC<{
           </div>
           {onResetOnboarding && (
             <button
-              onClick={onResetOnboarding}
+              onClick={() => setShowGuideConfirm(true)}
               className={`bg-[#E0E7FF] rounded-xl px-3 py-2 font-black text-slate-900 text-xs flex items-center gap-1.5 ${S.border} ${S.shadowSm} ${S.press}`}
             >
               <span>❓</span> Guide
@@ -102,6 +103,29 @@ export const ProgressTab: React.FC<{
 
       {/* Session History */}
       <SessionHistory sessions={sessions} addSession={handleAddSession} />
+
+      <Modal isOpen={showGuideConfirm} onClose={() => setShowGuideConfirm(false)} title="Replay Tutorial?">
+        <div className="flex flex-col items-center gap-4 text-center">
+          <span className="text-5xl">🧗</span>
+          <p className="font-semibold text-slate-600 text-sm leading-relaxed">
+            This will restart the new user tutorial from the beginning. You'll be walked through all the key features of Climbuddy again.
+          </p>
+          <div className="flex gap-3 w-full">
+            <button
+              onClick={() => setShowGuideConfirm(false)}
+              className={`flex-1 py-2.5 rounded-xl font-black text-sm text-slate-700 bg-slate-100 ${S.border} ${S.press}`}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => { setShowGuideConfirm(false); onResetOnboarding?.(); }}
+              className={`flex-1 py-2.5 rounded-xl font-black text-sm text-white bg-slate-900 ${S.border} ${S.press}`}
+            >
+              Let's Go
+            </button>
+          </div>
+        </div>
+      </Modal>
 
       {selectedBadge && (
         <Modal isOpen={true} onClose={() => setSelectedBadge(null)} title={selectedBadge.label}>
