@@ -55,7 +55,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ name, portrait, level, progre
           title="Change Avatar"
         />
       )}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 sm:gap-4">
         <button
           onClick={() => onPortraitChange && setShowPicker(true)}
           className="relative w-16 h-16 rounded-full overflow-hidden shrink-0 group"
@@ -82,7 +82,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ name, portrait, level, progre
                 maxLength={20}
               />
             ) : (
-              <p className="font-black text-2xl text-slate-900 truncate">{name}</p>
+              <p className="font-black text-2xl text-slate-900 truncate min-w-[80px]">{name}</p>
             )}
             {onNameChange && (
               editing ? (
