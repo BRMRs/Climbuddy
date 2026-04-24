@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   SESSIONS,
   CALENDAR_EVENTS,
@@ -270,7 +270,11 @@ export default function App() {
     setActiveScreen(screen as ScreenType);
   };
 
-  const switchTab = (tab: TabType) => setActiveTab(tab);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const switchTab = (tab: TabType) => {
+    setActiveTab(tab);
+    scrollContainerRef.current?.scrollTo({ top: 0, behavior: 'instant' });
+  };
 
   const goHome = () => {
     setActiveScreen('home');
@@ -302,7 +306,7 @@ export default function App() {
 
             {/* Home tabs */}
             {activeScreen === 'home' && (
-              <div className="h-full overflow-y-auto custom-scrollbar">
+              <div ref={scrollContainerRef} className="h-full overflow-y-auto custom-scrollbar">
                 {activeTab === 'gyms'     && <GymsTab onNavigate={navigate} switchTab={switchTab} />}
                 {activeTab === 'partners' && (
                   <PartnersTab
