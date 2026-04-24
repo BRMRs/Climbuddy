@@ -271,10 +271,11 @@ export default function App() {
   };
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const switchTab = (tab: TabType) => {
-    setActiveTab(tab);
+  const switchTab = (tab: TabType) => setActiveTab(tab);
+
+  useEffect(() => {
     scrollContainerRef.current?.scrollTo({ top: 0, behavior: 'instant' });
-  };
+  }, [activeTab]);
 
   const goHome = () => {
     setActiveScreen('home');
