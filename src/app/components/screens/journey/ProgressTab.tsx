@@ -80,12 +80,6 @@ export const ProgressTab: React.FC<{
         onPortraitChange={onPortraitChange}
       />
 
-      {/* Live Health Data */}
-      <HealthStats heartRate={heartRate} duration={48} calories={320} hrColor={hrColor} />
-
-      {/* AI Coach */}
-      <AICoachCard switchTab={switchTab ?? (() => {})} />
-
       {/* Calendar Section */}
       <CalendarSection
         calendarEvents={calendarEvents}
@@ -95,6 +89,12 @@ export const ProgressTab: React.FC<{
         markEventReviewed={markEventReviewed}
         userName={userName}
       />
+
+      {/* Live Health Data */}
+      <HealthStats heartRate={heartRate} duration={48} calories={320} hrColor={hrColor} />
+
+      {/* AI Coach */}
+      <AICoachCard switchTab={switchTab ?? (() => {})} />
 
       {/* Badges */}
       <BadgeGrid badges={badges} onSelectBadge={setSelectedBadge} selectedBadge={selectedBadge} />
