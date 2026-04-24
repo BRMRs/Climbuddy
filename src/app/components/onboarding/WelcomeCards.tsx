@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { S } from '../../constants/styles';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Mountain, MapPin, Zap, Rocket } from 'lucide-react';
 
 interface WelcomeCardsProps {
   onComplete: () => void;
@@ -10,28 +10,32 @@ interface WelcomeCardsProps {
 const PAGES = [
   {
     bg: 'bg-white',
-    emoji: '🧗',
+    Icon: Mountain,
+    iconColor: 'text-teal-600',
     title: 'Welcome to Climbuddy',
     subtitle: 'Your complete climbing companion.',
     body: 'Find nearby gyms, match with climbing partners, follow AI training plans, and track every step of your journey.',
   },
   {
     bg: 'bg-[#E0E7FF]',
-    emoji: '📍',
+    Icon: MapPin,
+    iconColor: 'text-indigo-600',
     title: 'Discover & Connect',
     subtitle: 'Find gyms and partners near you.',
     body: 'Browse verified climbing gyms, filter by style or skill level, and match with climbing partners who share your vibe.',
   },
   {
     bg: 'bg-[#FEF3C7]',
-    emoji: '⚡',
+    Icon: Zap,
+    iconColor: 'text-amber-500',
     title: 'Train & Grow',
     subtitle: 'AI coaching meets personal tracking.',
     body: 'Get daily training plans from your AI coach, unlock premium courses, and watch your journey unfold session by session.',
   },
   {
     bg: 'bg-slate-900',
-    emoji: '🚀',
+    Icon: Rocket,
+    iconColor: 'text-white',
     title: 'Ready to Start?',
     subtitle: '',
     body: 'Your climbing adventure begins now.',
@@ -60,8 +64,8 @@ export const WelcomeCards: React.FC<WelcomeCardsProps> = ({ onComplete, onGettin
 
       <div className={`flex-1 flex flex-col items-center justify-center px-8 gap-6 transition-colors duration-300 ${currentPage.bg}`}>
         <div className="animate-in fade-in duration-300 flex flex-col items-center text-center" key={pageIndex}>
-          <div className={`text-8xl mb-4 select-none ${isLast ? 'text-white' : ''}`}>
-            {currentPage.emoji}
+          <div className="mb-4 w-24 h-24 flex items-center justify-center">
+            <currentPage.Icon className={`w-20 h-20 ${currentPage.iconColor}`} strokeWidth={1.25} />
           </div>
           <h1 className={`text-3xl font-black mb-2 ${isLast ? 'text-white' : 'text-slate-900'}`}>
             {currentPage.title}
@@ -111,7 +115,7 @@ export const WelcomeCards: React.FC<WelcomeCardsProps> = ({ onComplete, onGettin
               onClick={onComplete}
               className={`w-full py-4 bg-[#FEF08A] text-slate-900 font-black text-xl rounded-2xl border-2 border-[#FEF08A] ${S.shadow} ${S.press}`}
             >
-              Let's Go! 🎉
+              Let's Go!
             </button>
             <button 
               onClick={onGettingStarted}

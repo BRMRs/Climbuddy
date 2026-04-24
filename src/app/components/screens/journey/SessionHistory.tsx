@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { Film, X, Heart, Flame, Save, Smile, Meh, Frown, ThermometerSun } from 'lucide-react';
 import { S } from '../../../constants/styles';
 import { SessionLog } from '../../../types';
 import Modal from '../../layout/Modal';
@@ -61,7 +62,7 @@ const SessionHistory: React.FC<SessionHistoryProps> = ({ sessions, addSession, o
             <div>
               <p className="font-black text-slate-900 flex items-center gap-2">
                 {s.date}
-                {s.videoUrl && <span title="Video attached">🎬</span>}
+                {s.videoUrl && <Film className="w-3.5 h-3.5 text-indigo-400" strokeWidth={2} aria-label="Video attached" />}
               </p>
               <p className="font-semibold text-slate-500 text-xs">{s.level} · {s.routes} routes</p>
             </div>
@@ -86,11 +87,11 @@ const SessionHistory: React.FC<SessionHistoryProps> = ({ sessions, addSession, o
   );
 };
 
-const fatigueOptions: Array<{ label: string; value: number }> = [
-  { label: '😊 Low', value: 2 },
-  { label: '😐 Moderate', value: 5 },
-  { label: '😤 High', value: 8 },
-  { label: '🥵 Extreme', value: 10 },
+const fatigueOptions: Array<{ label: string; value: number; Icon: React.FC<any> }> = [
+  { label: 'Low', value: 2, Icon: Smile },
+  { label: 'Moderate', value: 5, Icon: Meh },
+  { label: 'High', value: 8, Icon: Frown },
+  { label: 'Extreme', value: 10, Icon: ThermometerSun },
 ];
 
 const LogSessionModal: React.FC<{
@@ -179,9 +180,9 @@ const LogSessionModal: React.FC<{
             <button
               type="button"
               onClick={() => setShowVideoPicker(true)}
-              className={`w-full py-2.5 text-sm font-black rounded-xl bg-indigo-200 text-slate-900 ${S.border} ${S.shadowSm} ${S.press}`}
+              className={`w-full py-2.5 text-sm font-black rounded-xl bg-indigo-200 text-slate-900 ${S.border} ${S.shadowSm} ${S.press} flex items-center justify-center gap-2`}
             >
-              🎬 Attach Video
+              <Film className="w-4 h-4" strokeWidth={2} /> Attach Video
             </button>
           ) : (
             <div className="mt-1 flex flex-col gap-2">
@@ -194,9 +195,9 @@ const LogSessionModal: React.FC<{
               <button
                 type="button"
                 onClick={resetVideo}
-                className={`w-full py-2 text-xs font-black rounded-xl bg-white text-slate-500 ${S.border} ${S.press}`}
+                className={`w-full py-2 text-xs font-black rounded-xl bg-white text-slate-500 ${S.border} ${S.press} flex items-center justify-center gap-1`}
               >
-                ✕ Remove Video
+                <X className="w-3.5 h-3.5" strokeWidth={2.5} /> Remove Video
               </button>
             </div>
           )}
@@ -206,12 +207,12 @@ const LogSessionModal: React.FC<{
           <p className="font-black text-slate-900 mb-3">Smartwatch Data</p>
 
           <div className="mb-3">
-            <label className="font-bold text-slate-500 text-xs uppercase tracking-wider mb-1.5 block">❤️ Heart Rate (BPM)</label>
+            <label className="font-bold text-slate-500 text-xs uppercase tracking-wider mb-1.5 flex items-center gap-1"><Heart className="w-3.5 h-3.5 text-red-400" strokeWidth={2} /> Heart Rate (BPM)</label>
             <input type="number" value={heartRateInput} onChange={(e) => setHeartRateInput(e.target.value)} placeholder="e.g. 145" className={S.input} />
           </div>
 
           <div className="mb-3">
-            <label className="font-bold text-slate-500 text-xs uppercase tracking-wider mb-1.5 block">🔥 Calories (kcal)</label>
+            <label className="font-bold text-slate-500 text-xs uppercase tracking-wider mb-1.5 flex items-center gap-1"><Flame className="w-3.5 h-3.5 text-orange-400" strokeWidth={2} /> Calories (kcal)</label>
             <input type="number" value={caloriesInput} onChange={(e) => setCaloriesInput(e.target.value)} placeholder="e.g. 320" className={S.input} />
           </div>
 
@@ -223,9 +224,9 @@ const LogSessionModal: React.FC<{
                   key={option.label}
                   type="button"
                   onClick={() => setFatigueLevel(option.value)}
-                  className={`px-2 py-2 text-xs font-black rounded-xl ${S.border} ${S.press} ${fatigueLevel === option.value ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}`}
+                  className={`px-2 py-2 text-xs font-black rounded-xl ${S.border} ${S.press} flex items-center justify-center gap-1 ${fatigueLevel === option.value ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}`}
                 >
-                  {option.label}
+                  <option.Icon className="w-3.5 h-3.5" strokeWidth={2} />{option.label}
                 </button>
               ))}
             </div>
@@ -247,7 +248,7 @@ const LogSessionModal: React.FC<{
           onClick={handleSubmit}
           className={`w-full bg-slate-900 text-white font-black text-lg py-3.5 rounded-2xl ${S.border} ${S.shadowSm} ${S.press}`}
         >
-          Save Session 💾
+          <span className="flex items-center justify-center gap-2"><Save className="w-5 h-5" strokeWidth={2} /> Save Session</span>
         </button>
       </div>
     </Modal>

@@ -374,7 +374,7 @@ function BookingModal({ coach, onClose, onBookingSuccess }: { coach: Coach; onCl
         onClick={e => e.stopPropagation()}>
         <div className="px-5 pt-5 pb-3 flex-shrink-0 flex items-center justify-between">
           <div>
-            <h3 className="font-black text-xl text-slate-900">📅 Book {coach.name}</h3>
+            <h3 className="font-black text-xl text-slate-900">Book {coach.name}</h3>
             <p className="font-semibold text-slate-400 text-xs mt-0.5">
               {step === 0 ? 'Select gym' : step === 1 ? 'Choose time' : 'Confirm'}
             </p>

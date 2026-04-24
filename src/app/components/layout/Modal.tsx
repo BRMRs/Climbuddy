@@ -1,4 +1,5 @@
 import React from 'react';
+import { X } from 'lucide-react';
 import { S } from '../../constants/styles';
 
 export interface ModalProps {
@@ -28,7 +29,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, maxHeig
         {title && (
           <div className="flex items-center justify-between p-5 pb-3 border-b-2 border-slate-900">
             <h2 className="text-xl font-black text-slate-900">{title}</h2>
-            <button onClick={onClose} className="text-slate-500 hover:text-slate-900" aria-label="Close modal">✕</button>
+            <button onClick={onClose} className="text-slate-500 hover:text-slate-900" aria-label="Close modal"><X className="w-5 h-5" strokeWidth={2.5} /></button>
           </div>
         )}
         <div className={`overflow-y-auto p-5 ${contentMax}`}>

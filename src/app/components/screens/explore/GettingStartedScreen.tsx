@@ -1,11 +1,12 @@
 import React, { useState, useRef } from 'react';
+import { Shield, Footprints, Mountain, Users, CheckCircle2, Trophy, Sparkles, Flame } from 'lucide-react';
 import { ScreenHeader } from '../../layout/ScreenHeader';
 import { S } from '../../../constants/styles';
-import { CheckCircle2 } from 'lucide-react';
 
 const STEPS = [
   {
-    icon: '🛡️',
+    Icon: Shield,
+    iconColor: 'text-red-600',
     title: 'Safety First',
     color: 'bg-[#FEE2E2]',
     items: [
@@ -16,7 +17,8 @@ const STEPS = [
     ],
   },
   {
-    icon: '👟',
+    Icon: Footprints,
+    iconColor: 'text-amber-600',
     title: 'Gear Basics',
     color: 'bg-[#FEF3C7]',
     items: [
@@ -27,7 +29,8 @@ const STEPS = [
     ],
   },
   {
-    icon: '🧗',
+    Icon: Mountain,
+    iconColor: 'text-teal-600',
     title: 'Your First Climb',
     color: 'bg-[#D1FAE5]',
     items: [
@@ -38,7 +41,8 @@ const STEPS = [
     ],
   },
   {
-    icon: '🤝',
+    Icon: Users,
+    iconColor: 'text-indigo-600',
     title: 'Gym Etiquette',
     color: 'bg-[#E0E7FF]',
     items: [
@@ -90,7 +94,7 @@ export const GettingStartedScreen: React.FC<GettingStartedScreenProps> = ({ onBa
       <div ref={scrollRef} className="flex-1 overflow-y-auto custom-scrollbar px-5 pt-4 pb-12 flex flex-col gap-5">
 
         <p className="font-semibold text-slate-600 text-sm leading-relaxed">
-          Welcome to climbing, {userName}! 🎉 Open every section below before your first session.
+          Welcome to climbing, {userName}! Open every section below before your first session.
         </p>
 
         {/* Progress bar */}
@@ -116,7 +120,7 @@ export const GettingStartedScreen: React.FC<GettingStartedScreenProps> = ({ onBa
               className={`w-full flex items-center gap-4 px-5 py-5 ${step.color} text-left
                 ${openIdx === i ? 'rounded-t-2xl' : 'rounded-2xl'}`}
             >
-              <span className="text-3xl shrink-0">{step.icon}</span>
+              <step.Icon className={`w-7 h-7 shrink-0 ${step.iconColor}`} strokeWidth={2} />
               <span className="font-black text-slate-900 text-[17px] flex-1 leading-snug">{step.title}</span>
               <div className="flex items-center gap-2 shrink-0">
                 {readSet.has(i) && (
@@ -154,7 +158,7 @@ export const GettingStartedScreen: React.FC<GettingStartedScreenProps> = ({ onBa
               ? 'bg-slate-900 text-white shadow-[4px_4px_0px_0px_rgba(20,184,166,1)]'
               : 'bg-slate-200 text-slate-400 border-slate-300 cursor-not-allowed'}`}
         >
-          {allRead ? "I'm Ready! ✅" : `Open all ${STEPS.length} sections to continue`}
+          {allRead ? <span className="flex items-center justify-center gap-2"><CheckCircle2 className="w-5 h-5" strokeWidth={2.5} /> I'm Ready!</span> : `Open all ${STEPS.length} sections to continue`}
         </button>
 
         <div className="text-center pt-4 pb-2">
@@ -184,13 +188,13 @@ function ReadyScreen({ onBack, userName = 'Emma' }: { onBack: () => void; userNa
         {/* Trophy */}
         <div className="relative">
           <div className="w-32 h-32 rounded-full bg-[#FEF08A] flex items-center justify-center shadow-[0_0_50px_rgba(254,240,138,0.45)] border-4 border-[#FEF08A]">
-            <span className="text-7xl select-none">🏆</span>
+            <Trophy className="w-16 h-16 text-amber-600" strokeWidth={1.5} />
           </div>
           <div className="absolute -top-2 -right-2 w-9 h-9 bg-teal-400 rounded-full border-2 border-slate-900 flex items-center justify-center shadow-lg">
-            <span className="text-base">✨</span>
+            <Sparkles className="w-4 h-4 text-white" strokeWidth={2} />
           </div>
           <div className="absolute -bottom-1 -left-3 w-7 h-7 bg-rose-400 rounded-full border-2 border-slate-900 flex items-center justify-center">
-            <span className="text-xs">🔥</span>
+            <Flame className="w-4 h-4 text-white" strokeWidth={2} />
           </div>
         </div>
 
@@ -201,20 +205,20 @@ function ReadyScreen({ onBack, userName = 'Emma' }: { onBack: () => void; userNa
           </h1>
           <p className="text-slate-400 font-semibold mt-3 text-sm leading-relaxed">
             You've completed the Getting Started guide.<br />
-            The wall is waiting for you, {userName}. 🧗
+            The wall is waiting for you, {userName}.
           </p>
         </div>
 
         {/* Achievements */}
         <div className="flex flex-col gap-2.5 w-full">
-          {[
-            ['🛡️', 'Safety certified'],
-            ['👟', 'Gear knowledge unlocked'],
-            ['🧗', 'First climb ready'],
-            ['🤝', 'Community member'],
-          ].map(([icon, label]) => (
+          {([
+            [Shield,     'Safety certified'],
+            [Footprints, 'Gear knowledge unlocked'],
+            [Mountain,   'First climb ready'],
+            [Users,      'Community member'],
+          ] as [React.FC<any>, string][]).map(([Icon, label]) => (
             <div key={label} className="flex items-center gap-3 bg-white/10 rounded-xl px-4 py-3 border border-white/20 backdrop-blur-sm">
-              <span className="text-xl">{icon}</span>
+              <Icon className="w-5 h-5 text-white/70 shrink-0" strokeWidth={2} />
               <span className="font-bold text-white text-sm flex-1">{label}</span>
               <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0" strokeWidth={2.5} />
             </div>

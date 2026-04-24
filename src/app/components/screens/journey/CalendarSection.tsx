@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Camera, X } from 'lucide-react';
+import { Camera, X, Home, Users, GraduationCap, Clock, MapPin, Check, Leaf, Mountain, Wrench, Banknote, Briefcase, BookOpen, Shield, Dumbbell, Target, MessageSquare, Star } from 'lucide-react';
 import { CalendarEvent, VenueReview, CoachReview, PartnerReview } from '../../../types';
 import { S } from '../../../constants/styles';
 import { GYMS_DATA } from '../../../data/mockData';
@@ -235,9 +235,9 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
                 <div key={event.id} className={`bg-white rounded-2xl p-3 flex flex-col gap-2 ${S.border} ${S.shadow} ${cardBorder}`}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      {event.type === 'booking' && <span className="text-lg">🏠</span>}
-                      {event.type === 'social' && <span className="text-lg">👥</span>}
-                      {event.type === 'coach' && <span className="text-lg">👨‍🏫</span>}
+                      {event.type === 'booking' && <Home className="w-4 h-4 text-teal-600" strokeWidth={2} />}
+                      {event.type === 'social' && <Users className="w-4 h-4 text-orange-500" strokeWidth={2} />}
+                      {event.type === 'coach' && <GraduationCap className="w-4 h-4 text-purple-600" strokeWidth={2} />}
                       <span className="font-bold text-slate-900">
                         {event.type === 'booking' && 'Solo Session'}
                         {event.type === 'social' && event.partnerName}
@@ -257,8 +257,8 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
                   </div>
 
                   <div className="ml-7 flex flex-col gap-2">
-                    <p className="text-sm font-bold text-slate-700">
-                      🕐 {event.slot || 'Time TBD'} · 📍 {getGymName(event)}
+                    <p className="text-sm font-bold text-slate-700 flex items-center gap-1 flex-wrap">
+                      <Clock className="w-3.5 h-3.5 text-slate-400" strokeWidth={2} /> {event.slot || 'Time TBD'} · <MapPin className="w-3.5 h-3.5 text-slate-400" strokeWidth={2} /> {getGymName(event)}
                     </p>
 
                     {isEventPast(event) && !event.isReviewed && (
@@ -302,7 +302,7 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
 
                     {isEventPast(event) && event.isReviewed && (
                       <span className="text-green-600 text-sm font-bold flex items-center gap-1">
-                        Reviewed ✓
+                        Reviewed <Check className="w-3.5 h-3.5" strokeWidth={3} />
                       </span>
                     )}
                   </div>
@@ -333,11 +333,11 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
           )}
           <div className="flex flex-col gap-4">
             {(['environment', 'routeDesign', 'equipment', 'value'] as const).map(dim => {
-              const labels: Record<string, string> = {
-                environment: '🌿 Environment',
-                routeDesign: '🧗 Route Design',
-                equipment: '🔧 Equipment',
-                value: '💰 Value',
+              const labels: Record<string, React.ReactNode> = {
+                environment: <span className="flex items-center gap-1"><Leaf className="w-3.5 h-3.5 text-green-500" strokeWidth={2} /> Environment</span>,
+                routeDesign: <span className="flex items-center gap-1"><Mountain className="w-3.5 h-3.5 text-teal-600" strokeWidth={2} /> Route Design</span>,
+                equipment:   <span className="flex items-center gap-1"><Wrench className="w-3.5 h-3.5 text-slate-500" strokeWidth={2} /> Equipment</span>,
+                value:       <span className="flex items-center gap-1"><Banknote className="w-3.5 h-3.5 text-amber-600" strokeWidth={2} /> Value</span>,
               };
 
               return (
@@ -349,9 +349,9 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
                         key={star}
                         type="button"
                         onClick={() => setVenueRatings(r => ({ ...r, [dim]: star }))}
-                        className={`text-xl ${venueRatings[dim] >= star ? 'text-amber-400' : 'text-slate-200'}`}
+                        className="p-0.5"
                       >
-                        ★
+                        <Star className={`w-5 h-5 ${venueRatings[dim] >= star ? 'fill-amber-400 text-amber-400' : 'text-slate-200 fill-slate-200'}`} strokeWidth={0} />
                       </button>
                     ))}
                   </div>
@@ -404,11 +404,11 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
           )}
           <div className="flex flex-col gap-4">
             {(['professionalism', 'teachingSkill', 'communication', 'valueForMoney'] as const).map(dim => {
-              const labels: Record<string, string> = {
-                professionalism: '👔 Professionalism',
-                teachingSkill: '📚 Teaching Skill',
-                communication: '💬 Communication',
-                valueForMoney: '💰 Value for Money',
+              const labels: Record<string, React.ReactNode> = {
+                professionalism: <span className="flex items-center gap-1"><Briefcase className="w-3.5 h-3.5 text-slate-500" strokeWidth={2} /> Professionalism</span>,
+                teachingSkill:   <span className="flex items-center gap-1"><BookOpen className="w-3.5 h-3.5 text-indigo-500" strokeWidth={2} /> Teaching Skill</span>,
+                communication:   <span className="flex items-center gap-1"><MessageSquare className="w-3.5 h-3.5 text-teal-500" strokeWidth={2} /> Communication</span>,
+                valueForMoney:   <span className="flex items-center gap-1"><Banknote className="w-3.5 h-3.5 text-amber-600" strokeWidth={2} /> Value for Money</span>,
               };
 
               return (
@@ -420,9 +420,9 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
                         key={star}
                         type="button"
                         onClick={() => setCoachRatings(r => ({ ...r, [dim]: star }))}
-                        className={`text-xl ${coachRatings[dim] >= star ? 'text-purple-400' : 'text-slate-200'}`}
+                        className="p-0.5"
                       >
-                        ★
+                        <Star className={`w-5 h-5 ${coachRatings[dim] >= star ? 'fill-purple-400 text-purple-400' : 'text-slate-200 fill-slate-200'}`} strokeWidth={0} />
                       </button>
                     ))}
                   </div>
@@ -475,12 +475,12 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
           )}
           <div className="flex flex-col gap-4">
             {(['reliability', 'safety', 'encouragement', 'skillMatch', 'communication'] as const).map(dim => {
-              const labels: Record<string, string> = {
-                reliability: '⏰ Reliability',
-                safety: '🛡️ Safety Awareness',
-                encouragement: '💪 Encouragement',
-                skillMatch: '🎯 Skill Match',
-                communication: '💬 Communication',
+              const labels: Record<string, React.ReactNode> = {
+                reliability:   <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5 text-slate-500" strokeWidth={2} /> Reliability</span>,
+                safety:        <span className="flex items-center gap-1"><Shield className="w-3.5 h-3.5 text-blue-500" strokeWidth={2} /> Safety Awareness</span>,
+                encouragement: <span className="flex items-center gap-1"><Dumbbell className="w-3.5 h-3.5 text-orange-500" strokeWidth={2} /> Encouragement</span>,
+                skillMatch:    <span className="flex items-center gap-1"><Target className="w-3.5 h-3.5 text-teal-600" strokeWidth={2} /> Skill Match</span>,
+                communication: <span className="flex items-center gap-1"><MessageSquare className="w-3.5 h-3.5 text-purple-500" strokeWidth={2} /> Communication</span>,
               };
 
               return (
@@ -492,9 +492,9 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
                         key={star}
                         type="button"
                         onClick={() => setPartnerRatings(r => ({ ...r, [dim]: star }))}
-                        className={`text-xl ${partnerRatings[dim] >= star ? 'text-orange-400' : 'text-slate-200'}`}
+                        className="p-0.5"
                       >
-                        ★
+                        <Star className={`w-5 h-5 ${partnerRatings[dim] >= star ? 'fill-orange-400 text-orange-400' : 'text-slate-200 fill-slate-200'}`} strokeWidth={0} />
                       </button>
                     ))}
                   </div>

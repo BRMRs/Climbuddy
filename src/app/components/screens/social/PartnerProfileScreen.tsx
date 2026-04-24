@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, Star, MessageCircle } from 'lucide-react';
+import { ShieldCheck, Star, MessageCircle, Mountain, Clock, Shield, Dumbbell, Target, MessageSquare, MapPin, BarChart2 } from 'lucide-react';
 import { ScreenHeader } from '../../layout/ScreenHeader';
 import { S } from '../../../constants/styles';
 import { Partner, PartnerRating } from '../../../types';
@@ -40,8 +40,8 @@ export const PartnerProfileScreen: React.FC<PartnerProfileScreenProps> = ({
               <span className="bg-white/20 backdrop-blur-sm text-white text-xs font-black px-2.5 py-1 rounded-full">
                 {partner.level}
               </span>
-              <span className="bg-white/20 backdrop-blur-sm text-white text-xs font-bold px-2.5 py-1 rounded-full">
-                🧗 Since {partner.climbingSince}
+              <span className="bg-white/20 backdrop-blur-sm text-white text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
+                <Mountain className="w-3 h-3" strokeWidth={2} /> Since {partner.climbingSince}
               </span>
               {partner.styles?.map(s => (
                 <span key={s} className="bg-teal-400/30 backdrop-blur-sm text-white text-xs font-black px-2.5 py-1 rounded-full border border-teal-300/40">
@@ -70,8 +70,8 @@ export const PartnerProfileScreen: React.FC<PartnerProfileScreenProps> = ({
                 rating.creditScore >= 90 ? 'text-green-600' :
                 rating.creditScore >= 75 ? 'text-amber-600' : 'text-red-500'
               }`}>
-                {rating.creditScore >= 90 ? '⭐ Excellent' :
-                 rating.creditScore >= 75 ? '✔ Good' : '⚠ Fair'}
+                {rating.creditScore >= 90 ? 'Excellent' :
+                 rating.creditScore >= 75 ? 'Good' : 'Fair'}
               </p>
             </div>
             <div className={`flex-1 bg-white rounded-2xl p-4 ${S.border} ${S.shadowSm} text-center`}>
@@ -87,18 +87,18 @@ export const PartnerProfileScreen: React.FC<PartnerProfileScreenProps> = ({
 
           {/* Intro */}
           <div className={`bg-white rounded-2xl p-4 ${S.border} ${S.shadowSm}`}>
-            <p className="font-black text-slate-900 mb-2 text-sm">💬 About</p>
+            <p className="font-black text-slate-900 mb-2 text-sm flex items-center gap-1.5"><MessageSquare className="w-4 h-4 text-slate-600" strokeWidth={2} /> About</p>
             <p className="font-semibold text-slate-600 text-sm leading-relaxed">{partner.hopePartner}</p>
             <div className="flex items-center gap-1.5 mt-3">
-              <span className="text-xs font-bold text-teal-700 bg-teal-50 border border-teal-200 px-2.5 py-1 rounded-full">
-                📍 {partner.gym}
+              <span className="text-xs font-bold text-teal-700 bg-teal-50 border border-teal-200 px-2.5 py-1 rounded-full flex items-center gap-1">
+                <MapPin className="w-3 h-3" strokeWidth={2} /> {partner.gym}
               </span>
             </div>
           </div>
 
           {/* Radar Chart */}
           <div className={`bg-white rounded-2xl p-5 ${S.border} ${S.shadowSm}`}>
-            <p className="font-black text-slate-900 mb-4 text-sm">📊 Partner Ratings</p>
+            <p className="font-black text-slate-900 mb-4 text-sm flex items-center gap-1.5"><BarChart2 className="w-4 h-4 text-slate-600" strokeWidth={2} /> Partner Ratings</p>
             <div className="flex justify-center">
               <RadarChart rating={rating} />
             </div>
@@ -106,7 +106,7 @@ export const PartnerProfileScreen: React.FC<PartnerProfileScreenProps> = ({
             <div className="flex flex-col gap-2 mt-4">
               {RADAR_DIMS.map(d => (
                 <div key={d.key} className="flex items-center gap-3">
-                  <span className="text-sm w-5 text-center">{d.emoji}</span>
+                  <d.Icon className="w-4 h-4 text-slate-500 flex-shrink-0" strokeWidth={2} />
                   <span className="font-semibold text-slate-600 text-xs w-20">{d.label}</span>
                   <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
                     <div
@@ -123,7 +123,7 @@ export const PartnerProfileScreen: React.FC<PartnerProfileScreenProps> = ({
           {/* Reviews */}
           {reviews.length > 0 && (
             <div className="flex flex-col gap-3">
-              <p className="font-black text-slate-900 text-sm">⭐ Recent Reviews</p>
+              <p className="font-black text-slate-900 text-sm flex items-center gap-1.5"><Star className="w-4 h-4 fill-amber-400 text-amber-400" strokeWidth={0} /> Recent Reviews</p>
               {reviews.map((r, i) => (
                 <div key={i} className={`bg-white rounded-2xl p-4 ${S.border} ${S.shadowSm}`}>
                   <div className="flex items-center gap-2 mb-2">
@@ -159,11 +159,11 @@ export const PartnerProfileScreen: React.FC<PartnerProfileScreenProps> = ({
 
 /* ── Radar Dimensions ─────────────────────── */
 const RADAR_DIMS = [
-  { key: 'reliability'   as const, emoji: '⏰', label: 'Reliable'  },
-  { key: 'safety'        as const, emoji: '🛡️', label: 'Safety'    },
-  { key: 'encouragement' as const, emoji: '💪', label: 'Supportive'},
-  { key: 'skillMatch'    as const, emoji: '🎯', label: 'Skill Fit' },
-  { key: 'communication' as const, emoji: '💬', label: 'Comms'     },
+  { key: 'reliability'   as const, Icon: Clock,         label: 'Reliable'  },
+  { key: 'safety'        as const, Icon: Shield,        label: 'Safety'    },
+  { key: 'encouragement' as const, Icon: Dumbbell,      label: 'Supportive'},
+  { key: 'skillMatch'    as const, Icon: Target,        label: 'Skill Fit' },
+  { key: 'communication' as const, Icon: MessageSquare, label: 'Comms'     },
 ];
 
 /* ── Radar Chart SVG ─────────────────────── */
@@ -216,7 +216,7 @@ function RadarChart({ rating }: { rating: PartnerRating }) {
           textAnchor={anchors[i]} dominantBaseline="middle"
           fontSize="10" fontWeight="700" fill="#475569"
         >
-          {d.emoji} {d.label}
+          {d.label}
         </text>
       ))}
     </svg>

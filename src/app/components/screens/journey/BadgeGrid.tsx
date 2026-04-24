@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { S } from '../../../constants/styles';
 import { Badge } from '../../../types';
-import { Award, ChevronDown, ChevronUp } from 'lucide-react';
+import { Award, ChevronDown, ChevronUp, Mountain, CheckCircle2, Users, Flame, Star, Zap, Film, GraduationCap, Trophy, Map, PenLine, Sunrise, Lock } from 'lucide-react';
 
 export interface BadgeGridProps {
   badges: Badge[];
@@ -10,6 +10,16 @@ export interface BadgeGridProps {
 }
 
 const INITIAL_DISPLAY_COUNT = 6;
+
+const BADGE_ICON_MAP: Record<string, React.FC<any>> = {
+  Mountain, CheckCircle2, Users, Flame, Star, Zap, Film, GraduationCap, Trophy, Map, PenLine, Sunrise,
+};
+
+export function BadgeIcon({ name, className }: { name: string; className?: string }) {
+  const Icon = BADGE_ICON_MAP[name];
+  if (!Icon) return null;
+  return <Icon className={className} strokeWidth={1.75} />;
+}
 
 const BadgeGrid: React.FC<BadgeGridProps> = ({ badges, onSelectBadge, selectedBadge }) => {
   const [expanded, setExpanded] = useState(false);
@@ -40,7 +50,7 @@ const BadgeGrid: React.FC<BadgeGridProps> = ({ badges, onSelectBadge, selectedBa
                   : 'bg-slate-100 border-slate-300 opacity-50 grayscale'}`}
               aria-pressed={isSelected}
             >
-              <span className="text-2xl">{b.icon}</span>
+              <BadgeIcon name={b.icon} className="w-6 h-6 text-slate-800" />
               <span className={`font-black text-[10px] text-center mt-1 leading-tight ${b.unlocked ? 'text-slate-900' : 'text-slate-400'}`}>
                 {b.label}
               </span>
@@ -55,13 +65,9 @@ const BadgeGrid: React.FC<BadgeGridProps> = ({ badges, onSelectBadge, selectedBa
           className="w-full mt-4 flex items-center justify-center gap-1 py-2 text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors"
         >
           {expanded ? (
-            <>
-              Show Less <ChevronUp className="w-4 h-4" />
-            </>
+            <>Show Less <ChevronUp className="w-4 h-4" /></>
           ) : (
-            <>
-              Show All {badges.length} Badges <ChevronDown className="w-4 h-4" />
-            </>
+            <>Show All {badges.length} Badges <ChevronDown className="w-4 h-4" /></>
           )}
         </button>
       )}

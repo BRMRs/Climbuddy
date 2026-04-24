@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { MapPin, Search, ShieldCheck, Star, X } from 'lucide-react';
+import { MapPin, Search, ShieldCheck, Star, X, Mountain } from 'lucide-react';
 import { GYMS_DATA } from '../../../data/mockData';
 import { S } from '../../../constants/styles';
 import { Gym } from '../../../types';
@@ -75,7 +75,7 @@ export const GymsTab: React.FC<GymsTabProps> = ({ onNavigate, switchTab }) => {
         onClick={() => onNavigate('gettingStarted')}
         className={`bg-[#E0E7FF] rounded-2xl p-4 flex items-center gap-4 ${S.border} ${S.shadowSm} ${S.press} text-left`}
       >
-        <span className="text-3xl">🧗</span>
+        <Mountain className="w-8 h-8 text-slate-400" strokeWidth={1.5} />
         <div>
           <p className="font-black text-slate-900 text-base">New to Climbing?</p>
           <p className="text-slate-600 font-semibold text-xs leading-tight mt-0.5">
@@ -94,7 +94,7 @@ export const GymsTab: React.FC<GymsTabProps> = ({ onNavigate, switchTab }) => {
 
         {filtered.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-4xl mb-3">🔍</p>
+            <Search className="w-10 h-10 text-slate-300 mb-3 mx-auto" strokeWidth={1.5} />
             <p className="font-black text-slate-500">No gyms match your search.</p>
           </div>
         )}

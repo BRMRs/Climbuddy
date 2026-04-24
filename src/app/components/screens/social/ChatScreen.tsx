@@ -1,20 +1,20 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ArrowUp, ShieldCheck, CalendarPlus, CheckCircle2, X } from 'lucide-react';
+import { ArrowUp, ShieldCheck, CalendarPlus, CheckCircle2, X, MapPin, Calendar, Clock } from 'lucide-react';
 import { ScreenHeader } from '../../layout/ScreenHeader';
 import { S } from '../../../constants/styles';
 import { Message, Partner, MeetingProposal } from '../../../types';
 import { GYMS_DATA, TIME_SLOTS } from '../../../data/mockData';
 
 const AUTO_REPLIES: string[] = [
-  "That sounds great! When are you free this week? 😊",
+  "That sounds great! When are you free this week?",
   "I usually go on weekends. Does Saturday morning work?",
-  "Awesome! I'll see you at the gym 🧗‍♀️",
+  "Awesome! I'll see you at the gym!",
   "Let me know if you need any tips for the beginner routes!",
   "Peak Bouldering has really nice V2s right now, you'll love them.",
 ];
 
 const INITIAL_MESSAGES: Message[] = [
-  { id: 'm0', text: "Hey {userName}! Ready to conquer some beginner routes this weekend? 🧗", fromSelf: false, time: '10:21' },
+  { id: 'm0', text: "Hey {userName}! Ready to conquer some beginner routes this weekend?", fromSelf: false, time: '10:21' },
 ];
 
 function nowStr(): string {
@@ -294,7 +294,7 @@ function ProposalCard({ proposal, fromSelf, partnerName }: {
           : <CalendarPlus className="w-4 h-4 text-[#FEF08A] shrink-0" strokeWidth={2.5} />}
         <span className="font-black text-white text-xs flex-1">
           {fromSelf
-            ? isAccepted ? 'Climb Confirmed ✓' : 'Invite Sent'
+            ? isAccepted ? 'Climb Confirmed' : 'Invite Sent'
             : `${partnerName} invited you to climb`}
         </span>
         {isPending && (
@@ -304,21 +304,21 @@ function ProposalCard({ proposal, fromSelf, partnerName }: {
       {/* Body */}
       <div className="px-4 py-3 bg-white flex flex-col gap-1.5">
         <div className="flex items-center gap-2">
-          <span className="text-slate-400 text-xs">📍</span>
+          <MapPin className="w-3.5 h-3.5 text-slate-400" strokeWidth={2} />
           <span className="font-black text-slate-900 text-sm">{proposal.gym}</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-slate-400 text-xs">📅</span>
+          <Calendar className="w-3.5 h-3.5 text-slate-400" strokeWidth={2} />
           <span className="font-semibold text-slate-600 text-sm">{proposal.date}</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-slate-400 text-xs">⏰</span>
+          <Clock className="w-3.5 h-3.5 text-slate-400" strokeWidth={2} />
           <span className="font-semibold text-slate-600 text-sm">{proposal.slot}</span>
         </div>
         {isAccepted && (
           <div className="mt-1 pt-2 border-t border-slate-100 flex items-center gap-1.5">
             <CheckCircle2 className="w-3.5 h-3.5 text-green-500" strokeWidth={2.5} />
-            <span className="font-black text-green-600 text-xs">Both confirmed ✓</span>
+            <span className="font-black text-green-600 text-xs">Both confirmed</span>
           </div>
         )}
       </div>
@@ -360,7 +360,7 @@ function ProposeMeetingSheet({ partnerName, onClose, onSend }: {
         <div className="px-5 pt-5 pb-3 flex-shrink-0">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="font-black text-xl text-slate-900">📅 Climb with {partnerName}</h3>
+              <h3 className="font-black text-xl text-slate-900 flex items-center gap-2"><Calendar className="w-5 h-5 text-slate-700" strokeWidth={2} /> Climb with {partnerName}</h3>
               <p className="font-semibold text-slate-400 text-xs mt-0.5">
                 {['Pick a gym', 'Choose time', 'Confirm & send'][step]}
               </p>
@@ -454,12 +454,12 @@ function ProposeMeetingSheet({ partnerName, onClose, onSend }: {
               </div>
               <div className={`bg-[#FFFBEB] rounded-2xl p-4 ${S.border}`}>
                 <p className="font-semibold text-slate-600 text-xs leading-relaxed">
-                  📢 Once sent, <strong>{partnerName}</strong> will receive your climb invite. The session is confirmed when they accept.
+                  Once sent, <strong>{partnerName}</strong> will receive your climb invite. The session is confirmed when they accept.
                 </p>
               </div>
               <button onClick={handleSend}
                 className={`w-full py-4 rounded-2xl font-black text-xl bg-slate-900 text-white ${S.border} ${S.shadow} ${S.press}`}>
-                Send Climb Invite 🧗
+                Send Climb Invite →
               </button>
             </>
           )}

@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ArrowUp, X, Video, Sparkles } from 'lucide-react';
+import { ArrowUp, X, Video, Sparkles, Upload, CheckCircle2 } from 'lucide-react';
 import { ScreenHeader } from '../../layout/ScreenHeader';
 import { S } from '../../../constants/styles';
 import { Message } from '../../../types';
 
 const AI_INITIAL_MESSAGES: Message[] = [
-  { id: 'ai0', text: "Hey there! I'm your AI climbing coach 🤖 Ask me anything about technique, training plans, or get personalized climbing tips!", fromSelf: false, time: 'Now' },
+  { id: 'ai0', text: "Hey there! I'm your AI climbing coach. Ask me anything about technique, training plans, or get personalized climbing tips!", fromSelf: false, time: 'Now' },
 ];
 
 const AI_SUGGESTIONS = [
@@ -57,7 +57,7 @@ export const AICoachChatScreen: React.FC<AICoachChatScreenProps> = ({ onBack }) 
       else if (lower.includes('footwork')) response = AI_RESPONSES['footwork'][0];
       else if (lower.includes('overhang') || lower.includes('roof') || lower.includes('angle')) response = AI_RESPONSES['overhang'][0];
       else if (lower.includes('warm') || lower.includes('warmup')) response = AI_RESPONSES['warmup'][0];
-      else if (lower.includes('thanks') || lower.includes('great')) response = "You're welcome! Keep crushing it! 🧗 Let me know if you need anything else.";
+      else if (lower.includes('thanks') || lower.includes('great')) response = "You're welcome! Keep crushing it! Let me know if you need anything else.";
       
       setMessages(m => [...m, { id: `ai${Date.now()}`, text: response, fromSelf: false, time: nowStr() }]);
     }, 800 + Math.random() * 600);
@@ -195,7 +195,7 @@ function VideoAnalysisModal({ onClose }: { onClose: () => void }) {
         onClick={e => e.stopPropagation()}>
         <div className="px-5 pt-5 pb-3 flex-shrink-0 flex items-center justify-between">
           <div>
-            <h3 className="font-black text-xl text-slate-900">🎥 AI Video Analysis</h3>
+            <h3 className="font-black text-xl text-slate-900 flex items-center gap-2"><Video className="w-5 h-5 text-slate-700" strokeWidth={2} /> AI Video Analysis</h3>
             <p className="font-semibold text-slate-400 text-xs mt-0.5">Get professional feedback on your technique</p>
           </div>
           <button onClick={onClose} className="w-9 h-9 bg-slate-100 rounded-full flex items-center justify-center">
@@ -223,8 +223,8 @@ function VideoAnalysisModal({ onClose }: { onClose: () => void }) {
                     return p + 15;
                   });
                 }, 150);
-              }} className="w-full py-4 rounded-2xl font-black text-lg bg-indigo-500 text-white border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]">
-                📤 Upload Video
+              }} className="w-full py-4 rounded-2xl font-black text-lg bg-indigo-500 text-white border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] flex items-center justify-center gap-2">
+                <Upload className="w-5 h-5" strokeWidth={2.5} /> Upload Video
               </button>
             </>
           )}
@@ -242,7 +242,7 @@ function VideoAnalysisModal({ onClose }: { onClose: () => void }) {
           {step === 'result' && (
             <div className="flex flex-col gap-4">
               <div className="bg-green-50 border-2 border-green-500 rounded-2xl p-4">
-                <p className="font-black text-green-700 text-lg">✓ Analysis Complete!</p>
+                <p className="font-black text-green-700 text-lg flex items-center gap-2"><CheckCircle2 className="w-5 h-5" strokeWidth={2.5} /> Analysis Complete!</p>
               </div>
               {[
                 { label: 'Footwork', score: 7 },

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, Mountain, Lock } from 'lucide-react';
 import { PORTRAITS, BADGES, MY_PREFERENCES } from '../../../data/mockData';
 import { S } from '../../../constants/styles';
 import { Badge, SessionLog, CalendarEvent, VenueReview, CoachReview, PartnerReview } from '../../../types';
 import ProfileCard from './ProfileCard';
-import BadgeGrid from './BadgeGrid';
+import BadgeGrid, { BadgeIcon } from './BadgeGrid';
 import HealthStats from './HealthStats';
 import AICoachCard from './AICoachCard';
 import SessionHistory from './SessionHistory';
@@ -106,7 +106,7 @@ export const ProgressTab: React.FC<{
 
       <Modal isOpen={showGuideConfirm} onClose={() => setShowGuideConfirm(false)} title="Replay Tutorial?">
         <div className="flex flex-col items-center gap-4 text-center">
-          <span className="text-5xl">🧗</span>
+          <Mountain className="w-12 h-12 text-slate-400" strokeWidth={1.5} />
           <p className="font-semibold text-slate-600 text-sm leading-relaxed">
             This will restart the new user tutorial from the beginning. You'll be walked through all the key features of Climbuddy again.
           </p>
@@ -130,7 +130,7 @@ export const ProgressTab: React.FC<{
       {selectedBadge && (
         <Modal isOpen={true} onClose={() => setSelectedBadge(null)} title={selectedBadge.label}>
           <div className="flex flex-col items-center gap-4 text-center">
-            <span className="text-6xl">{selectedBadge.icon}</span>
+            <BadgeIcon name={selectedBadge.icon} className="w-16 h-16 text-slate-800" />
             <h3 className="font-black text-2xl text-slate-900">{selectedBadge.label}</h3>
             <p className="font-semibold text-slate-600 text-sm">{selectedBadge.desc}</p>
             {selectedBadge.unlocked ? (
@@ -142,7 +142,7 @@ export const ProgressTab: React.FC<{
                 <p className="text-xs text-gray-500">Unlocked on April 19, 2026</p>
               </div>
             ) : (
-              <p className="font-bold text-slate-400 text-sm">🔒 Keep climbing to unlock this badge.</p>
+              <p className="font-bold text-slate-400 text-sm flex items-center gap-1"><Lock className="w-4 h-4" strokeWidth={2.5} /> Keep climbing to unlock this badge.</p>
             )}
           </div>
         </Modal>

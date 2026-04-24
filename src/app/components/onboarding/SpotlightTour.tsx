@@ -170,7 +170,7 @@ export const SpotlightTour: React.FC<SpotlightTourProps> = ({ onComplete, switch
                 onClick={goNext}
                 className={`bg-slate-900 text-white font-black text-sm px-5 py-2.5 rounded-xl ${S.border} shadow-[2px_2px_0px_0px_rgba(20,184,166,1)] ${S.press}`}
               >
-                {stepIndex < STEPS.length - 1 ? 'Next →' : 'Done! 🎉'}
+                {stepIndex < STEPS.length - 1 ? 'Next →' : 'Done!'}
               </button>
             </div>
           </div>

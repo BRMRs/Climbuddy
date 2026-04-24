@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Lock } from 'lucide-react';
 import { Course } from '../../../types';
 import { S } from '../../../constants/styles';
 
@@ -82,7 +83,7 @@ export const CourseDetailScreen: React.FC<CourseDetailScreenProps> = ({
             onClick={handlePurchaseClick}
             className={`w-full py-4 rounded-xl font-black text-lg bg-amber-400 text-slate-900 ${S.border} ${S.shadow} ${S.press}`}
           >
-            🔒 Purchase for ${course.price?.toFixed(2)}
+            <Lock className="w-4 h-4 inline-block mr-1" strokeWidth={2.5} />Purchase for ${course.price?.toFixed(2)}
           </button>
         )}
       </div>

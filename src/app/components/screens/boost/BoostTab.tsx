@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { Bot, Zap, Lock, Check, CheckCircle2, GraduationCap, Star, User, ArrowRight } from 'lucide-react';
 import { COURSES, COACH_COURSES, GYM_COACHES } from '../../../data/mockData';
 import { S } from '../../../constants/styles';
-import { DailyTask, Coach } from '../../../types';
+import { DailyTask } from '../../../types';
 
 interface BoostTabProps {
   onNavigate: (screen: string, data?: unknown) => void;
@@ -18,26 +19,61 @@ export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab, purch
   const paidCourses = COURSES.filter(c => c.type === 'paid');
   const visiblePaidCourses = showAllPremium ? paidCourses : paidCourses.slice(0, 2);
   const allCoaches = Object.values(GYM_COACHES).flat();
+  const completedCount = tasks.filter(t => t.completed).length;
+  const totalTasks = tasks.length;
+  const progressPercent = totalTasks ? Math.round((completedCount / totalTasks) * 100) : 0;
+  const nextTask = tasks.find(task => !task.completed);
 
   return (
     <div className="p-5 pb-28 flex flex-col gap-6 animate-in fade-in duration-300">
       <div>
-        <h1 className="text-3xl font-black text-slate-900 tracking-tight">Boost ⚡</h1>
+        <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+          Boost <Zap className="w-7 h-7 text-amber-400 fill-amber-400" strokeWidth={2} />
+        </h1>
         <p className="text-slate-500 text-sm -mt-1 font-bold">Your personal training hub</p>
       </div>
 
+      {/* AI Coach Chat — top of page */}
+      <button
+        onClick={() => onNavigate('aiCoachChat')}
+        className="w-full border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] rounded-3xl p-4 bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-500 flex items-center gap-4 active:translate-y-1 active:translate-x-1 active:shadow-none"
+      >
+        <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center border border-white/30">
+          <Bot className="w-7 h-7 text-white" strokeWidth={1.5} />
+        </div>
+        <div className="flex-1 text-left min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <p className="font-black text-white text-lg">AI Coach</p>
+            <span className="text-[10px] font-black uppercase tracking-wide text-indigo-900 bg-white px-2 py-0.5 rounded-full">
+              Instant help
+            </span>
+          </div>
+          <p className="text-indigo-100 text-xs font-semibold mt-0.5">
+            Quick tips, beta advice, and a plan for your next session.
+          </p>
+        </div>
+        <ArrowRight className="w-5 h-5 text-white flex-shrink-0" strokeWidth={2.5} />
+      </button>
+
       {/* Today's Training Plan Section */}
       <div className="flex flex-col gap-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-black text-slate-900">🤖 Today's Plan</h2>
-          <span className="text-sm text-slate-500">{tasks.filter(t => t.completed).length}/{tasks.length} done</span>
+        <div className="flex items-end justify-between gap-3">
+          <div>
+            <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
+              <Bot className="w-5 h-5 text-indigo-500" strokeWidth={2} />
+              Today's Plan
+            </h2>
+            <p className="text-sm text-slate-500 font-bold">
+              {nextTask ? `Next: ${nextTask.title}` : 'All tasks completed for today'}
+            </p>
+          </div>
+          <span className="text-sm text-slate-500 whitespace-nowrap">{completedCount}/{totalTasks} done</span>
         </div>
-        
-        {/* Progress bar */}
+
         <div className="h-2 bg-slate-100 rounded-full border border-slate-200 overflow-hidden">
           <div
-            className="h-full bg-teal-500 rounded-full transition-all"
-            style={{ width: `${(tasks.filter(t => t.completed).length / tasks.length) * 100}%` }}
+            className="h-full bg-gradient-to-r from-teal-400 to-cyan-500 rounded-full transition-all"
+            style={{ width: `${progressPercent}%` }}
           />
         </div>
 
@@ -47,17 +83,17 @@ export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab, purch
           const isLocked = isPaid && !purchasedCourseIds.includes(task.courseId ?? '');
           return (
             <div
-                key={task.id}
-                className={`border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] rounded-2xl p-4 bg-white flex items-start gap-3 ${task.completed ? 'opacity-60' : ''}`}
+              key={task.id}
+              className={`rounded-2xl p-4 bg-white flex items-start gap-3 border ${task.completed ? 'border-slate-200 opacity-60' : 'border-slate-300'}`}
+            >
+              {/* Checkbox */}
+              <button
+                onClick={() => onToggleTask(task.id)}
+                className={`mt-0.5 w-6 h-6 rounded-full border-2 border-slate-900 flex items-center justify-center flex-shrink-0 ${task.completed ? 'bg-green-500' : 'bg-white'}`}
               >
-                {/* Checkbox */}
-                <button
-                  onClick={() => onToggleTask(task.id)}
-                  className={`mt-0.5 w-6 h-6 rounded-full border-2 border-slate-900 flex items-center justify-center flex-shrink-0 ${task.completed ? 'bg-green-500' : 'bg-white'}`}
-                >
-                {task.completed && <span className="text-white text-xs">✓</span>}
+                {task.completed && <Check className="w-3 h-3 text-white" strokeWidth={3} />}
               </button>
-              
+
               {/* Task content — tappable area */}
               <button
                 className="flex-1 text-left"
@@ -65,10 +101,11 @@ export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab, purch
                   if (task.courseId) onNavigate('courseDetail', [...COURSES, ...COACH_COURSES].find(c => c.id === task.courseId));
                 }}
               >
-                <p className={`font-bold text-slate-900 text-sm ${task.completed ? 'line-through text-slate-400' : ''}`}>
-                  {isLocked && '🔒 '}{task.title}
+                <p className={`font-bold text-slate-900 text-sm flex items-center gap-1 ${task.completed ? 'line-through text-slate-400' : ''}`}>
+                  {isLocked && <Lock className="w-3 h-3 inline-block flex-shrink-0" strokeWidth={2.5} />}
+                  {task.title}
                 </p>
-                <div className="flex items-center gap-2 mt-1">
+                <div className="flex items-center gap-2 mt-1 flex-wrap">
                   <span className="text-xs text-slate-400">{task.duration}</span>
                   <span className={`text-xs px-2 py-0.5 rounded-full border font-bold ${
                     task.type === 'free' ? 'bg-green-50 text-green-700 border-green-200' :
@@ -83,21 +120,6 @@ export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab, purch
           );
         })}
       </div>
-
-      {/* AI Coach Chat */}
-      <button
-        onClick={() => onNavigate('aiCoachChat')}
-        className="w-full border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] rounded-2xl p-4 bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center gap-4 active:translate-y-1 active:translate-x-1 active:shadow-none"
-      >
-        <div className="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center">
-          <span className="text-3xl">🤖</span>
-        </div>
-        <div className="flex-1 text-left">
-          <p className="font-black text-white text-lg">AI Coach Chat</p>
-          <p className="text-indigo-100 text-xs font-semibold">Ask anything, get climbing tips</p>
-        </div>
-        <span className="text-white text-2xl">→</span>
-      </button>
 
       <div className="flex flex-col gap-3">
         <h2 className="text-xl font-black text-slate-900">Free Training</h2>
@@ -151,11 +173,10 @@ export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab, purch
                     <span className="text-xs font-black text-slate-900 bg-amber-100 px-2 py-0.5 rounded-md border-2 border-slate-900">
                       ${course.price?.toFixed(2)}
                     </span>
-                    {isPurchased ? (
-                      <span className="text-xs">✅</span>
-                    ) : (
-                      <span className="text-xs">🔒</span>
-                    )}
+                    {isPurchased
+                      ? <CheckCircle2 className="w-4 h-4 text-green-500" strokeWidth={2.5} />
+                      : <Lock className="w-3.5 h-3.5 text-slate-400" strokeWidth={2.5} />
+                    }
                   </div>
                 </div>
               </button>
@@ -172,10 +193,13 @@ export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab, purch
         )}
       </div>
 
-{/* Train with a Coach Section */}
+      {/* Train with a Coach Section */}
       <div className="flex flex-col gap-3">
-        <h2 className="text-xl font-black text-slate-900">👨‍🏫 Train with a Coach</h2>
-        
+        <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
+          <GraduationCap className="w-5 h-5 text-slate-700" strokeWidth={2} />
+          Train with a Coach
+        </h2>
+
         <div className="flex gap-3 overflow-x-auto pb-2 -mx-5 px-5">
           {allCoaches.map(coach => (
             <button
@@ -183,7 +207,7 @@ export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab, purch
               onClick={() => onNavigate('coachDetail', coach)}
               className="flex-shrink-0 w-28 border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] rounded-2xl p-3 bg-white flex flex-col items-center gap-2 active:translate-y-1 active:translate-x-1 active:shadow-none"
             >
-<div className="w-12 h-12 rounded-full border-2 border-slate-900 overflow-hidden">
+              <div className="w-12 h-12 rounded-full border-2 border-slate-900 overflow-hidden">
                 {coach.image ? (
                   <img src={coach.image} alt={coach.name} className="w-full h-full object-cover" />
                 ) : (
@@ -195,7 +219,7 @@ export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab, purch
               <p className="font-black text-slate-900 text-xs text-center">{coach.name}</p>
               <p className="text-slate-500 text-[10px] text-center leading-tight">{coach.specialty}</p>
               <div className="flex items-center gap-1">
-                <span className="text-amber-500 text-xs">★</span>
+                <Star className="w-3 h-3 fill-amber-400 text-amber-400" strokeWidth={0} />
                 <span className="text-xs font-bold text-slate-700">{coach.rating}</span>
               </div>
               {coach.price && (
@@ -226,8 +250,9 @@ export const BoostTab: React.FC<BoostTabProps> = ({ onNavigate, switchTab, purch
                 <div className="flex-1 min-w-0">
                   <p className="font-black text-slate-900 text-sm">{course.title}</p>
                   {coach && (
-                    <span className="inline-block text-xs bg-teal-100 text-teal-700 border border-teal-300 rounded-full px-2 py-0.5 mt-1 font-bold">
-                      👤 {coach.name}
+                    <span className="inline-flex items-center gap-1 text-xs bg-teal-100 text-teal-700 border border-teal-300 rounded-full px-2 py-0.5 mt-1 font-bold">
+                      <User className="w-3 h-3" strokeWidth={2.5} />
+                      {coach.name}
                     </span>
                   )}
                   <div className="flex items-center gap-2 mt-1">

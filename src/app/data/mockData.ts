@@ -359,18 +359,18 @@ export const CHAT_HISTORY: ChatHistoryItem[] = [
 ];
 
 export const BADGES: Badge[] = [
-  { id: 'b1', label: 'First Climb!',  icon: '🧗', unlocked: true, earnedDate: 'Mar 15, 2025',  desc: 'Completed your first climb.' },
-  { id: 'b2', label: 'V1 Sent',       icon: '✅', unlocked: true, earnedDate: 'Mar 18, 2025',  desc: 'Sent your first V1 route.' },
-  { id: 'b3', label: 'Social Bee',    icon: '🤝', unlocked: true, earnedDate: 'Mar 20, 2025',  desc: 'Matched with a partner.' },
-  { id: 'b4', label: '5 Sessions',    icon: '🔥', unlocked: true, earnedDate: 'Apr 5, 2025', desc: 'Log 5 climbing sessions.' },
-  { id: 'b5', label: 'V2 Master',     icon: '⭐', unlocked: true, earnedDate: 'Apr 8, 2025', desc: 'Send 5 V2 routes.' },
-  { id: 'b6', label: 'V3 Crusher',    icon: '💥', unlocked: false, desc: 'Send a V3 route.' },
-  { id: 'b7', label: 'Video Star',    icon: '🎬', unlocked: true, earnedDate: 'Apr 12, 2025', desc: 'Upload a climbing video.' },
-  { id: 'b8', label: 'Coach Student', icon: '👨‍🏫', unlocked: true, earnedDate: 'Apr 13, 2025', desc: 'Complete your first coach session.' },
-  { id: 'b9', label: '10 Sessions',   icon: '🏆', unlocked: false, desc: 'Log 10 climbing sessions.' },
-  { id: 'b10', label: 'Gym Explorer', icon: '🗺️', unlocked: false, desc: 'Visit all 3 partner gyms.' },
-  { id: 'b11', label: 'Review Guru',  icon: '✍️', unlocked: true, earnedDate: 'Apr 13, 2025', desc: 'Write 3 venue reviews.' },
-  { id: 'b12', label: 'Early Bird',   icon: '🌅', unlocked: false, desc: 'Complete 3 morning sessions (before 10am).' },
+  { id: 'b1', label: 'First Climb!',  icon: 'Mountain',      unlocked: true, earnedDate: 'Mar 15, 2025',  desc: 'Completed your first climb.' },
+  { id: 'b2', label: 'V1 Sent',       icon: 'CheckCircle2',  unlocked: true, earnedDate: 'Mar 18, 2025',  desc: 'Sent your first V1 route.' },
+  { id: 'b3', label: 'Social Bee',    icon: 'Users',         unlocked: true, earnedDate: 'Mar 20, 2025',  desc: 'Matched with a partner.' },
+  { id: 'b4', label: '5 Sessions',    icon: 'Flame',         unlocked: true, earnedDate: 'Apr 5, 2025',  desc: 'Log 5 climbing sessions.' },
+  { id: 'b5', label: 'V2 Master',     icon: 'Star',          unlocked: true, earnedDate: 'Apr 8, 2025',  desc: 'Send 5 V2 routes.' },
+  { id: 'b6', label: 'V3 Crusher',    icon: 'Zap',           unlocked: false, desc: 'Send a V3 route.' },
+  { id: 'b7', label: 'Video Star',    icon: 'Film',          unlocked: true, earnedDate: 'Apr 12, 2025', desc: 'Upload a climbing video.' },
+  { id: 'b8', label: 'Coach Student', icon: 'GraduationCap', unlocked: true, earnedDate: 'Apr 13, 2025', desc: 'Complete your first coach session.' },
+  { id: 'b9', label: '10 Sessions',   icon: 'Trophy',        unlocked: false, desc: 'Log 10 climbing sessions.' },
+  { id: 'b10', label: 'Gym Explorer', icon: 'Map',           unlocked: false, desc: 'Visit all 3 partner gyms.' },
+  { id: 'b11', label: 'Review Guru',  icon: 'PenLine',       unlocked: true, earnedDate: 'Apr 13, 2025', desc: 'Write 3 venue reviews.' },
+  { id: 'b12', label: 'Early Bird',   icon: 'Sunrise',       unlocked: false, desc: 'Complete 3 morning sessions (before 10am).' },
 ];
 
  

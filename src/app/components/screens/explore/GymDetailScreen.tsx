@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
-import { Star, ShieldCheck, MapPin, CheckCircle2, X, Eye, EyeOff, MessageCircle } from 'lucide-react';
+import { Star, ShieldCheck, MapPin, CheckCircle2, X, Eye, EyeOff, MessageCircle, Droplets, Lock, Coffee, ShoppingCart, Dumbbell, Flower2, Sparkles, Calendar, Mountain, Users } from 'lucide-react';
 import { ScreenHeader } from '../../layout/ScreenHeader';
 import { GYM_COACHES, GYM_ROUTES, TIME_SLOTS, SLOT_BOOKERS } from '../../../data/mockData';
 import { S } from '../../../constants/styles';
 import { Gym, Route, SlotBooker, VenueReview } from '../../../types';
 import Modal from '../../layout/Modal';
 
-const AMENITY_ICONS: Record<string, string> = {
-  Showers: '🚿', Lockers: '🔒', Cafe: '☕', 'Gear Rental': '👟', 'Yoga Room': '🧘', 'Pro Shop': '🛒',
+const AMENITY_ICONS: Record<string, React.ReactNode> = {
+  Showers:      <Droplets className="w-4 h-4" strokeWidth={2} />,
+  Lockers:      <Lock className="w-4 h-4" strokeWidth={2} />,
+  Cafe:         <Coffee className="w-4 h-4" strokeWidth={2} />,
+  'Gear Rental': <Dumbbell className="w-4 h-4" strokeWidth={2} />,
+  'Yoga Room':  <Flower2 className="w-4 h-4" strokeWidth={2} />,
+  'Pro Shop':   <ShoppingCart className="w-4 h-4" strokeWidth={2} />,
 };
 
 const TABS = ['Info', 'Routes', 'Reviews', 'Coaches', 'Photos'] as const;
@@ -138,7 +143,7 @@ export const GymDetailScreen: React.FC<GymDetailScreenProps> = ({ gym, onBack, o
           {tab === 'Info' && (
             <div className="flex flex-col gap-4">
               <div className="rounded-2xl p-4 bg-[#F0FDF4] border-2 border-slate-200">
-                <p className="font-black text-slate-900 mb-1">📍 Address</p>
+                <p className="font-black text-slate-900 mb-1 flex items-center gap-1.5"><MapPin className="w-4 h-4 text-teal-600" strokeWidth={2} /> Address</p>
                 <p className="font-semibold text-slate-600 text-sm">{gym.address}</p>
               </div>
               <div>
@@ -147,7 +152,7 @@ export const GymDetailScreen: React.FC<GymDetailScreenProps> = ({ gym, onBack, o
                 <div className="flex flex-wrap gap-2">
                   {gym.amenities.map(a => (
                     <div key={a} className="flex items-center gap-1.5 px-3 py-2 bg-slate-100 rounded-xl border border-slate-200">
-                      <span className="text-base leading-none">{AMENITY_ICONS[a] ?? '✨'}</span>
+                      <span className="text-slate-500 leading-none">{AMENITY_ICONS[a] ?? <Sparkles className="w-4 h-4" strokeWidth={2} />}</span>
                       <span className="font-semibold text-slate-600 text-xs">{a}</span>
                     </div>
                   ))}
@@ -222,7 +227,7 @@ export const GymDetailScreen: React.FC<GymDetailScreenProps> = ({ gym, onBack, o
               <div className="border-2 border-slate-900 rounded-2xl p-4 bg-amber-50 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]">
                 <div className="flex items-center gap-2">
                   <span className="text-3xl font-black">{overallAvg.toFixed(1)}</span>
-                  <span className="text-amber-500 text-xl">★</span>
+                  <Star className="w-5 h-5 text-amber-400 fill-amber-400" strokeWidth={0} />
                   <span className="text-slate-500 text-sm">({reviewsCount} reviews)</span>
                 </div>
                 <div className="grid grid-cols-2 gap-2 mt-3">
@@ -234,7 +239,7 @@ export const GymDetailScreen: React.FC<GymDetailScreenProps> = ({ gym, onBack, o
                   ].map(d => (
                     <div key={d.dim} className="text-sm">
                       <span className="text-slate-500">{d.dim}: </span>
-                      <span className="font-bold">{d.val.toFixed(1)} ★</span>
+                      <span className="font-bold flex items-center gap-0.5">{d.val.toFixed(1)} <Star className="w-3 h-3 fill-amber-400 text-amber-400" strokeWidth={0} /></span>
                     </div>
                   ))}
                 </div>
@@ -246,10 +251,10 @@ export const GymDetailScreen: React.FC<GymDetailScreenProps> = ({ gym, onBack, o
                     <span className="text-xs text-slate-500">{r.date}</span>
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-xs text-slate-600 mb-1">
-                    <span>Environment: {r.environment}★</span>
-                    <span>Route Design: {r.routeDesign}★</span>
-                    <span>Equipment: {r.equipment}★</span>
-                    <span>Value: {r.value}★</span>
+                    <span>Environment: {r.environment}/5</span>
+                    <span>Route Design: {r.routeDesign}/5</span>
+                    <span>Equipment: {r.equipment}/5</span>
+                    <span>Value: {r.value}/5</span>
                   </div>
                   {r.text && <p className="mt-1 text-sm text-slate-700">"{r.text}"</p>}
                   {r.photos && r.photos.length > 0 && (
@@ -426,7 +431,7 @@ function BookingModal({ gymId, gymName, target, onClose, onChatWith, onConfirmBo
             {!isCoach && (
               <InfoRow
                 label="Visibility"
-                value={ghost ? '🕵️ Ghost Mode' : '👁️ Visible to others'}
+                value={ghost ? 'Ghost Mode' : 'Visible to others'}
               />
             )}
           </div>
@@ -444,7 +449,7 @@ function BookingModal({ gymId, gymName, target, onClose, onChatWith, onConfirmBo
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <h3 className="font-black text-xl text-slate-900">
-          {isCoach ? `📅 Book with ${target}` : '📅 Book a Visit'}
+          <span className="flex items-center gap-2"><Calendar className="w-5 h-5 text-slate-700" strokeWidth={2} />{isCoach ? `Book with ${target}` : 'Book a Visit'}</span>
         </h3>
         <button onClick={onClose} className={`w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 ${S.press}`}>
           <X className="w-4 h-4 text-slate-600" strokeWidth={2.5} />
@@ -500,7 +505,7 @@ function BookingModal({ gymId, gymName, target, onClose, onChatWith, onConfirmBo
       {!isCoach && slot && (
         <div className="mb-4 animate-in fade-in duration-200">
           <p className="font-black text-slate-900 mb-2 text-xs uppercase tracking-wider">
-            {bookers.length > 0 ? `🧗 ${bookers.length} Climber${bookers.length > 1 ? 's' : ''} at This Slot` : '😶 No one booked yet'}
+            {bookers.length > 0 ? `${bookers.length} Climber${bookers.length > 1 ? 's' : ''} at This Slot` : 'No one booked yet'}
           </p>
           {bookers.map(b => (
             <div key={b.name} className="flex items-center gap-3 p-3 mb-2 bg-[#F8FAFC] rounded-xl border-2 border-slate-100">
@@ -557,7 +562,7 @@ function BookingModal({ gymId, gymName, target, onClose, onChatWith, onConfirmBo
           ${slot
             ? 'bg-[#FEF08A] text-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]'
             : 'bg-slate-200 text-slate-400 border-slate-300 cursor-not-allowed'}`}>
-        {slot ? 'Confirm Booking ✓' : 'Pick a time slot first'}
+        {slot ? <span className="flex items-center justify-center gap-2"><CheckCircle2 className="w-5 h-5" strokeWidth={2.5} /> Confirm Booking</span> : 'Pick a time slot first'}
       </button>
     </Modal>
   );

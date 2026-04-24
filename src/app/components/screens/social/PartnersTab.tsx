@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Modal from '../../layout/Modal';
-import { AlignJustify, ShieldCheck, X, Heart, CheckCircle2, CreditCard, Clock } from 'lucide-react';
+import { AlignJustify, ShieldCheck, X, Heart, CheckCircle2, CreditCard, Clock, Settings, MapPin, ArrowLeft, ArrowRight, MessageCircle, BarChart2, Shield, Dumbbell, Target, MessageSquare, Star } from 'lucide-react';
 import { PARTNERS_DATA, PAST_PARTNERS, GYMS_DATA, TIME_SLOTS, MY_PREFERENCES, MY_RATINGS, CHAT_HISTORY, PARTNER_RATINGS } from '../../../data/mockData';
 import { S } from '../../../constants/styles';
 import { Partner, MyPreferences, ChatHistoryItem } from '../../../types';
@@ -164,7 +164,7 @@ export const PartnersTab: React.FC<PartnersTabProps> = ({
               onClick={() => setShowPrefs(true)}
               className={`bg-[#FFEDD5] rounded-xl px-3 py-2 font-black text-slate-900 text-xs flex items-center gap-1.5 ${S.border} ${S.shadowSm} ${S.press}`}
             >
-              <span>⚙️</span> Prefs
+              <Settings className="w-3.5 h-3.5" strokeWidth={2.5} /> Prefs
             </button>
           </div>
 
@@ -231,18 +231,18 @@ export const PartnersTab: React.FC<PartnersTabProps> = ({
                     <p className="font-semibold text-slate-700 text-sm leading-relaxed">{current.hopePartner}</p>
                   </div>
                   <div className={`flex items-center gap-1.5 self-start bg-[#CCFBF1] px-3 py-1.5 rounded-xl ${S.border}`}>
-                    <span className="text-xs">📍</span>
+                    <MapPin className="w-3.5 h-3.5 text-teal-700" strokeWidth={2} />
                     <span className="font-extrabold text-teal-800 text-xs">{current.gym}</span>
                   </div>
-                  <p className="text-slate-400 font-semibold text-xs mt-1">
-                    👈 Drag to pass · Tap to view profile · Drag to match 👉
+                  <p className="text-slate-400 font-semibold text-xs mt-1 flex items-center gap-1">
+                    <ArrowLeft className="w-3 h-3" strokeWidth={2.5} /> Drag to pass · Tap to view · Drag to match <ArrowRight className="w-3 h-3" strokeWidth={2.5} />
                   </p>
                 </div>
               </div>
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-16 gap-4">
-              <span className="text-5xl">🎉</span>
+              <CheckCircle2 className="w-12 h-12 text-teal-400" strokeWidth={1.5} />
               <p className="font-black text-slate-900 text-xl">You've seen everyone!</p>
               <p className="font-semibold text-slate-500 text-sm">Check back later for new climbers.</p>
               <button
@@ -337,7 +337,7 @@ function MatchScreen({ partner, onChat, onContinue, userPortrait }: {
   return (
     <div className="flex flex-col items-center justify-center h-full bg-slate-900 animate-in fade-in duration-300 p-6 gap-6">
       <div className="text-center">
-        <p className="text-5xl mb-3">🎉</p>
+        <Heart className="w-12 h-12 text-[#FEF08A] fill-[#FEF08A] mb-3" strokeWidth={0} />
         <h2 className="text-3xl font-black text-white tracking-tight">It's a Match!</h2>
         <p className="text-slate-400 font-semibold mt-2">You and {partner.name} liked each other.</p>
       </div>
@@ -354,7 +354,7 @@ function MatchScreen({ partner, onChat, onContinue, userPortrait }: {
       </p>
       <button onClick={onChat}
         className={`w-full bg-[#FEF08A] text-slate-900 font-black text-lg py-4 rounded-2xl border-2 border-[#FEF08A] ${S.press}`}>
-        Start Chatting 💬
+        <span className="flex items-center justify-center gap-2"><MessageCircle className="w-5 h-5" strokeWidth={2.5} /> Start Chatting</span>
       </button>
       <button onClick={onContinue} className="text-slate-500 font-bold text-sm">
         Keep Browsing
@@ -394,7 +394,7 @@ function PlanSheet({ partner, onClose, onConfirmed }: {
         <div className="px-5 pt-5 pb-3 flex-shrink-0">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-black text-xl text-slate-900">
-              {['Pick a Gym', 'Choose Time', 'Confirm & Pay', '⏳ Waiting...', '🎉 Confirmed!'][step]}
+              {['Pick a Gym', 'Choose Time', 'Confirm & Pay', 'Waiting...', 'Confirmed!'][step]}
             </h3>
             {step < 3 && (
               <button onClick={onClose} className={`w-9 h-9 bg-slate-100 rounded-full flex items-center justify-center ${S.press}`}>
@@ -489,7 +489,7 @@ function PlanSheet({ partner, onClose, onConfirmed }: {
                 <PlanRow label="Entry" value={selectedGym?.price ?? ''} />
               </div>
               <div className={`rounded-2xl p-4 bg-[#FFFBEB] ${S.border}`}>
-                <p className="font-black text-slate-900 mb-1 text-sm">💳 Payment</p>
+                <p className="font-black text-slate-900 mb-1 text-sm flex items-center gap-1.5"><CreditCard className="w-4 h-4 text-slate-600" strokeWidth={2} /> Payment</p>
                 <p className="font-semibold text-slate-500 text-xs leading-relaxed">
                   Both partners must pay their own entry fee. Your booking is only confirmed once both payments are received.
                 </p>
@@ -507,7 +507,7 @@ function PlanSheet({ partner, onClose, onConfirmed }: {
               <div className="w-16 h-16 rounded-full bg-[#FEF3C7] flex items-center justify-center animate-pulse">
                 <Clock className="w-8 h-8 text-amber-600" strokeWidth={2.5} />
               </div>
-              <p className="font-black text-xl text-slate-900">Your payment is in 🎉</p>
+              <p className="font-black text-xl text-slate-900">Your payment is in!</p>
               <p className="font-semibold text-slate-500 text-sm">
                 Waiting for <strong>{partner.name}</strong> to confirm their payment...
               </p>
@@ -527,17 +527,17 @@ function PlanSheet({ partner, onClose, onConfirmed }: {
               </div>
               <p className="font-black text-2xl text-slate-900">Session Confirmed!</p>
               <p className="font-semibold text-slate-500 text-sm">
-                Both you and <strong>{partner.name}</strong> have paid. See you at the wall! 🧗
+                Both you and <strong>{partner.name}</strong> have paid. See you at the wall!
               </p>
               <div className={`w-full bg-[#F8FAFC] rounded-2xl p-4 ${S.border} flex flex-col gap-2 text-left`}>
                 <PlanRow label="Partner" value={partner.name} />
                 <PlanRow label="Gym"     value={selectedGym?.name ?? ''} />
                 <PlanRow label="When"    value={`${DAYS[dayIdx].label} · ${slot}`} />
-                <PlanRow label="Status"  value="✅ Fully Confirmed" />
+                <PlanRow label="Status"  value="Fully Confirmed" />
               </div>
               <button onClick={onConfirmed}
                 className={`w-full bg-slate-900 text-white font-black py-4 rounded-2xl text-lg ${S.border} ${S.press}`}>
-                Done 🎉
+                Done
               </button>
             </div>
           )}
@@ -561,7 +561,7 @@ function PrefsSheet({ prefs, setPrefs, onClose }: {
         <button onClick={onClose} className={`w-9 h-9 bg-slate-100 rounded-full flex items-center justify-center ${S.press}`}>
           <X className="w-4 h-4 text-slate-700" strokeWidth={2.5} />
         </button>
-        <h2 className="font-black text-xl text-slate-900">⚙️ Preferences</h2>
+        <h2 className="font-black text-xl text-slate-900 flex items-center gap-2"><Settings className="w-5 h-5 text-slate-700" strokeWidth={2} /> Preferences</h2>
       </div>
 
       <div className="flex-1 overflow-y-auto custom-scrollbar px-5 py-5 flex flex-col gap-6 pb-10">
@@ -624,7 +624,7 @@ function PrefsSheet({ prefs, setPrefs, onClose }: {
 
           {/* My stats radar */}
           <div className={`bg-[#F8FAFC] rounded-2xl p-4 ${S.border}`}>
-            <p className="font-black text-slate-900 text-xs uppercase tracking-wider mb-3">📊 Your Partner Ratings</p>
+            <p className="font-black text-slate-900 text-xs uppercase tracking-wider mb-3 flex items-center gap-1.5"><BarChart2 className="w-4 h-4 text-slate-600" strokeWidth={2} /> Your Partner Ratings</p>
             <div className="flex justify-center">
               <MyRadarChart />
             </div>
@@ -700,7 +700,7 @@ function PrefsSheet({ prefs, setPrefs, onClose }: {
 
         <button onClick={onClose}
           className={`w-full py-4 rounded-2xl font-black text-lg bg-slate-900 text-white ${S.border} ${S.shadow} ${S.press}`}>
-          Save Preferences ✓
+          <span className="flex items-center justify-center gap-2"><CheckCircle2 className="w-5 h-5" strokeWidth={2.5} /> Save Preferences</span>
         </button>
       </div>
     </div>
@@ -722,7 +722,7 @@ function ChatHistorySheet({ history, onClose, onChat, onReview }: {
         onClick={e => e.stopPropagation()}
       >
         <div className="px-5 pt-5 pb-3 flex items-center justify-between border-b-2 border-slate-100 flex-shrink-0">
-          <h3 className="font-black text-xl text-slate-900">💬 Chat History</h3>
+          <h3 className="font-black text-xl text-slate-900 flex items-center gap-2"><MessageCircle className="w-5 h-5 text-slate-700" strokeWidth={2} /> Chat History</h3>
           <button onClick={onClose} className={`w-9 h-9 bg-slate-100 rounded-full flex items-center justify-center ${S.press}`}>
             <X className="w-4 h-4 text-slate-600" />
           </button>
@@ -750,7 +750,7 @@ function ChatHistorySheet({ history, onClose, onChat, onReview }: {
                 )}
                 {item.sessionStatus === 'completed_unreviewed' && (
                   <div className="bg-amber-50 border-b-2 border-amber-200 px-4 py-2 flex items-center gap-2">
-                    <span className="text-amber-600 text-xs font-black">⭐ Session done! Leave a review?</span>
+                    <span className="text-amber-600 text-xs font-black flex items-center gap-1"><Star className="w-3 h-3 fill-amber-500 text-amber-500" strokeWidth={0} /> Session done! Leave a review?</span>
                     <button
                       onClick={() => onReview(item)}
                       className={`ml-auto px-3 py-1 bg-amber-400 text-slate-900 font-black text-xs rounded-lg ${S.press} border border-amber-500`}
@@ -761,7 +761,7 @@ function ChatHistorySheet({ history, onClose, onChat, onReview }: {
                 )}
                 {item.sessionStatus === 'completed_reviewed' && (
                   <div className="bg-green-50 border-b-2 border-green-200 px-4 py-2">
-                    <span className="text-green-700 text-xs font-black">✅ Reviewed · {item.sessionDate}</span>
+                    <span className="text-green-700 text-xs font-black flex items-center gap-1"><CheckCircle2 className="w-3.5 h-3.5" strokeWidth={2.5} /> Reviewed · {item.sessionDate}</span>
                   </div>
                 )}
                 {/* Chat row */}
@@ -800,11 +800,11 @@ function ChatHistorySheet({ history, onClose, onChat, onReview }: {
 // ─── Review Sheet ───────────────────────────────────────────────────────────────
 
 const REVIEW_DIMS = [
-  { key: 'reliability',   label: 'Reliable & On Time',  emoji: '⏰' },
-  { key: 'safety',        label: 'Safety Awareness',    emoji: '🛡️' },
-  { key: 'encouragement', label: 'Encouraging',         emoji: '💪' },
-  { key: 'skillMatch',    label: 'Skill Level Match',   emoji: '🎯' },
-  { key: 'communication', label: 'Easy to Communicate', emoji: '💬' },
+  { key: 'reliability',   label: 'Reliable & On Time',  Icon: Clock },
+  { key: 'safety',        label: 'Safety Awareness',    Icon: Shield },
+  { key: 'encouragement', label: 'Encouraging',         Icon: Dumbbell },
+  { key: 'skillMatch',    label: 'Skill Level Match',   Icon: Target },
+  { key: 'communication', label: 'Easy to Communicate', Icon: MessageSquare },
 ] as const;
 
 function ReviewSheet({ item, partner, onClose, onSubmit }: {
@@ -852,7 +852,7 @@ function ReviewSheet({ item, partner, onClose, onSubmit }: {
         {REVIEW_DIMS.map(dim => (
           <div key={dim.key}>
             <div className="flex items-center gap-2 mb-2">
-              <span>{dim.emoji}</span>
+              <dim.Icon className="w-4 h-4 text-slate-500" strokeWidth={2} />
               <span className="font-black text-slate-900 text-sm">{dim.label}</span>
             </div>
             <div className="flex gap-2">
@@ -881,7 +881,7 @@ function ReviewSheet({ item, partner, onClose, onSubmit }: {
       <button onClick={() => allRated && setSubmitted(true)} disabled={!allRated}
         className={`w-full py-4 rounded-2xl font-black text-lg border-2 border-slate-900 transition-all ${S.press}
           ${allRated ? 'bg-[#FEF08A] text-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]' : 'bg-slate-200 text-slate-400 border-slate-300 cursor-not-allowed'}`}>
-        {allRated ? 'Submit Review ✓' : 'Rate all dimensions first'}
+        {allRated ? <span className="flex items-center justify-center gap-2"><CheckCircle2 className="w-5 h-5" strokeWidth={2.5} /> Submit Review</span> : 'Rate all dimensions first'}
       </button>
       </Modal>
   );
@@ -892,11 +892,11 @@ function ReviewSheet({ item, partner, onClose, onSubmit }: {
 // ─── Radar Chart for "My Stats" in Prefs ──────────────────────────────────────
 
 const RADAR_DIMS_PREFS = [
-  { key: 'reliability'   as keyof typeof MY_RATINGS, emoji: '⏰', label: 'Reliable'   },
-  { key: 'safety'        as keyof typeof MY_RATINGS, emoji: '🛡️', label: 'Safety'     },
-  { key: 'encouragement' as keyof typeof MY_RATINGS, emoji: '💪', label: 'Supportive' },
-  { key: 'skillMatch'    as keyof typeof MY_RATINGS, emoji: '🎯', label: 'Skill Fit'  },
-  { key: 'communication' as keyof typeof MY_RATINGS, emoji: '💬', label: 'Comms'      },
+  { key: 'reliability'   as keyof typeof MY_RATINGS, label: 'Reliable'   },
+  { key: 'safety'        as keyof typeof MY_RATINGS, label: 'Safety'     },
+  { key: 'encouragement' as keyof typeof MY_RATINGS, label: 'Supportive' },
+  { key: 'skillMatch'    as keyof typeof MY_RATINGS, label: 'Skill Fit'  },
+  { key: 'communication' as keyof typeof MY_RATINGS, label: 'Comms'      },
 ];
 
 function MyRadarChart() {
@@ -937,7 +937,7 @@ function MyRadarChart() {
         <text key={i} x={labels[i].x} y={labels[i].y}
           textAnchor={anchors[i]} dominantBaseline="middle"
           fontSize="9" fontWeight="700" fill="#475569">
-          {d.emoji} {d.label}
+          {d.label}
         </text>
       ))}
     </svg>

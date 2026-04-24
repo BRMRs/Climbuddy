@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ScreenHeader } from '../../layout/ScreenHeader';
 import { S } from '../../../constants/styles';
 import { GYMS_DATA } from '../../../data/mockData';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, ClipboardList, Rocket } from 'lucide-react';
 
 const LEVELS = ['V0–V1', 'V2–V3', 'V4–V5', 'V6+'];
 
@@ -45,7 +45,7 @@ export const AddPartnerScreen: React.FC<AddPartnerScreenProps> = ({ onBack }) =>
           </p>
           <div className={`w-full bg-white rounded-2xl p-5 text-left ${S.border} ${S.shadowSm}`}>
             <div className="flex items-center gap-2 mb-2">
-              <span className="font-black text-slate-900 text-lg">📋 Your Post</span>
+              <span className="font-black text-slate-900 text-lg flex items-center gap-1.5"><ClipboardList className="w-5 h-5" strokeWidth={2} /> Your Post</span>
             </div>
             <p className="font-bold text-slate-500 text-xs uppercase tracking-wider mb-1">Level</p>
             <p className="font-black text-slate-900 mb-3">{level}</p>
@@ -127,7 +127,7 @@ export const AddPartnerScreen: React.FC<AddPartnerScreenProps> = ({ onBack }) =>
             onClick={handleSubmit}
             className={`w-full bg-slate-900 text-white font-black text-xl py-4 rounded-2xl border-2 border-slate-900 ${S.shadow} ${S.press} hover:bg-slate-800`}
           >
-            Post to Board 🚀
+            <span className="flex items-center justify-center gap-2"><Rocket className="w-5 h-5" strokeWidth={2} /> Post to Board</span>
           </button>
         </div>
       </div>
