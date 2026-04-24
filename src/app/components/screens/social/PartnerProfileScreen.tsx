@@ -36,13 +36,18 @@ export const PartnerProfileScreen: React.FC<PartnerProfileScreenProps> = ({
               <span className="text-white/80 font-bold text-lg">{partner.age}</span>
               {partner.verified && <ShieldCheck className="w-5 h-5 text-teal-300" strokeWidth={2.5} />}
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-1.5">
               <span className="bg-white/20 backdrop-blur-sm text-white text-xs font-black px-2.5 py-1 rounded-full">
                 {partner.level}
               </span>
               <span className="bg-white/20 backdrop-blur-sm text-white text-xs font-bold px-2.5 py-1 rounded-full">
                 🧗 Since {partner.climbingSince}
               </span>
+              {partner.styles?.map(s => (
+                <span key={s} className="bg-teal-400/30 backdrop-blur-sm text-white text-xs font-black px-2.5 py-1 rounded-full border border-teal-300/40">
+                  {s}
+                </span>
+              ))}
             </div>
           </div>
         </div>

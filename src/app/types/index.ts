@@ -37,6 +37,7 @@ export interface Partner {
   verified: boolean;
   age: number;
   climbingSince: string;
+  styles?: string[];
 }
 
 export interface MeetingProposal {

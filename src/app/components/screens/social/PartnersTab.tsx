@@ -219,6 +219,15 @@ export const PartnersTab: React.FC<PartnersTabProps> = ({
                       <span className="font-black text-xs text-slate-500 uppercase tracking-wider">Level</span>
                       <span className="font-black text-slate-900">{current.level}</span>
                     </div>
+                    {current.styles && current.styles.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 mb-2">
+                        {current.styles.map(s => (
+                          <span key={s} className="bg-teal-100 text-teal-800 text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wide border border-teal-200">
+                            {s}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                     <p className="font-semibold text-slate-700 text-sm leading-relaxed">{current.hopePartner}</p>
                   </div>
                   <div className={`flex items-center gap-1.5 self-start bg-[#CCFBF1] px-3 py-1.5 rounded-xl ${S.border}`}>

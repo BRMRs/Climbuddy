@@ -12,11 +12,12 @@ export interface ProfileCardProps {
   routes: number;
   sessions: number;
   calories: number;
+  styles?: string[];
   onNameChange?: (name: string) => void;
   onPortraitChange?: (url: string) => void;
 }
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ name, portrait, level, progressPercent, routes, sessions, calories, onNameChange, onPortraitChange }) => {
+const ProfileCard: React.FC<ProfileCardProps> = ({ name, portrait, level, progressPercent, routes, sessions, calories, styles, onNameChange, onPortraitChange }) => {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(name);
   const [showPicker, setShowPicker] = useState(false);
@@ -102,7 +103,17 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ name, portrait, level, progre
               )
             )}
           </div>
-          <p className="font-bold text-slate-500 text-xs uppercase tracking-wider">Beginner · Climbing since 2024</p>
+          {styles && styles.length > 0 ? (
+            <div className="flex flex-wrap gap-1 mt-0.5">
+              {styles.map(s => (
+                <span key={s} className="bg-teal-100 text-teal-800 text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wide border border-teal-200">
+                  {s}
+                </span>
+              ))}
+            </div>
+          ) : (
+            <p className="font-bold text-slate-500 text-xs uppercase tracking-wider">Beginner · Climbing since 2024</p>
+          )}
         </div>
         <div className="text-right shrink-0">
           <p className="font-black text-3xl text-slate-900">{level}</p>

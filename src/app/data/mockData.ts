@@ -194,24 +194,28 @@ export const PARTNERS_DATA: Partner[] = [
     hopePartner: 'Looking for a chill regular partner. Safety first, vibes second 🙌',
     image: PORTRAITS.alice, gym: 'Peak Bouldering',
     trustScore: 98, verified: true, age: 24, climbingSince: '2022',
+    styles: ['Boulder', 'Top Rope'],
   },
   {
     id: 'p2', name: 'Bob', level: 'V1–V2',
     hopePartner: 'Total beginner, need someone patient to teach me the basics!',
     image: PORTRAITS.bob, gym: 'The Crux Gym',
     trustScore: 91, verified: true, age: 28, climbingSince: '2025',
+    styles: ['Boulder'],
   },
   {
     id: 'p3', name: 'Chen', level: 'V5–V6',
     hopePartner: 'Looking to push my limit. Must be serious about projecting.',
     image: PORTRAITS.chen, gym: 'Iron Walls',
     trustScore: 95, verified: true, age: 22, climbingSince: '2020',
+    styles: ['Boulder', 'Lead', 'Competition'],
   },
   {
     id: 'p4', name: 'Maya', level: 'V2–V3',
     hopePartner: 'Weekend warrior. Prefer mornings at Peak Bouldering 🧗‍♀️',
     image: PORTRAITS.maya, gym: 'Peak Bouldering',
     trustScore: 87, verified: false, age: 26, climbingSince: '2023',
+    styles: ['Boulder', 'Top Rope'],
   },
 ];
 
@@ -223,6 +227,7 @@ export const PAST_PARTNERS: Partner[] = [
     image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
     gym: 'Peak Bouldering',
     trustScore: 94, verified: true, age: 27, climbingSince: '2021',
+    styles: ['Boulder', 'Top Rope'],
   },
   {
     id: 'past-user-2', name: 'Marcus', level: 'V4–V5',
@@ -230,6 +235,7 @@ export const PAST_PARTNERS: Partner[] = [
     image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
     gym: 'The Crux Gym',
     trustScore: 92, verified: true, age: 29, climbingSince: '2019',
+    styles: ['Lead', 'Boulder'],
   },
   {
     id: 'past-user-3', name: 'David', level: 'V3–V4',
@@ -237,6 +243,7 @@ export const PAST_PARTNERS: Partner[] = [
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
     gym: 'Iron Walls',
     trustScore: 89, verified: true, age: 25, climbingSince: '2022',
+    styles: ['Boulder', 'Lead'],
   },
 ];
 

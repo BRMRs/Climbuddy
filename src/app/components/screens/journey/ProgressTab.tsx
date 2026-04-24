@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CheckCircle2 } from 'lucide-react';
-import { PORTRAITS, BADGES } from '../../../data/mockData';
+import { PORTRAITS, BADGES, MY_PREFERENCES } from '../../../data/mockData';
 import { S } from '../../../constants/styles';
 import { Badge, SessionLog, CalendarEvent, VenueReview, CoachReview, PartnerReview } from '../../../types';
 import ProfileCard from './ProfileCard';
@@ -76,6 +76,7 @@ export const ProgressTab: React.FC<{
         routes={19}
         sessions={3}
         calories={580}
+        styles={MY_PREFERENCES.myStyles}
         onNameChange={onUserNameChange}
         onPortraitChange={onPortraitChange}
       />
